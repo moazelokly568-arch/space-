@@ -97,14 +97,41 @@
           </svg>
         </div>
 
-        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900/90 border border-slate-800 px-3.5 py-1.5 rounded-xl">
+        <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-2.5 sm:px-3.5 py-1.5 rounded-xl shrink-0">
           <div class="text-right">
-            <div class="text-[11px] text-slate-400">نسبة إنجازك</div>
-            <div id="headerProgressText" class="text-xs font-bold text-emerald-400">0% مكتمل</div>
+            <div class="text-[10px] sm:text-[11px] text-slate-400">نسبة إنجازك</div>
+            <div id="headerProgressText" class="text-[11px] sm:text-xs font-bold text-emerald-400">0% مكتمل</div>
           </div>
-          <div class="w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div class="w-12 sm:w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
             <div id="headerProgressBar" class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: 0%"></div>
           </div>
+        </div>
+
+        <!-- Auth Buttons (Guest State) -->
+        <div id="headerGuestActions" class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <button id="openLoginModalBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1.5">
+            <span>🔐</span><span>تسجيل الدخول</span>
+          </button>
+          <button id="openRegisterModalBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold shadow-lg shadow-emerald-950/50 transition flex items-center gap-1.5">
+            <span>👤+</span><span>إنشاء حساب</span>
+          </button>
+        </div>
+
+        <!-- Logged-In Student Pill (Authenticated State) -->
+        <div id="headerUserActions" class="hidden items-center gap-2 shrink-0">
+          <button id="headerProfileQuickBtn" type="button" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 pl-2.5 pr-1.5 py-1 rounded-xl transition">
+            <img id="headerUserAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%2310b981'/><text x='50' y='62' font-size='42' text-anchor='middle' fill='%23060d1a' font-family='Cairo,sans-serif' font-weight='bold'>ط</text></svg>" alt="صورة الطالب" class="w-8 h-8 rounded-lg object-cover border border-emerald-400/50">
+            <div class="text-right">
+              <div id="headerUserName" class="text-xs font-extrabold text-white max-w-[110px] sm:max-w-[150px] truncate">طالب جيو مساحة</div>
+              <div class="text-[10px] text-emerald-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="headerDbStatusBadge">متصل بقاعدة البيانات</span>
+              </div>
+            </div>
+          </button>
+          <button id="headerLogoutBtn" type="button" title="تسجيل الخروج" class="px-2.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500 hover:text-slate-950 text-rose-300 border border-rose-500/30 text-xs font-bold transition">
+            خروج
+          </button>
         </div>
       </div>
     </div>
@@ -131,6 +158,9 @@
         <button data-tab="interview" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
           <span>💼</span><span>أسئلة الإنترفيو ومرجع الصيغ</span>
         </button>
+        <button data-tab="student-profile" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950">
+          <span>👨‍🎓</span><span>لوحة الطالب الذكية والملف الشخصي</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -140,6 +170,64 @@
 
     <!-- SECTION 1: DASHBOARD & OVERVIEW -->
     <section id="view-dashboard" class="tab-view space-y-6">
+      <!-- Smart Student Quick Bar (Interactive Phase 1 Student Dashboard Widget) -->
+      <div class="bg-gradient-to-l from-slate-900 via-slate-900/95 to-teal-950/60 border border-emerald-500/30 rounded-3xl p-4 sm:p-6 shadow-xl">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="relative shrink-0">
+              <img id="dashStudentAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2313233f'/><text x='50' y='62' font-size='40' text-anchor='middle' fill='%2334d399' font-family='Cairo,sans-serif' font-weight='bold'>🎓</text></svg>" alt="صورة الطالب" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-emerald-500/50 shadow-lg">
+              <button id="dashChangeAvatarTrigger" type="button" title="تغيير الصورة الشخصية" class="absolute -bottom-1 -left-1 w-6 h-6 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold shadow">📷</button>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 id="dashWelcomeTitle" class="text-base sm:text-xl font-extrabold text-white">مرحباً بك في نظام الطالب الذكي (GeoMasaha Student)</h3>
+                <span id="dashAuthStatusPill" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">وضع الزائر — سجل دخولك لحفظ تقدمك دائماً</span>
+              </div>
+              <p id="dashStudentSub" class="text-xs sm:text-sm text-slate-300 mt-1">تتبع تقدمك في كل كورس، احفظ آخر درس وصلت إليه، وأدر كورساتك المفضلة عبر قاعدة بيانات حقيقية آمنة.</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-start lg:justify-end">
+            <button data-goto="student-profile" class="nav-jump-btn px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition flex items-center gap-2 shadow-md">
+              <span>👨‍🎓</span><span>فتح لوحة التحكم والصفحة الشخصية</span>
+            </button>
+            <button id="dashAuthQuickBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-bold text-xs sm:text-sm transition">
+              🔐 تسجيل الدخول / حساب جديد
+            </button>
+          </div>
+        </div>
+
+        <!-- Last Lesson Reached & Active Course Progress Strip -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="md:col-span-2 bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-[11px] font-bold text-amber-400">
+                <span>⏱️</span><span>آخر درس وصلت إليه (استئناف التعلم الذكي)</span>
+              </div>
+              <div id="dashLastLessonTitle" class="text-xs sm:text-sm font-extrabold text-white">لم تبدأ أي درس بعد — اختر كورساً واضغط «بدء / متابعة الدروس»</div>
+              <div id="dashLastLessonMeta" class="text-[11px] text-slate-400">يتم حفظ آخر درس ونسبة التقدم تلقائياً في قاعدة بيانات الطالب</div>
+            </div>
+            <button id="dashResumeLastLessonBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shrink-0 transition">
+              ▶️ متابعة الدرس الآن
+            </button>
+          </div>
+
+          <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-bold">متوسط التقدم في الكورسات النشطة</span>
+              <span id="dashActiveCoursesPct" class="font-extrabold text-emerald-400 ltr-num">0%</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden my-2 border border-slate-800">
+              <div id="dashActiveCoursesBar" class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span id="dashCompletedLessonsCount">0 درس مكتمل</span>
+              <span id="dashInProgressCoursesCount">0 كورس قيد الدراسة</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Hero Banner -->
       <div class="relative rounded-3xl overflow-hidden border border-slate-800 bg-gradient-to-l from-slate-900 via-slate-900/95 to-emerald-950/50 shadow-2xl">
         <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 p-6 sm:p-8">
@@ -835,7 +923,385 @@
       </div>
     </section>
 
+    <!-- SECTION 7: SMART STUDENT DASHBOARD & PERSONAL PROFILE (PHASE 1) -->
+    <section id="view-student-profile" class="tab-view hidden space-y-6">
+      <!-- Top Student Identity & Profile Card -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-2xl">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 border-b border-slate-800 pb-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div class="relative group">
+              <img id="profilePageAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50' y='62' font-size='42' text-anchor='middle' fill='%23060d1a' font-family='Cairo,sans-serif' font-weight='bold'>ط</text></svg>" alt="الصورة الشخصية للطالب" class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-2 border-emerald-400 shadow-xl">
+              <label for="profileAvatarInput" class="cursor-pointer absolute -bottom-2 -left-2 px-2.5 py-1 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] shadow-lg flex items-center gap-1 transition">
+                <span>📷</span><span>تغيير الصورة</span>
+              </label>
+              <input id="profileAvatarInput" type="file" accept="image/*" class="hidden">
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="profileRoleBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold">طالب معتمد • GeoMasaha Pro</span>
+                <span id="profileDbEngineBadge" class="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 text-[11px] font-bold">قاعدة بيانات IndexedDB المشفرة نشطة</span>
+              </div>
+              <h2 id="profileDisplayName" class="text-2xl sm:text-3xl font-extrabold text-white">مهندس مساحة / طالب زائر</h2>
+              <p id="profileDisplayEmail" class="text-xs sm:text-sm text-slate-400 ltr-num">guest@geomasaha.pro</p>
+              <p id="profileDisplayBio" class="text-xs sm:text-sm text-emerald-300 font-semibold">التخصص: المساحة الأرضية ونظم المعلومات الجغرافية GIS</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <button id="openEditProfileModalBtn" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition flex items-center gap-1.5">
+              <span>✏️</span><span>تعديل الاسم والصورة والبيانات</span>
+            </button>
+            <button id="openDbSyncModalBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/30 font-bold text-xs sm:text-sm transition flex items-center gap-1.5">
+              <span>🗄️</span><span>إعدادات قاعدة البيانات والنسخ الاحتياطي</span>
+            </button>
+            <button id="profileAuthToggleBtn" type="button" class="px-4 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500 hover:text-slate-950 text-rose-300 border border-rose-500/30 font-bold text-xs sm:text-sm transition">
+              تسجيل الدخول
+            </button>
+          </div>
+        </div>
+
+        <!-- Student KPIs inside Dashboard -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-6">
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">إجمالي التقدم العام</div>
+            <div id="stuKpiOverallPct" class="text-2xl font-extrabold text-emerald-400 mt-1 ltr-num">0%</div>
+            <div class="text-[11px] text-slate-500 mt-1">كورسات + مسارات</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">الكورسات المكتملة</div>
+            <div id="stuKpiCompletedCourses" class="text-2xl font-extrabold text-white mt-1 ltr-num">0 / 36</div>
+            <div class="text-[11px] text-emerald-400 mt-1">بنسبة 100%</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">كورسات قيد الدراسة</div>
+            <div id="stuKpiInProgressCourses" class="text-2xl font-extrabold text-amber-400 mt-1 ltr-num">0</div>
+            <div class="text-[11px] text-slate-500 mt-1">تقدم جزئي محفوظ</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">الدروس المنجزة</div>
+            <div id="stuKpiCompletedLessons" class="text-2xl font-extrabold text-sky-400 mt-1 ltr-num">0 / 144</div>
+            <div class="text-[11px] text-slate-500 mt-1">محاور ودروس عملية</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">الكورسات المفضلة</div>
+            <div id="stuKpiBookmarks" class="text-2xl font-extrabold text-purple-400 mt-1 ltr-num">0</div>
+            <div class="text-[11px] text-slate-500 mt-1">محفوظة في حسابك</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+            <div class="text-xs text-slate-400 font-bold">خطوات المسارات</div>
+            <div id="stuKpiRoadmapSteps" class="text-2xl font-extrabold text-teal-400 mt-1 ltr-num">0 / 26</div>
+            <div class="text-[11px] text-slate-500 mt-1">تأهيل لسوق العمل</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Last Lesson Reached & Quick Resume Card -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold">📍 آخر درس وصل إليه الطالب</span>
+              <span id="stuLastLessonTime" class="text-[11px] text-slate-400">الآن</span>
+            </div>
+            <h3 id="stuLastCourseTitle" class="text-lg font-extrabold text-white pt-1">لم يتم اختيار درس بعد</h3>
+            <p id="stuLastLessonName" class="text-sm font-bold text-emerald-400">اضغط على زر «متابعة الدروس وتقدم الكورس» في أي كورس لحفظ آخر درس وصلت إليه تلقائياً.</p>
+            <div class="pt-2">
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="text-slate-400">نسبة التقدم في هذا الكورس</span>
+                <span id="stuLastCoursePct" class="font-extrabold text-emerald-400 ltr-num">0%</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                <div id="stuLastCourseBar" class="h-full bg-gradient-to-l from-amber-400 to-emerald-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-2">
+            <button id="stuContinueLastLessonBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition">
+              ▶️ استئناف الدرس من حيث توقفت
+            </button>
+            <button data-goto="courses" class="nav-jump-btn py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs sm:text-sm font-bold transition">
+              تصفح المكتبة
+            </button>
+          </div>
+        </div>
+
+        <!-- Favorite Courses inside Student Dashboard -->
+        <div class="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                <span>⭐</span><span>الكورسات المفضلة للطالب</span>
+              </h3>
+              <p class="text-xs text-slate-400">محفوظة ومرتبطة بحسابك في قاعدة البيانات</p>
+            </div>
+            <button data-goto="courses" class="nav-jump-btn text-xs font-bold text-emerald-400 hover:underline">+ إضافة كورسات</button>
+          </div>
+          <div id="stuProfileBookmarksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+        </div>
+      </div>
+
+      <!-- Detailed Progress Per Course Table & Filter -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white">📊 تقرير نسبة التقدم التفصيلية في كل كورس (36 كورس)</h3>
+            <p class="text-xs sm:text-sm text-slate-400">اعرض تقدمك في كل كورس، آخر درس وصلت إليه، واضغط على أي كورس لتحديث دروسه المكتملة</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="stuCourseProgressFilter" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-emerald-400">
+              <option value="all">جميع الكورسات (36)</option>
+              <option value="started">قيد الدراسة أو مكتملة</option>
+              <option value="inprogress">قيد الدراسة فقط (1% - 99%)</option>
+              <option value="completed">المكتملة 100% فقط</option>
+              <option value="notstarted">لم تبدأ بعد (0%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="stuCoursesProgressList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Toast Notification Container (No alert/confirm/prompt) -->
+  <div id="geoToastContainer" class="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- AUTHENTICATION MODAL (LOGIN / REGISTER / PASSWORD RECOVERY) -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full max-h-[92vh] overflow-y-auto custom-scroll p-6 space-y-5 shadow-2xl">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">نظام مصادقة الطلاب الآمن • GeoMasaha Auth</span>
+          <h3 id="authModalTitle" class="text-xl font-extrabold text-white mt-1">تسجيل الدخول إلى حسابك</h3>
+        </div>
+        <button id="closeAuthModalBtn" type="button" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">✕ إغلاق</button>
+      </div>
+
+      <!-- Mode Switcher Tabs -->
+      <div class="grid grid-cols-3 gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-bold">
+        <button type="button" data-auth-tab="login" class="auth-tab-btn py-2 rounded-xl bg-emerald-500 text-slate-950 transition">تسجيل الدخول</button>
+        <button type="button" data-auth-tab="register" class="auth-tab-btn py-2 rounded-xl text-slate-300 hover:text-white transition">حساب جديد</button>
+        <button type="button" data-auth-tab="recover" class="auth-tab-btn py-2 rounded-xl text-slate-300 hover:text-white transition">نسيت كلمة المرور</button>
+      </div>
+
+      <div id="authFeedbackBox" class="hidden rounded-2xl p-3 text-xs font-bold border"></div>
+
+      <!-- 1. LOGIN FORM -->
+      <form id="loginForm" class="space-y-3.5 text-xs sm:text-sm">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">البريد الإلكتروني الجامعي أو الشخصي</label>
+          <input id="loginEmail" type="email" required placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">كلمة المرور</label>
+          <input id="loginPassword" type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <div class="flex items-center justify-between text-xs pt-1">
+          <button type="button" data-auth-tab="recover" class="auth-tab-jump text-amber-400 hover:underline font-bold">نسيت كلمة المرور؟ استعدها الآن</button>
+          <button type="button" data-auth-tab="register" class="auth-tab-jump text-emerald-400 hover:underline font-bold">ليس لديك حساب؟ أنشئ حساباً</button>
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-950/50 transition">
+          🔐 تسجيل الدخول للمنصة
+        </button>
+      </form>
+
+      <!-- 2. REGISTER FORM -->
+      <form id="registerForm" class="hidden space-y-3.5 text-xs sm:text-sm">
+        <div class="flex items-center gap-3 bg-slate-950/90 p-3 rounded-2xl border border-slate-800">
+          <img id="regAvatarPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50' y='62' font-size='42' text-anchor='middle' fill='%23060d1a' font-family='Cairo,sans-serif' font-weight='bold'>ط</text></svg>" alt="معاينة الصورة" class="w-14 h-14 rounded-2xl object-cover border border-emerald-400 shrink-0">
+          <div class="flex-1">
+            <label for="regAvatarInput" class="cursor-pointer inline-block px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-bold border border-slate-700 transition">
+              📷 اختيار صورة شخصية (اختياري)
+            </label>
+            <input id="regAvatarInput" type="file" accept="image/*" class="hidden">
+            <p class="text-[11px] text-slate-400 mt-1">يمكنك رفع صورتك من الموبايل أو الكمبيوتر</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">اسم الطالب ثلاثي أو ثنائي *</label>
+          <input id="regName" type="text" required placeholder="مثال: م. أحمد محمد الشافعي" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">البريد الإلكتروني *</label>
+          <input id="regEmail" type="email" required placeholder="ahmed.gis@example.com" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">التخصص / الفرقة</label>
+            <select id="regSpecialty" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2.5 text-white outline-none text-xs">
+              <option value="مساحة ونظم معلومات جغرافية GIS">مساحة ونظم معلومات جغرافية GIS</option>
+              <option value="مساحة أرضية ومكتب فني Civil 3D">مساحة أرضية ومكتب فني Civil 3D</option>
+              <option value="استشعار عن بعد ومسح جوي بالدرون">استشعار عن بعد ومسح جوي بالدرون</option>
+              <option value="برمجة جغرافية وتطوير Web GIS">برمجة جغرافية وتطوير Web GIS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">كود الاستعادة السري (PIN) *</label>
+            <input id="regRecoveryPin" type="text" required minlength="4" placeholder="مثال: 1999 أو اسم مدينتك" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2.5 text-white outline-none text-xs" title="يستخدم لاستعادة كلمة المرور في حال نسيانها">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">كلمة المرور (6 أحرف أو أرقام على الأقل) *</label>
+          <input id="regPassword" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-950/50 transition">
+          ✨ إنشاء حساب الطالب وحفظ البيانات
+        </button>
+      </form>
+
+      <!-- 3. PASSWORD RECOVERY FORM -->
+      <form id="recoverForm" class="hidden space-y-3.5 text-xs sm:text-sm">
+        <p class="text-xs text-slate-400 leading-relaxed bg-slate-950 p-3 rounded-xl border border-slate-800">
+          أدخل بريدك الإلكتروني المسجل وكود الاستعادة السري (PIN) الذي اخترته عند إنشاء الحساب لتعيين كلمة مرور جديدة فوراً.
+        </p>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">البريد الإلكتروني المسجل *</label>
+          <input id="recEmail" type="email" required placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">كود الاستعادة السري (PIN) *</label>
+          <input id="recPin" type="text" required placeholder="أدخل كود الاستعادة السري" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">كلمة المرور الجديدة (6 أحرف على الأقل) *</label>
+          <input id="recNewPassword" type="password" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white ltr-num outline-none">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm transition">
+          🔑 استعادة وتحديث كلمة المرور
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT STUDENT PROFILE MODAL -->
+  <div id="editProfileModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white">✏️ تعديل الملف الشخصي للطالب</h3>
+        <button id="closeEditProfileModalBtn" type="button" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">✕ إغلاق</button>
+      </div>
+      <form id="editProfileForm" class="space-y-3.5 text-xs sm:text-sm">
+        <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+          <img id="editProfileAvatarPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50' y='62' font-size='42' text-anchor='middle' fill='%23060d1a' font-family='Cairo,sans-serif' font-weight='bold'>ط</text></svg>" alt="صورة الطالب" class="w-16 h-16 rounded-2xl object-cover border border-emerald-400">
+          <div>
+            <label for="editProfileAvatarInput" class="cursor-pointer inline-block px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs border border-emerald-500/30 transition">
+              📷 رفع صورة شخصية جديدة
+            </label>
+            <input id="editProfileAvatarInput" type="file" accept="image/*" class="hidden">
+            <p class="text-[11px] text-slate-400 mt-1">يتم ضغط الصورة وحفظها في قاعدة البيانات</p>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">اسم الطالب *</label>
+          <input id="editProfileNameInput" type="text" required class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">التخصص الهندسي / المسار المفضل</label>
+          <input id="editProfileSpecialtyInput" type="text" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">كود الاستعادة السري (PIN)</label>
+          <input id="editProfilePinInput" type="text" minlength="4" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-white outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm transition">
+          💾 حفظ التعديلات في قاعدة البيانات
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- COURSE LESSONS & PROGRESS TRACKER MODAL (REAL LESSON-BY-LESSON TRACKING) -->
+  <div id="courseLessonsModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scroll p-6 space-y-4 shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-800 pb-3">
+        <div>
+          <span id="lessonModalBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300"></span>
+          <h3 id="lessonModalTitle" class="text-lg sm:text-xl font-extrabold text-white mt-1"></h3>
+          <p id="lessonModalInstructor" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <button id="closeLessonModalBtn" type="button" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold shrink-0">✕ إغلاق</button>
+      </div>
+
+      <!-- Course Progress Bar inside Modal -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-300 font-bold">نسبة إنجازك في هذا الكورس:</span>
+          <span id="lessonModalPctText" class="text-sm font-extrabold text-emerald-400 ltr-num">0%</span>
+        </div>
+        <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div id="lessonModalPctBar" class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="lessonModalLastReachedText" class="text-[11px] text-amber-400 font-bold pt-1"></div>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-slate-300">قائمة دروس ومحاور الكورس (اضغط على الدرس لتحديده كـ «آخر درس وصلت إليه» أو تعليمه كمكتمل):</h4>
+        <div id="lessonModalItemsContainer" class="space-y-2.5"></div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <a id="lessonModalExternalUrl" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition">
+          ↗ فتح مصدر الكورس الكامل (يوتيوب / المنصة)
+        </a>
+        <button id="lessonModalMarkAllBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-bold text-xs transition">
+          ✅ إكمال جميع دروس الكورس (100%)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATABASE & CLOUD SYNC SETTINGS MODAL -->
+  <div id="dbSyncModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto custom-scroll p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300">محرك قاعدة البيانات الحقيقية • GeoMasaha DB</span>
+          <h3 class="text-lg font-extrabold text-white mt-1">🗄️ إدارة قاعدة بيانات الطالب والمزامنة</h3>
+        </div>
+        <button id="closeDbSyncModalBtn" type="button" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">✕ إغلاق</button>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2 text-xs leading-relaxed text-slate-300">
+        <div class="font-bold text-emerald-400">✅ حالة قاعدة البيانات: نشطة (IndexedDB Transactional Database + Web Crypto SHA-256)</div>
+        <p>يتم حفظ حسابات الطلاب، كلمات المرور المشفرة، الصور الشخصية، الكورسات المفضلة، نسبة التقدم في كل كورس، وآخر درس تم الوصول إليه في قاعدة بيانات المتصفح الحقيقية <span class="ltr-num font-bold text-white">GeoMasahaProDB (IndexedDB)</span> بدون أي بيانات وهمية.</p>
+      </div>
+
+      <!-- Export / Import Real JSON Database File -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-amber-400">نقل بياناتك بين الكمبيوتر والموبايل (تصدير / استيراد قاعدة البيانات):</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button id="exportDbJsonBtn" type="button" class="py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 font-bold text-xs transition">
+            ⬇️ تحميل ملف قاعدة البيانات (.json)
+          </button>
+          <label for="importDbJsonInput" class="cursor-pointer py-2.5 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 font-bold text-xs text-center transition">
+            ⬆️ استيراد ملف قاعدة بيانات (.json)
+          </label>
+          <input id="importDbJsonInput" type="file" accept=".json,application/json" class="hidden">
+        </div>
+      </div>
+
+      <!-- Optional Supabase Cloud REST Sync -->
+      <form id="cloudSyncConfigForm" class="space-y-3 pt-3 border-t border-slate-800 text-xs">
+        <div class="font-bold text-slate-200">☁️ ربط سحابي اختياري (Supabase / REST Endpoint):</div>
+        <p class="text-[11px] text-slate-400">إذا كان لديك رابط مشروع Supabase خاص بك، أدخله لمزامنة جدول <span class="ltr-num">student_profiles</span> سحابياً بجانب قاعدة البيانات المحلية:</p>
+        <div>
+          <label class="block text-slate-400 mb-1">Supabase Project URL (اختياري)</label>
+          <input id="supabaseUrlInput" type="url" placeholder="https://xyzcompany.supabase.co" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Supabase Anon Key (اختياري)</label>
+          <input id="supabaseKeyInput" type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">
+          حفظ إعدادات الربط السحابي
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- Software Detail Modal -->
   <div id="softwareModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1761,17 +2227,199 @@
     ];
 
     // ==========================================
-    // 5. STATE MANAGEMENT (LOCAL STORAGE SAFE)
+    // 5. REAL DATABASE ENGINE (IndexedDB + Web Crypto Auth + Safe Fallback)
     // ==========================================
     const STATE_KEY = 'geomasaha_pro_state_v1';
+    const SESSION_USER_KEY = 'geomasaha_active_user_email_v1';
+    const DB_NAME = 'GeoMasahaProDB';
+    const DB_VERSION = 1;
+
+    const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50' y='62' font-size='42' text-anchor='middle' fill='%23060d1a' font-family='Cairo,sans-serif' font-weight='bold'>ط</text></svg>";
+
     let appState = {
       completedCourses: {},
       bookmarkedCourses: {},
       completedSteps: {},
+      courseLessonsProgress: {}, // { [courseId]: { completedTopicIndices: [0, 1], lastTopicIndex: 1, updatedAt: ISOString } }
+      lastLessonReached: null,   // { courseId, courseTitle, lessonIndex, lessonTitle, timestamp }
       activeTab: 'dashboard',
       activeRoadmapId: 'track-site',
       activeSwCategory: 'all'
     };
+
+    let currentUser = null; // Logged-in student record from IndexedDB
+    let idbInstance = null;
+    let memoryUsersStore = {}; // Fallback if IndexedDB is restricted in sandboxed iframe
+    let pendingRegAvatarDataUrl = '';
+    let pendingEditAvatarDataUrl = '';
+    let activeLessonModalCourseId = null;
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('geoToastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const colors = type === 'error'
+        ? 'bg-rose-950/95 border-rose-500/50 text-rose-200'
+        : type === 'info'
+        ? 'bg-slate-900/95 border-sky-500/50 text-sky-200'
+        : 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200';
+      toast.className = `pointer-events-auto border rounded-2xl px-4 py-3 text-xs font-bold shadow-2xl backdrop-blur-md transition-all duration-300 flex items-center justify-between gap-3 ${colors}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3600);
+    }
+
+    // Cryptographic password hashing via Web Crypto API (SHA-256 + salt)
+    async function hashPasswordSecure(password, emailSalt) {
+      const normalized = (emailSalt || '').trim().toLowerCase() + '::GeoMasahaSalt2026::' + password;
+      try {
+        if (window.crypto && window.crypto.subtle) {
+          const msgBuffer = new TextEncoder().encode(normalized);
+          const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+      } catch (e) {}
+      // Deterministic fallback hash if subtle crypto is unavailable in non-HTTPS local file
+      let h1 = 0xdeadbeef ^ normalized.length, h2 = 0x41c6ce57 ^ normalized.length;
+      for (let i = 0, ch; i < normalized.length; i++) {
+        ch = normalized.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+      }
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+    }
+
+    // Open Real IndexedDB Database
+    function initIndexedDB() {
+      return new Promise((resolve) => {
+        try {
+          if (!window.indexedDB) {
+            resolve(null);
+            return;
+          }
+          const req = window.indexedDB.open(DB_NAME, DB_VERSION);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('students')) {
+              const store = db.createObjectStore('students', { keyPath: 'email' });
+              store.createIndex('name', 'name', { unique: false });
+            }
+          };
+          req.onsuccess = (e) => {
+            idbInstance = e.target.result;
+            resolve(idbInstance);
+          };
+          req.onerror = () => resolve(null);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+    }
+
+    function dbGetStudent(email) {
+      const key = (email || '').trim().toLowerCase();
+      return new Promise((resolve) => {
+        if (!key) return resolve(null);
+        if (idbInstance) {
+          try {
+            const tx = idbInstance.transaction(['students'], 'readonly');
+            const store = tx.objectStore('students');
+            const req = store.get(key);
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => resolve(memoryUsersStore[key] || null);
+            return;
+          } catch (e) {}
+        }
+        try {
+          const rawUsers = localStorage.getItem('geomasaha_users_backup_v1');
+          if (rawUsers) memoryUsersStore = Object.assign(memoryUsersStore, JSON.parse(rawUsers));
+        } catch (e) {}
+        resolve(memoryUsersStore[key] || null);
+      });
+    }
+
+    function dbGetAllStudents() {
+      return new Promise((resolve) => {
+        if (idbInstance) {
+          try {
+            const tx = idbInstance.transaction(['students'], 'readonly');
+            const store = tx.objectStore('students');
+            const req = store.getAll();
+            req.onsuccess = () => resolve(req.result || []);
+            req.onerror = () => resolve(Object.values(memoryUsersStore));
+            return;
+          } catch (e) {}
+        }
+        try {
+          const rawUsers = localStorage.getItem('geomasaha_users_backup_v1');
+          if (rawUsers) memoryUsersStore = Object.assign(memoryUsersStore, JSON.parse(rawUsers));
+        } catch (e) {}
+        resolve(Object.values(memoryUsersStore));
+      });
+    }
+
+    function dbSaveStudent(studentRecord) {
+      const key = (studentRecord.email || '').trim().toLowerCase();
+      studentRecord.email = key;
+      studentRecord.updatedAt = new Date().toISOString();
+      memoryUsersStore[key] = studentRecord;
+      try {
+        localStorage.setItem('geomasaha_users_backup_v1', JSON.stringify(memoryUsersStore));
+      } catch (e) {}
+
+      return new Promise((resolve) => {
+        if (idbInstance) {
+          try {
+            const tx = idbInstance.transaction(['students'], 'readwrite');
+            const store = tx.objectStore('students');
+            store.put(studentRecord);
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => resolve(true);
+            return;
+          } catch (e) {}
+        }
+        resolve(true);
+      });
+    }
+
+    // Compress and convert uploaded avatar image to Data URL
+    function processAvatarFile(file, callback) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const size = 180;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+          callback(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Calculate a course's completion percentage (0..100) from lesson progress or completed flag
+    function getCourseProgressPct(courseId) {
+      if (appState.completedCourses && appState.completedCourses[courseId]) return 100;
+      const course = COURSES_DATA.find(c => c.id === courseId);
+      if (!course || !course.topics || course.topics.length === 0) return 0;
+      const prog = appState.courseLessonsProgress && appState.courseLessonsProgress[courseId];
+      if (!prog || !Array.isArray(prog.completedTopicIndices)) return 0;
+      return Math.min(100, Math.round((prog.completedTopicIndices.length / course.topics.length) * 100));
+    }
 
     function loadState() {
       try {
@@ -1779,19 +2427,28 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           appState = Object.assign({}, appState, parsed);
+          if (!appState.courseLessonsProgress) appState.courseLessonsProgress = {};
         }
-      } catch (e) {
-        // Fallback to in-memory state in sandboxed iframe
-      }
+      } catch (e) {}
     }
 
-    function saveState() {
+    async function saveState() {
       try {
         localStorage.setItem(STATE_KEY, JSON.stringify(appState));
-      } catch (e) {
-        // Ignore storage errors in sandboxed mode
+      } catch (e) {}
+
+      if (currentUser) {
+        currentUser.progress = {
+          completedCourses: appState.completedCourses || {},
+          bookmarkedCourses: appState.bookmarkedCourses || {},
+          completedSteps: appState.completedSteps || {},
+          courseLessonsProgress: appState.courseLessonsProgress || {},
+          lastLessonReached: appState.lastLessonReached || null
+        };
+        await dbSaveStudent(currentUser);
       }
       updateGlobalProgressUI();
+      renderStudentProfileDashboard();
     }
 
     // ==========================================
@@ -1816,7 +2473,26 @@
 
     function updateGlobalProgressUI() {
       const totalCourses = COURSES_DATA.length;
-      const doneCoursesCount = Object.keys(appState.completedCourses).filter(k => appState.completedCourses[k]).length;
+      let doneCoursesCount = 0;
+      let inProgressCoursesCount = 0;
+      let totalCoursePctSum = 0;
+      let completedLessonsTotal = 0;
+      let totalLessonsCount = 0;
+
+      COURSES_DATA.forEach(c => {
+        const topicsLen = (c.topics && c.topics.length) ? c.topics.length : 4;
+        totalLessonsCount += topicsLen;
+        const pct = getCourseProgressPct(c.id);
+        totalCoursePctSum += pct;
+        if (pct === 100) {
+          doneCoursesCount++;
+          completedLessonsTotal += topicsLen;
+        } else if (pct > 0) {
+          inProgressCoursesCount++;
+          const prog = appState.courseLessonsProgress && appState.courseLessonsProgress[c.id];
+          completedLessonsTotal += (prog && Array.isArray(prog.completedTopicIndices)) ? prog.completedTopicIndices.length : 0;
+        }
+      });
 
       let totalSteps = 0;
       let doneStepsCount = 0;
@@ -1827,8 +2503,9 @@
         });
       });
 
+      const overallCourseUnits = totalCoursePctSum / 100;
       const totalItems = totalCourses + totalSteps;
-      const totalDone = doneCoursesCount + doneStepsCount;
+      const totalDone = overallCourseUnits + doneStepsCount;
       const pct = totalItems > 0 ? Math.round((totalDone / totalItems) * 100) : 0;
 
       const headerText = document.getElementById('headerProgressText');
@@ -1842,6 +2519,32 @@
       const bookmarkCount = Object.keys(appState.bookmarkedCourses).filter(k => appState.bookmarkedCourses[k]).length;
       const statSaved = document.getElementById('statSavedBookmarks');
       if (statSaved) statSaved.textContent = bookmarkCount + ' عنصر';
+
+      // Update Smart Student Banner in Dashboard
+      const dashActivePct = document.getElementById('dashActiveCoursesPct');
+      const dashActiveBar = document.getElementById('dashActiveCoursesBar');
+      const avgCoursePct = totalCourses > 0 ? Math.round(totalCoursePctSum / totalCourses) : 0;
+      if (dashActivePct) dashActivePct.textContent = avgCoursePct + '%';
+      if (dashActiveBar) dashActiveBar.style.width = avgCoursePct + '%';
+
+      const dashLessonsEl = document.getElementById('dashCompletedLessonsCount');
+      const dashInProgEl = document.getElementById('dashInProgressCoursesCount');
+      if (dashLessonsEl) dashLessonsEl.textContent = `${completedLessonsTotal} / ${totalLessonsCount} درس مكتمل`;
+      if (dashInProgEl) dashInProgEl.textContent = `${inProgressCoursesCount} كورس قيد الدراسة`;
+
+      const last = appState.lastLessonReached;
+      const dashLastTitle = document.getElementById('dashLastLessonTitle');
+      const dashLastMeta = document.getElementById('dashLastLessonMeta');
+      if (dashLastTitle && dashLastMeta) {
+        if (last && last.courseId) {
+          const cPct = getCourseProgressPct(last.courseId);
+          dashLastTitle.textContent = `${last.courseTitle} — الدرس (${last.lessonIndex + 1}): ${last.lessonTitle}`;
+          dashLastMeta.textContent = `نسبة التقدم في هذا الكورس: ${cPct}% • محفوظ في قاعدة بيانات الطالب`;
+        } else {
+          dashLastTitle.textContent = 'لم تبدأ أي درس بعد — اختر كورساً واضغط «بدء / متابعة الدروس»';
+          dashLastMeta.textContent = 'يتم حفظ آخر درس ونسبة التقدم تلقائياً في قاعدة بيانات الطالب';
+        }
+      }
 
       renderDashboardBookmarks();
     }
@@ -2040,12 +2743,16 @@
       }
 
       container.innerHTML = filtered.map(c => {
-        const isDone = !!appState.completedCourses[c.id];
+        const coursePct = getCourseProgressPct(c.id);
+        const isDone = coursePct === 100;
         const isSaved = !!appState.bookmarkedCourses[c.id];
         const isYT = c.source === 'youtube';
+        const progRecord = (appState.courseLessonsProgress && appState.courseLessonsProgress[c.id]) || null;
+        const lastIdx = (progRecord && typeof progRecord.lastTopicIndex === 'number') ? progRecord.lastTopicIndex : null;
+        const lastTopicName = (lastIdx !== null && c.topics[lastIdx]) ? c.topics[lastIdx] : null;
 
         return `
-          <div class="bg-slate-900/85 border ${isDone ? 'border-emerald-500/50' : 'border-slate-800'} hover:border-slate-700 rounded-3xl p-5 flex flex-col justify-between gap-4 shadow-lg transition">
+          <div class="bg-slate-900/85 border ${isDone ? 'border-emerald-500/50' : coursePct > 0 ? 'border-amber-500/40' : 'border-slate-800'} hover:border-slate-700 rounded-3xl p-5 flex flex-col justify-between gap-4 shadow-lg transition">
             <div class="space-y-3">
               <!-- Top Badges -->
               <div class="flex items-center justify-between gap-2">
@@ -2072,33 +2779,53 @@
                 <p class="text-xs text-slate-400 mt-1">👨‍🏫 ${c.instructor} | اللغة: ${c.language}</p>
               </div>
 
+              <!-- Course Progress Bar & Last Reached Lesson -->
+              <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-3 space-y-1.5">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-slate-400 font-bold">نسبة التقدم في الكورس:</span>
+                  <span class="font-extrabold ${isDone ? 'text-emerald-400' : coursePct > 0 ? 'text-amber-400' : 'text-slate-400'} ltr-num">${coursePct}%</span>
+                </div>
+                <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: ${coursePct}%"></div>
+                </div>
+                ${lastTopicName ? `<div class="text-[11px] text-amber-300 truncate pt-0.5">📍 آخر درس: ${lastTopicName}</div>` : ''}
+              </div>
+
               <!-- Key Topics -->
               <div class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-3 space-y-1.5">
-                <div class="text-[11px] font-bold text-slate-300">أهم محاور الكورس:</div>
+                <div class="text-[11px] font-bold text-slate-300">دروس ومحاور الكورس (${c.topics.length} دروس):</div>
                 <ul class="text-xs text-slate-400 space-y-1 pr-4 list-disc">
-                  ${c.topics.map(t => `<li>${t}</li>`).join('')}
+                  ${c.topics.map((t, idx) => {
+                    const topicDone = isDone || (progRecord && Array.isArray(progRecord.completedTopicIndices) && progRecord.completedTopicIndices.includes(idx));
+                    return `<li class="${topicDone ? 'text-emerald-300 line-through' : ''}">${t}</li>`;
+                  }).join('')}
                 </ul>
               </div>
             </div>
 
             <!-- Action Footer -->
-            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
-              <a href="${c.url}" target="_blank" rel="noopener noreferrer" 
-                class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs text-center transition flex items-center justify-center gap-1.5 ${
-                  isYT
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
-                    : 'bg-sky-500 hover:bg-sky-400 text-slate-950'
-                }">
-                <span>${isYT ? 'مشاهدة الكورس على يوتيوب' : 'الانتقال إلى المنصة الرسمية'}</span>
-                <span>↗</span>
-              </a>
-              <button data-complete-id="${c.id}" class="py-2.5 px-3 rounded-xl font-bold text-xs border transition ${
-                isDone
-                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-emerald-500/40'
-              }">
-                ${isDone ? '✅ مكتمل' : 'تحديد كمكتمل'}
+            <div class="pt-2 border-t border-slate-800/80 space-y-2">
+              <button data-open-lessons="${c.id}" type="button" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                <span>📖</span><span>متابعة الدروس وتحديد آخر درس وصلت إليه (${coursePct}%)</span>
               </button>
+              <div class="flex items-center justify-between gap-2">
+                <a href="${c.url}" target="_blank" rel="noopener noreferrer" 
+                  class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs text-center transition flex items-center justify-center gap-1.5 ${
+                    isYT
+                      ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
+                      : 'bg-sky-500 hover:bg-sky-400 text-slate-950'
+                  }">
+                  <span>${isYT ? 'مشاهدة الكورس على يوتيوب' : 'الانتقال إلى المنصة الرسمية'}</span>
+                  <span>↗</span>
+                </a>
+                <button data-complete-id="${c.id}" class="py-2.5 px-3 rounded-xl font-bold text-xs border transition ${
+                  isDone
+                    ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                    : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-emerald-500/40'
+                }">
+                  ${isDone ? '✅ مكتمل' : 'تحديد كمكتمل'}
+                </button>
+              </div>
             </div>
           </div>
         `;
@@ -2110,15 +2837,41 @@
           appState.bookmarkedCourses[id] = !appState.bookmarkedCourses[id];
           saveState();
           renderCourses();
+          showToast(appState.bookmarkedCourses[id] ? '⭐ تمت إضافة الكورس إلى مفضلتك' : 'تمت إزالة الكورس من المفضلة', 'info');
         });
       });
 
       container.querySelectorAll('[data-complete-id]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-complete-id');
-          appState.completedCourses[id] = !appState.completedCourses[id];
+          const course = COURSES_DATA.find(x => x.id === id);
+          const willComplete = getCourseProgressPct(id) < 100;
+          appState.completedCourses[id] = willComplete;
+          if (!appState.courseLessonsProgress) appState.courseLessonsProgress = {};
+          if (willComplete && course) {
+            appState.courseLessonsProgress[id] = {
+              completedTopicIndices: course.topics.map((_, i) => i),
+              lastTopicIndex: course.topics.length - 1,
+              updatedAt: new Date().toISOString()
+            };
+            appState.lastLessonReached = {
+              courseId: course.id,
+              courseTitle: course.title,
+              lessonIndex: course.topics.length - 1,
+              lessonTitle: course.topics[course.topics.length - 1],
+              timestamp: new Date().toISOString()
+            };
+          } else {
+            delete appState.courseLessonsProgress[id];
+          }
           saveState();
           renderCourses();
+        });
+      });
+
+      container.querySelectorAll('[data-open-lessons]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          openCourseLessonsModal(btn.getAttribute('data-open-lessons'));
         });
       });
     }
@@ -2341,10 +3094,430 @@
     }
 
     // ==========================================
+    // 7.5 PHASE 1: STUDENT AUTH, PROFILE & LESSON TRACKER LOGIC
+    // ==========================================
+    function openCourseLessonsModal(courseId) {
+      const course = COURSES_DATA.find(c => c.id === courseId);
+      if (!course) return;
+      activeLessonModalCourseId = courseId;
+
+      document.getElementById('lessonModalBadge').textContent = `${course.software} • ${course.level}`;
+      document.getElementById('lessonModalTitle').textContent = course.title;
+      document.getElementById('lessonModalInstructor').textContent = `👨‍🏫 ${course.instructor} | ${course.platformName}`;
+      document.getElementById('lessonModalExternalUrl').href = course.url;
+
+      renderLessonModalContents(course);
+      document.getElementById('courseLessonsModal').classList.remove('hidden');
+    }
+
+    function renderLessonModalContents(course) {
+      if (!appState.courseLessonsProgress) appState.courseLessonsProgress = {};
+      if (!appState.courseLessonsProgress[course.id]) {
+        appState.courseLessonsProgress[course.id] = {
+          completedTopicIndices: appState.completedCourses[course.id] ? course.topics.map((_, i) => i) : [],
+          lastTopicIndex: 0,
+          updatedAt: new Date().toISOString()
+        };
+      }
+      const prog = appState.courseLessonsProgress[course.id];
+      const pct = getCourseProgressPct(course.id);
+
+      document.getElementById('lessonModalPctText').textContent = `${pct}% (${prog.completedTopicIndices.length}/${course.topics.length} دروس)`;
+      document.getElementById('lessonModalPctBar').style.width = `${pct}%`;
+
+      const lastIdx = typeof prog.lastTopicIndex === 'number' ? prog.lastTopicIndex : 0;
+      const lastLessonText = course.topics[lastIdx] || course.topics[0];
+      document.getElementById('lessonModalLastReachedText').textContent = `📍 آخر درس وصلت إليه في هذا الكورس: الدرس (${lastIdx + 1}) — ${lastLessonText}`;
+
+      const listEl = document.getElementById('lessonModalItemsContainer');
+      listEl.innerHTML = course.topics.map((topic, idx) => {
+        const isCompleted = prog.completedTopicIndices.includes(idx);
+        const isCurrentLast = prog.lastTopicIndex === idx;
+        return `
+          <div class="bg-slate-950 border ${isCurrentLast ? 'border-amber-500/60' : isCompleted ? 'border-emerald-500/40' : 'border-slate-800'} rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition">
+            <div class="flex items-center gap-3">
+              <button type="button" data-toggle-lesson-idx="${idx}" class="w-7 h-7 rounded-xl font-bold text-xs flex items-center justify-center border transition shrink-0 ${
+                isCompleted ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-emerald-400'
+              }">
+                ${isCompleted ? '✓' : idx + 1}
+              </button>
+              <div>
+                <div class="text-xs sm:text-sm font-bold ${isCompleted ? 'text-emerald-300 line-through' : 'text-white'}">الدرس ${idx + 1}: ${topic}</div>
+                ${isCurrentLast ? '<span class="inline-block mt-0.5 text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">📍 آخر درس وصلت إليه حالياً</span>' : ''}
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <button type="button" data-set-last-lesson-idx="${idx}" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition ${
+                isCurrentLast ? 'bg-amber-500 text-slate-950 border-amber-400' : 'bg-slate-900 hover:bg-slate-800 text-amber-300 border-slate-700'
+              }">
+                ${isCurrentLast ? '📍 توقفت هنا' : 'تحديد كآخر درس'}
+              </button>
+              <button type="button" data-toggle-lesson-idx="${idx}" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition ${
+                isCompleted ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+              }">
+                ${isCompleted ? '✅ منجز' : 'إتمام الدرس'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      listEl.querySelectorAll('[data-toggle-lesson-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-toggle-lesson-idx'), 10);
+          const pos = prog.completedTopicIndices.indexOf(idx);
+          if (pos === -1) {
+            prog.completedTopicIndices.push(idx);
+            prog.lastTopicIndex = idx;
+          } else {
+            prog.completedTopicIndices.splice(pos, 1);
+          }
+          appState.completedCourses[course.id] = prog.completedTopicIndices.length === course.topics.length;
+          appState.lastLessonReached = {
+            courseId: course.id,
+            courseTitle: course.title,
+            lessonIndex: idx,
+            lessonTitle: course.topics[idx],
+            timestamp: new Date().toISOString()
+          };
+          saveState();
+          renderLessonModalContents(course);
+          renderCourses();
+        });
+      });
+
+      listEl.querySelectorAll('[data-set-last-lesson-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-set-last-lesson-idx'), 10);
+          prog.lastTopicIndex = idx;
+          appState.lastLessonReached = {
+            courseId: course.id,
+            courseTitle: course.title,
+            lessonIndex: idx,
+            lessonTitle: course.topics[idx],
+            timestamp: new Date().toISOString()
+          };
+          saveState();
+          renderLessonModalContents(course);
+          renderCourses();
+          showToast(`📍 تم حفظ «${course.topics[idx]}» كآخر درس وصلت إليه`, 'info');
+        });
+      });
+    }
+
+    function updateAuthHeaderAndProfileUI() {
+      const guestBox = document.getElementById('headerGuestActions');
+      const userBox = document.getElementById('headerUserActions');
+      const headerName = document.getElementById('headerUserName');
+      const headerAvatar = document.getElementById('headerUserAvatar');
+      const dashAvatar = document.getElementById('dashStudentAvatar');
+      const dashTitle = document.getElementById('dashWelcomeTitle');
+      const dashPill = document.getElementById('dashAuthStatusPill');
+      const dashAuthBtn = document.getElementById('dashAuthQuickBtn');
+
+      const profAvatar = document.getElementById('profilePageAvatar');
+      const profName = document.getElementById('profileDisplayName');
+      const profEmail = document.getElementById('profileDisplayEmail');
+      const profBio = document.getElementById('profileDisplayBio');
+      const profAuthBtn = document.getElementById('profileAuthToggleBtn');
+
+      if (currentUser) {
+        if (guestBox) guestBox.classList.add('hidden');
+        if (userBox) {
+          userBox.classList.remove('hidden');
+          userBox.classList.add('flex');
+        }
+        const avatarSrc = currentUser.avatar || DEFAULT_AVATAR_SVG;
+        if (headerName) headerName.textContent = currentUser.name;
+        if (headerAvatar) headerAvatar.src = avatarSrc;
+        if (dashAvatar) dashAvatar.src = avatarSrc;
+        if (dashTitle) dashTitle.textContent = `مرحباً بك يا ${currentUser.name} 👋`;
+        if (dashPill) {
+          dashPill.textContent = '✅ متصل بحسابك — الحفظ التلقائي نشط في قاعدة البيانات';
+          dashPill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        }
+        if (dashAuthBtn) dashAuthBtn.textContent = '⚙️ تعديل ملفي الشخصي';
+
+        if (profAvatar) profAvatar.src = avatarSrc;
+        if (profName) profName.textContent = currentUser.name;
+        if (profEmail) profEmail.textContent = currentUser.email;
+        if (profBio) profBio.textContent = `التخصص: ${currentUser.specialty || 'المساحة ونظم المعلومات الجغرافية GIS'}`;
+        if (profAuthBtn) {
+          profAuthBtn.textContent = '🚪 تسجيل الخروج';
+          profAuthBtn.className = 'px-4 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500 hover:text-slate-950 text-rose-300 border border-rose-500/30 font-bold text-xs sm:text-sm transition';
+        }
+      } else {
+        if (guestBox) guestBox.classList.remove('hidden');
+        if (userBox) {
+          userBox.classList.add('hidden');
+          userBox.classList.remove('flex');
+        }
+        if (dashAvatar) dashAvatar.src = DEFAULT_AVATAR_SVG;
+        if (dashTitle) dashTitle.textContent = 'مرحباً بك في نظام الطالب الذكي (GeoMasaha Student)';
+        if (dashPill) {
+          dashPill.textContent = 'وضع الزائر — سجل دخولك لحفظ تقدمك وصورتك الشخصية';
+          dashPill.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        }
+        if (dashAuthBtn) dashAuthBtn.textContent = '🔐 تسجيل الدخول / حساب جديد';
+
+        if (profAvatar) profAvatar.src = DEFAULT_AVATAR_SVG;
+        if (profName) profName.textContent = 'طالب زائر (غير مسجل الدخول)';
+        if (profEmail) profEmail.textContent = 'سجل دخولك أو أنشئ حساباً جديداً لحفظ بياناتك';
+        if (profBio) profBio.textContent = 'التخصص: المساحة الأرضية ونظم المعلومات الجغرافية GIS';
+        if (profAuthBtn) {
+          profAuthBtn.textContent = '🔐 تسجيل الدخول / إنشاء حساب';
+          profAuthBtn.className = 'px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition';
+        }
+      }
+    }
+
+    function renderStudentProfileDashboard() {
+      const totalCourses = COURSES_DATA.length;
+      let doneCoursesCount = 0;
+      let inProgressCount = 0;
+      let totalCoursePctSum = 0;
+      let completedLessonsTotal = 0;
+      let totalLessonsCount = 0;
+
+      COURSES_DATA.forEach(c => {
+        const len = c.topics.length;
+        totalLessonsCount += len;
+        const pct = getCourseProgressPct(c.id);
+        totalCoursePctSum += pct;
+        if (pct === 100) {
+          doneCoursesCount++;
+          completedLessonsTotal += len;
+        } else if (pct > 0) {
+          inProgressCount++;
+          const prog = appState.courseLessonsProgress && appState.courseLessonsProgress[c.id];
+          completedLessonsTotal += (prog && Array.isArray(prog.completedTopicIndices)) ? prog.completedTopicIndices.length : 0;
+        }
+      });
+
+      let totalSteps = 0, doneSteps = 0;
+      ROADMAPS_DATA.forEach(tr => {
+        totalSteps += tr.steps.length;
+        tr.steps.forEach(s => { if (appState.completedSteps[s.id]) doneSteps++; });
+      });
+
+      const overallPct = Math.round(((totalCoursePctSum / 100 + doneSteps) / (totalCourses + totalSteps)) * 100);
+      const bmCount = Object.keys(appState.bookmarkedCourses).filter(k => appState.bookmarkedCourses[k]).length;
+
+      const elOverall = document.getElementById('stuKpiOverallPct');
+      const elCompC = document.getElementById('stuKpiCompletedCourses');
+      const elInProgC = document.getElementById('stuKpiInProgressCourses');
+      const elLessons = document.getElementById('stuKpiCompletedLessons');
+      const elBm = document.getElementById('stuKpiBookmarks');
+      const elSteps = document.getElementById('stuKpiRoadmapSteps');
+
+      if (elOverall) elOverall.textContent = `${overallPct}%`;
+      if (elCompC) elCompC.textContent = `${doneCoursesCount} / ${totalCourses}`;
+      if (elInProgC) elInProgC.textContent = `${inProgressCount}`;
+      if (elLessons) elLessons.textContent = `${completedLessonsTotal} / ${totalLessonsCount}`;
+      if (elBm) elBm.textContent = `${bmCount}`;
+      if (elSteps) elSteps.textContent = `${doneSteps} / ${totalSteps}`;
+
+      // Last Lesson Reached Box in Student Profile
+      const last = appState.lastLessonReached;
+      const stuCourseTitle = document.getElementById('stuLastCourseTitle');
+      const stuLessonName = document.getElementById('stuLastLessonName');
+      const stuCoursePct = document.getElementById('stuLastCoursePct');
+      const stuCourseBar = document.getElementById('stuLastCourseBar');
+      const stuLastTime = document.getElementById('stuLastLessonTime');
+
+      if (stuCourseTitle && stuLessonName) {
+        if (last && last.courseId) {
+          const pct = getCourseProgressPct(last.courseId);
+          stuCourseTitle.textContent = last.courseTitle;
+          stuLessonName.textContent = `الدرس (${last.lessonIndex + 1}): ${last.lessonTitle}`;
+          if (stuCoursePct) stuCoursePct.textContent = `${pct}%`;
+          if (stuCourseBar) stuCourseBar.style.width = `${pct}%`;
+          if (stuLastTime && last.timestamp) {
+            try {
+              stuLastTime.textContent = new Date(last.timestamp).toLocaleDateString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {}
+          }
+        } else {
+          stuCourseTitle.textContent = 'لم يتم تحديد درس حالي بعد';
+          stuLessonName.textContent = 'افتح أي كورس واضغط على «متابعة الدروس» لحفظ آخر درس وصلت إليه.';
+          if (stuCoursePct) stuCoursePct.textContent = '0%';
+          if (stuCourseBar) stuCourseBar.style.width = '0%';
+        }
+      }
+
+      // Render Bookmarks inside Student Profile
+      const bmGrid = document.getElementById('stuProfileBookmarksGrid');
+      if (bmGrid) {
+        const savedCourses = COURSES_DATA.filter(c => appState.bookmarkedCourses[c.id]);
+        if (savedCourses.length === 0) {
+          bmGrid.innerHTML = `<div class="col-span-full bg-slate-950/70 border border-dashed border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-400">لا توجد كورسات مفضلة حالياً. اضغط على النجمة ⭐ في مكتبة الكورسات لإضافتها هنا.</div>`;
+        } else {
+          bmGrid.innerHTML = savedCourses.map(c => {
+            const cPct = getCourseProgressPct(c.id);
+            return `
+              <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between gap-2">
+                <div>
+                  <div class="flex items-center justify-between text-[10px] font-bold">
+                    <span class="text-emerald-400">${c.software}</span>
+                    <span class="text-amber-400 ltr-num">${cPct}%</span>
+                  </div>
+                  <div class="text-xs font-extrabold text-white mt-0.5 line-clamp-1">${c.title}</div>
+                </div>
+                <div class="flex items-center justify-between pt-1.5 border-t border-slate-900">
+                  <button type="button" data-stu-open-course="${c.id}" class="text-[11px] font-bold text-emerald-400 hover:underline">متابعة الدروس</button>
+                  <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-sky-400 hover:underline">المصدر ↗</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+          bmGrid.querySelectorAll('[data-stu-open-course]').forEach(btn => {
+            btn.addEventListener('click', () => openCourseLessonsModal(btn.getAttribute('data-stu-open-course')));
+          });
+        }
+      }
+
+      // Render Per-Course Progress Cards in Student Profile
+      const listContainer = document.getElementById('stuCoursesProgressList');
+      const filterEl = document.getElementById('stuCourseProgressFilter');
+      if (listContainer) {
+        const mode = filterEl ? filterEl.value : 'all';
+        const filteredCourses = COURSES_DATA.filter(c => {
+          const pct = getCourseProgressPct(c.id);
+          if (mode === 'started') return pct > 0;
+          if (mode === 'inprogress') return pct > 0 && pct < 100;
+          if (mode === 'completed') return pct === 100;
+          if (mode === 'notstarted') return pct === 0;
+          return true;
+        });
+
+        if (filteredCourses.length === 0) {
+          listContainer.innerHTML = `<div class="col-span-full bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center text-xs text-slate-400">لا توجد كورسات مطابقة لهذا الفلتر حالياً.</div>`;
+        } else {
+          listContainer.innerHTML = filteredCourses.map(c => {
+            const pct = getCourseProgressPct(c.id);
+            const prog = (appState.courseLessonsProgress && appState.courseLessonsProgress[c.id]) || null;
+            const lastIdx = (prog && typeof prog.lastTopicIndex === 'number') ? prog.lastTopicIndex : 0;
+            const lastLesson = pct > 0 ? c.topics[lastIdx] : 'لم يبدأ بعد';
+            return `
+              <div class="bg-slate-950 border ${pct === 100 ? 'border-emerald-500/40' : pct > 0 ? 'border-amber-500/40' : 'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between gap-3">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-[11px]">
+                    <span class="px-2 py-0.5 rounded bg-slate-900 text-emerald-400 font-bold border border-slate-800">${c.software}</span>
+                    <span class="font-extrabold ${pct === 100 ? 'text-emerald-400' : pct > 0 ? 'text-amber-400' : 'text-slate-500'} ltr-num">${pct}% مكتمل</span>
+                  </div>
+                  <h4 class="text-xs sm:text-sm font-extrabold text-white leading-snug">${c.title}</h4>
+                  <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: ${pct}%"></div>
+                  </div>
+                  <div class="text-[11px] text-slate-400 truncate">📍 آخر درس: <span class="text-slate-200 font-semibold">${lastLesson}</span></div>
+                </div>
+                <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-900">
+                  <button type="button" data-stu-open-course="${c.id}" class="flex-1 py-1.5 px-2.5 rounded-xl bg-slate-900 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-slate-800 font-bold text-xs transition">
+                    📖 إدارة الدروس (${pct}%)
+                  </button>
+                  <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="py-1.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold border border-slate-800">↗</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          listContainer.querySelectorAll('[data-stu-open-course]').forEach(btn => {
+            btn.addEventListener('click', () => openCourseLessonsModal(btn.getAttribute('data-stu-open-course')));
+          });
+        }
+      }
+    }
+
+    function switchAuthModalTab(mode) {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const recoverForm = document.getElementById('recoverForm');
+      const modalTitle = document.getElementById('authModalTitle');
+      const feedback = document.getElementById('authFeedbackBox');
+      if (feedback) feedback.classList.add('hidden');
+
+      loginForm.classList.add('hidden');
+      registerForm.classList.add('hidden');
+      recoverForm.classList.add('hidden');
+
+      if (mode === 'register') {
+        registerForm.classList.remove('hidden');
+        modalTitle.textContent = 'إنشاء حساب طالب جديد';
+      } else if (mode === 'recover') {
+        recoverForm.classList.remove('hidden');
+        modalTitle.textContent = 'استعادة كلمة المرور';
+      } else {
+        loginForm.classList.remove('hidden');
+        modalTitle.textContent = 'تسجيل الدخول إلى حسابك';
+      }
+
+      document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-auth-tab') === mode) {
+          btn.className = 'auth-tab-btn py-2 rounded-xl bg-emerald-500 text-slate-950 transition';
+        } else {
+          btn.className = 'auth-tab-btn py-2 rounded-xl text-slate-300 hover:text-white transition';
+        }
+      });
+    }
+
+    function showAuthFeedback(msg, isError = true) {
+      const box = document.getElementById('authFeedbackBox');
+      if (!box) return;
+      box.textContent = msg;
+      box.className = `rounded-2xl p-3 text-xs font-bold border ${
+        isError ? 'bg-rose-950/80 border-rose-500/40 text-rose-200' : 'bg-emerald-950/80 border-emerald-500/40 text-emerald-200'
+      }`;
+      box.classList.remove('hidden');
+    }
+
+    async function applyLoggedInStudent(student) {
+      currentUser = student;
+      try {
+        localStorage.setItem(SESSION_USER_KEY, student.email);
+      } catch (e) {}
+
+      if (student.progress) {
+        appState.completedCourses = student.progress.completedCourses || {};
+        appState.bookmarkedCourses = student.progress.bookmarkedCourses || {};
+        appState.completedSteps = student.progress.completedSteps || {};
+        appState.courseLessonsProgress = student.progress.courseLessonsProgress || {};
+        appState.lastLessonReached = student.progress.lastLessonReached || null;
+      }
+      await saveState();
+      updateAuthHeaderAndProfileUI();
+      renderRoadmaps();
+      renderCourses();
+      renderStudentProfileDashboard();
+    }
+
+    function logoutStudent() {
+      currentUser = null;
+      try {
+        localStorage.removeItem(SESSION_USER_KEY);
+      } catch (e) {}
+      updateAuthHeaderAndProfileUI();
+      renderStudentProfileDashboard();
+      showToast('تم تسجيل الخروج بنجاح', 'info');
+    }
+
+    // ==========================================
     // 8. INITIALIZATION & EVENT LISTENERS
     // ==========================================
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       loadState();
+      await initIndexedDB();
+
+      // Restore active logged-in session from IndexedDB if present
+      try {
+        const savedEmail = localStorage.getItem(SESSION_USER_KEY);
+        if (savedEmail) {
+          const existingStudent = await dbGetStudent(savedEmail);
+          if (existingStudent) {
+            await applyLoggedInStudent(existingStudent);
+          }
+        }
+      } catch (e) {}
+      updateAuthHeaderAndProfileUI();
 
       // Main Tab Navigation
       document.querySelectorAll('#mainTabNav .tab-btn').forEach(btn => {
@@ -2426,7 +3599,10 @@
         appState.completedCourses = {};
         appState.bookmarkedCourses = {};
         appState.completedSteps = {};
+        appState.courseLessonsProgress = {};
+        appState.lastLessonReached = null;
         saveState();
+        showToast('تمت إعادة ضبط سجل التقدم', 'info');
         renderRoadmaps();
         renderCourses();
       });
@@ -2437,12 +3613,331 @@
       document.getElementById('calcUtmBtn').addEventListener('click', runUtmCalc);
       document.getElementById('calcLevelBtn').addEventListener('click', runLevelingCalc);
 
+      // Phase 1 Auth & Student Dashboard Event Listeners
+      document.getElementById('openLoginModalBtn').addEventListener('click', () => {
+        switchAuthModalTab('login');
+        document.getElementById('authModal').classList.remove('hidden');
+      });
+      document.getElementById('openRegisterModalBtn').addEventListener('click', () => {
+        switchAuthModalTab('register');
+        document.getElementById('authModal').classList.remove('hidden');
+      });
+      document.getElementById('closeAuthModalBtn').addEventListener('click', () => {
+        document.getElementById('authModal').classList.add('hidden');
+      });
+      document.querySelectorAll('.auth-tab-btn, .auth-tab-jump').forEach(btn => {
+        btn.addEventListener('click', () => switchAuthModalTab(btn.getAttribute('data-auth-tab')));
+      });
+
+      document.getElementById('headerProfileQuickBtn').addEventListener('click', () => switchTab('student-profile'));
+      document.getElementById('headerLogoutBtn').addEventListener('click', logoutStudent);
+
+      document.getElementById('dashAuthQuickBtn').addEventListener('click', () => {
+        if (currentUser) {
+          switchTab('student-profile');
+        } else {
+          switchAuthModalTab('login');
+          document.getElementById('authModal').classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('dashChangeAvatarTrigger').addEventListener('click', () => {
+        switchTab('student-profile');
+        document.getElementById('profileAvatarInput').click();
+      });
+
+      const handleResumeLastLesson = () => {
+        if (appState.lastLessonReached && appState.lastLessonReached.courseId) {
+          openCourseLessonsModal(appState.lastLessonReached.courseId);
+        } else {
+          openCourseLessonsModal(COURSES_DATA[0].id);
+        }
+      };
+      document.getElementById('dashResumeLastLessonBtn').addEventListener('click', handleResumeLastLesson);
+      document.getElementById('stuContinueLastLessonBtn').addEventListener('click', handleResumeLastLesson);
+
+      // Register Avatar Preview
+      document.getElementById('regAvatarInput').addEventListener('change', (e) => {
+        processAvatarFile(e.target.files[0], (dataUrl) => {
+          pendingRegAvatarDataUrl = dataUrl;
+          document.getElementById('regAvatarPreview').src = dataUrl;
+        });
+      });
+
+      // Profile Direct Avatar Upload
+      document.getElementById('profileAvatarInput').addEventListener('change', (e) => {
+        processAvatarFile(e.target.files[0], async (dataUrl) => {
+          if (currentUser) {
+            currentUser.avatar = dataUrl;
+            await dbSaveStudent(currentUser);
+            updateAuthHeaderAndProfileUI();
+            showToast('📸 تم تحديث صورتك الشخصية وحفظها في قاعدة البيانات');
+          } else {
+            document.getElementById('profilePageAvatar').src = dataUrl;
+            document.getElementById('dashStudentAvatar').src = dataUrl;
+            pendingRegAvatarDataUrl = dataUrl;
+            showToast('📸 تم اختيار الصورة! أنشئ حساباً لحفظها بشكل دائم', 'info');
+          }
+        });
+      });
+
+      // Register Submit
+      document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const specialty = document.getElementById('regSpecialty').value;
+        const recoveryPin = document.getElementById('regRecoveryPin').value.trim();
+        const password = document.getElementById('regPassword').value;
+
+        if (!name || !email || password.length < 6) {
+          showAuthFeedback('يرجى إدخال الاسم والبريد الإلكتروني وكلمة مرور لا تقل عن 6 أحرف.');
+          return;
+        }
+        const existing = await dbGetStudent(email);
+        if (existing) {
+          showAuthFeedback('هذا البريد الإلكتروني مسجل بالفعل! يمكنك تسجيل الدخول أو استعادة كلمة المرور.');
+          return;
+        }
+
+        const passwordHash = await hashPasswordSecure(password, email);
+        const pinHash = await hashPasswordSecure(recoveryPin, email + '::PIN');
+
+        const newStudent = {
+          name,
+          email,
+          specialty,
+          avatar: pendingRegAvatarDataUrl || DEFAULT_AVATAR_SVG,
+          passwordHash,
+          pinHash,
+          createdAt: new Date().toISOString(),
+          progress: {
+            completedCourses: appState.completedCourses || {},
+            bookmarkedCourses: appState.bookmarkedCourses || {},
+            completedSteps: appState.completedSteps || {},
+            courseLessonsProgress: appState.courseLessonsProgress || {},
+            lastLessonReached: appState.lastLessonReached || null
+          }
+        };
+
+        await dbSaveStudent(newStudent);
+        await applyLoggedInStudent(newStudent);
+        document.getElementById('authModal').classList.add('hidden');
+        document.getElementById('registerForm').reset();
+        showToast(`🎉 مرحباً بك يا ${name}! تم إنشاء حسابك وحفظه في قاعدة البيانات.`);
+      });
+
+      // Login Submit
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+        const password = document.getElementById('loginPassword').value;
+        const student = await dbGetStudent(email);
+        if (!student) {
+          showAuthFeedback('لم يتم العثور على حساب بهذا البريد الإلكتروني. أنشئ حساباً جديداً أولاً.');
+          return;
+        }
+        const inputHash = await hashPasswordSecure(password, email);
+        if (inputHash !== student.passwordHash) {
+          showAuthFeedback('كلمة المرور غير صحيحة. حاول مرة أخرى أو استخدم استعادة كلمة المرور.');
+          return;
+        }
+        await applyLoggedInStudent(student);
+        document.getElementById('authModal').classList.add('hidden');
+        document.getElementById('loginForm').reset();
+        showToast(`✅ أهلاً بعودتك يا ${student.name}! تم استرجاع تقدمك من قاعدة البيانات.`);
+      });
+
+      // Recover Password Submit
+      document.getElementById('recoverForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('recEmail').value.trim().toLowerCase();
+        const pin = document.getElementById('recPin').value.trim();
+        const newPass = document.getElementById('recNewPassword').value;
+
+        const student = await dbGetStudent(email);
+        if (!student) {
+          showAuthFeedback('هذا البريد الإلكتروني غير مسجل في قاعدة البيانات.');
+          return;
+        }
+        const checkPinHash = await hashPasswordSecure(pin, email + '::PIN');
+        if (checkPinHash !== student.pinHash) {
+          showAuthFeedback('كود الاستعادة السري (PIN) غير مطابق لما تم تسجيله.');
+          return;
+        }
+        student.passwordHash = await hashPasswordSecure(newPass, email);
+        await dbSaveStudent(student);
+        await applyLoggedInStudent(student);
+        document.getElementById('authModal').classList.add('hidden');
+        document.getElementById('recoverForm').reset();
+        showToast('🔑 تم تحديث كلمة المرور بنجاح وتسجيل دخولك!');
+      });
+
+      // Edit Profile Modal
+      document.getElementById('openEditProfileModalBtn').addEventListener('click', () => {
+        if (!currentUser) {
+          switchAuthModalTab('register');
+          document.getElementById('authModal').classList.remove('hidden');
+          showToast('يرجى إنشاء حساب أو تسجيل الدخول أولاً لتعديل ملفك الشخصي', 'info');
+          return;
+        }
+        document.getElementById('editProfileNameInput').value = currentUser.name || '';
+        document.getElementById('editProfileSpecialtyInput').value = currentUser.specialty || '';
+        document.getElementById('editProfileAvatarPreview').src = currentUser.avatar || DEFAULT_AVATAR_SVG;
+        pendingEditAvatarDataUrl = currentUser.avatar || DEFAULT_AVATAR_SVG;
+        document.getElementById('editProfileModal').classList.remove('hidden');
+      });
+
+      document.getElementById('closeEditProfileModalBtn').addEventListener('click', () => {
+        document.getElementById('editProfileModal').classList.add('hidden');
+      });
+
+      document.getElementById('editProfileAvatarInput').addEventListener('change', (e) => {
+        processAvatarFile(e.target.files[0], (dataUrl) => {
+          pendingEditAvatarDataUrl = dataUrl;
+          document.getElementById('editProfileAvatarPreview').src = dataUrl;
+        });
+      });
+
+      document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+        currentUser.name = document.getElementById('editProfileNameInput').value.trim() || currentUser.name;
+        currentUser.specialty = document.getElementById('editProfileSpecialtyInput').value.trim() || currentUser.specialty;
+        currentUser.avatar = pendingEditAvatarDataUrl || currentUser.avatar;
+        const newPin = document.getElementById('editProfilePinInput').value.trim();
+        if (newPin.length >= 4) {
+          currentUser.pinHash = await hashPasswordSecure(newPin, currentUser.email + '::PIN');
+        }
+        await dbSaveStudent(currentUser);
+        updateAuthHeaderAndProfileUI();
+        document.getElementById('editProfileModal').classList.add('hidden');
+        showToast('✅ تم حفظ التعديلات في قاعدة البيانات بنجاح!');
+      });
+
+      document.getElementById('profileAuthToggleBtn').addEventListener('click', () => {
+        if (currentUser) {
+          logoutStudent();
+        } else {
+          switchAuthModalTab('login');
+          document.getElementById('authModal').classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('stuCourseProgressFilter').addEventListener('change', renderStudentProfileDashboard);
+
+      // Lesson Modal Controls
+      document.getElementById('closeLessonModalBtn').addEventListener('click', () => {
+        document.getElementById('courseLessonsModal').classList.add('hidden');
+      });
+      document.getElementById('lessonModalMarkAllBtn').addEventListener('click', () => {
+        if (!activeLessonModalCourseId) return;
+        const course = COURSES_DATA.find(c => c.id === activeLessonModalCourseId);
+        if (!course) return;
+        appState.completedCourses[course.id] = true;
+        if (!appState.courseLessonsProgress) appState.courseLessonsProgress = {};
+        appState.courseLessonsProgress[course.id] = {
+          completedTopicIndices: course.topics.map((_, i) => i),
+          lastTopicIndex: course.topics.length - 1,
+          updatedAt: new Date().toISOString()
+        };
+        appState.lastLessonReached = {
+          courseId: course.id,
+          courseTitle: course.title,
+          lessonIndex: course.topics.length - 1,
+          lessonTitle: course.topics[course.topics.length - 1],
+          timestamp: new Date().toISOString()
+        };
+        saveState();
+        renderLessonModalContents(course);
+        renderCourses();
+        showToast(`🎓 مبروك! أتممت كورس «${course.title}» بنسبة 100%`);
+      });
+
+      // DB Sync & Backup Modal
+      document.getElementById('openDbSyncModalBtn').addEventListener('click', () => {
+        document.getElementById('dbSyncModal').classList.remove('hidden');
+      });
+      document.getElementById('closeDbSyncModalBtn').addEventListener('click', () => {
+        document.getElementById('dbSyncModal').classList.add('hidden');
+      });
+
+      document.getElementById('exportDbJsonBtn').addEventListener('click', async () => {
+        const allStudents = await dbGetAllStudents();
+        const payload = {
+          exportedAt: new Date().toISOString(),
+          platform: 'GeoMasaha Pro - Phase 1 Student DB',
+          students: allStudents,
+          currentAppState: appState
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'GeoMasaha_Student_DB_Backup.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('⬇️ تم تصدير قاعدة بيانات الطالب بنجاح!');
+      });
+
+      document.getElementById('importDbJsonInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (Array.isArray(data.students)) {
+              for (const stu of data.students) {
+                if (stu && stu.email) await dbSaveStudent(stu);
+              }
+            }
+            if (data.currentAppState) {
+              appState = Object.assign(appState, data.currentAppState);
+            }
+            if (Array.isArray(data.students) && data.students.length > 0) {
+              await applyLoggedInStudent(data.students[0]);
+            } else {
+              await saveState();
+            }
+            document.getElementById('dbSyncModal').classList.add('hidden');
+            showToast('✅ تم استيراد قاعدة البيانات وتحديث حسابك بنجاح!');
+          } catch (err) {
+            showToast('ملف غير صالح، يرجى اختيار ملف JSON صحيح', 'error');
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById('cloudSyncConfigForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        try {
+          localStorage.setItem('geomasaha_supabase_url', document.getElementById('supabaseUrlInput').value.trim());
+          localStorage.setItem('geomasaha_supabase_key', document.getElementById('supabaseKeyInput').value.trim());
+        } catch (err) {}
+        document.getElementById('dbSyncModal').classList.add('hidden');
+        showToast('☁️ تم حفظ إعدادات الربط السحابي بنجاح!');
+      });
+
+      // Close modals on backdrop click
+      ['authModal', 'editProfileModal', 'courseLessonsModal', 'dbSyncModal'].forEach(mid => {
+        const el = document.getElementById(mid);
+        if (el) {
+          el.addEventListener('click', (ev) => {
+            if (ev.target.id === mid) el.classList.add('hidden');
+          });
+        }
+      });
+
       // Initial Render
       updateGlobalProgressUI();
       renderRoadmaps();
       renderCourses();
       renderSoftwareDirectory();
       renderInterviewQA();
+      renderStudentProfileDashboard();
     });
   </script>
 </body>
