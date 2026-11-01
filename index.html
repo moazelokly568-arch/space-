@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أكاديمية جيو مساحة | المنصة الشاملة لهندسة المساحة ونظم المعلومات الجغرافية GIS</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'Inter', 'sans-serif'],
+            mono: ['Inter', 'monospace']
+          },
+          colors: {
+            geo: {
+              950: '#060d1a',
+              900: '#0b172a',
+              800: '#13233f',
+              700: '#1d355d',
+              500: '#10b981',
+              400: '#34d399',
+              amber: '#f59e0b'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+      background-color: #070e1c;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    .grid-bg {
+      background-image: 
+        linear-gradient(to right, rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0b172a;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e3a5f;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+    .ltr-num {
+      direction: ltr;
+      display: inline-block;
+      font-family: 'Inter', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col grid-bg selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-900/40 border border-emerald-400/30">
+          <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">أكاديمية جيو مساحة</h1>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">GeoMasaha Pro</span>
+          </div>
+          <p class="text-xs text-slate-400">المنصة المتكاملة لخريجي ومهندسي المساحة والخرائط ونظم المعلومات الجغرافية GIS</p>
+        </div>
+      </div>
+
+      <!-- Global Quick Search & Progress Pill -->
+      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+        <div class="relative flex-1 md:w-72">
+          <input id="globalSearchInput" type="text" placeholder="ابحث عن برنامج، كورس، جهاز، أو مصطلح..." 
+            class="w-full bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 rounded-xl pr-9 pl-3 py-2 text-xs sm:text-sm text-white placeholder-slate-400 outline-none transition">
+          <svg class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900/90 border border-slate-800 px-3.5 py-1.5 rounded-xl">
+          <div class="text-right">
+            <div class="text-[11px] text-slate-400">نسبة إنجازك</div>
+            <div id="headerProgressText" class="text-xs font-bold text-emerald-400">0% مكتمل</div>
+          </div>
+          <div class="w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="headerProgressBar" class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 border-t border-slate-800/60 bg-slate-900/40">
+      <nav id="mainTabNav" class="flex items-center gap-1 sm:gap-2 overflow-x-auto custom-scroll py-2 text-xs sm:text-sm font-bold">
+        <button data-tab="dashboard" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow-md">
+          <span>🏠</span><span>الرئيسية ولوحة التحكم</span>
+        </button>
+        <button data-tab="roadmaps" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
+          <span>🧭</span><span>مسارات التعلم (6 تخصصات)</span>
+        </button>
+        <button data-tab="courses" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
+          <span>🎓</span><span>مكتبة الكورسات (يوتيوب + مواقع عالمية)</span>
+          <span id="coursesCountBadge" class="px-1.5 py-0.5 text-[10px] rounded-full bg-slate-800 text-emerald-300">36</span>
+        </button>
+        <button data-tab="software" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
+          <span>🛰️</span><span>موسوعة البرامج والأجهزة المساحية</span>
+        </button>
+        <button data-tab="calculators" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
+          <span>📐</span><span>الحاسبات المساحية والميزانية</span>
+        </button>
+        <button data-tab="interview" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
+          <span>💼</span><span>أسئلة الإنترفيو ومرجع الصيغ</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-8">
+
+    <!-- SECTION 1: DASHBOARD & OVERVIEW -->
+    <section id="view-dashboard" class="tab-view space-y-6">
+      <!-- Hero Banner -->
+      <div class="relative rounded-3xl overflow-hidden border border-slate-800 bg-gradient-to-l from-slate-900 via-slate-900/95 to-emerald-950/50 shadow-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 p-6 sm:p-8">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+              <span>✨</span>
+              <span>مصممة خصيصاً لخريجي برنامج المساحة ونظم المعلومات الجغرافية GIS</span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+              دليلك الهندسي الشامل لاحتراف <span class="text-emerald-400">المساحة الأرضية والجوية</span> و<span class="text-amber-400">نظم المعلومات الجغرافية</span>
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              منصة تعليمية وتطبيقية منظمة تجمع لك كل البرامج الهندسية، الأجهزة المساحية، قوائم التشغيل الكاملة من يوتيوب بالعربي، الشهادات المعتمدة من المواقع العالمية (Esri, Coursera, NASA, Autodesk, QGIS)، مع مسارات وظيفية مرتبة وحاسبات مساحية فورية.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button data-goto="roadmaps" class="nav-jump-btn px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-900/40 transition flex items-center gap-2">
+                <span>ابدأ مسارك الوظيفي الآن</span>
+                <span>←</span>
+              </button>
+              <button data-goto="courses" class="nav-jump-btn px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-sm transition flex items-center gap-2">
+                <span>تصفح مكتبة الكورسات (36+ كورس)</span>
+              </button>
+              <button data-goto="calculators" class="nav-jump-btn px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-bold text-sm transition">
+                <span>📐 الحاسبات المساحية</span>
+              </button>
+            </div>
+          </div>
+          <div class="lg:col-span-5">
+            <div class="relative rounded-2xl overflow-hidden border border-emerald-500/30 shadow-xl bg-slate-950">
+              <img src="assets/hero.jpg" alt="هندسة المساحة ونظم المعلومات الجغرافية" class="w-full h-56 sm:h-64 object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 right-3 left-3 flex items-center justify-between text-xs bg-slate-950/85 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-800">
+                <span class="text-emerald-300 font-bold">Total Station • GNSS RTK • GIS • UAV • Civil 3D</span>
+                <span class="text-slate-400">منظومة متكاملة</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Stats Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-emerald-400 text-xs font-bold">مسارات التخصص</div>
+          <div class="text-2xl font-extrabold text-white mt-1">6 مسارات</div>
+          <div class="text-[11px] text-slate-400 mt-1">مرتبة من الصفر للاحتراف</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-amber-400 text-xs font-bold">كورسات يوتيوب كاملة</div>
+          <div class="text-2xl font-extrabold text-white mt-1">24 سلسلة</div>
+          <div class="text-[11px] text-slate-400 mt-1">قوائم تشغيل وشروحات عربية</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-sky-400 text-xs font-bold">منصات ومواقع عالمية</div>
+          <div class="text-2xl font-extrabold text-white mt-1">12 منصة</div>
+          <div class="text-[11px] text-slate-400 mt-1">Esri • Coursera • NASA • edX</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-purple-400 text-xs font-bold">البرامج والأجهزة</div>
+          <div class="text-2xl font-extrabold text-white mt-1">16 أداة</div>
+          <div class="text-[11px] text-slate-400 mt-1">شرح الوظائف والأوامر والصيغ</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-rose-400 text-xs font-bold">كورسات مكتملة</div>
+          <div id="statCompletedCourses" class="text-2xl font-extrabold text-white mt-1">0 / 36</div>
+          <div class="text-[11px] text-slate-400 mt-1">حفظ تلقائي لتقدمك</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <div class="text-teal-400 text-xs font-bold">مفضلتي التعليمية</div>
+          <div id="statSavedBookmarks" class="text-2xl font-extrabold text-white mt-1">0 عنصر</div>
+          <div class="text-[11px] text-slate-400 mt-1">وصول سريع لكورساتك</div>
+        </div>
+      </div>
+
+      <!-- Architecture Map of Surveying & GIS Departments -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white">🗺️ الهيكل التنظيمي الشامل لعلوم المساحة ونظم المعلومات الجغرافية</h3>
+            <p class="text-xs sm:text-sm text-slate-400">اضغط على أي قسم للانتقال مباشرة إلى الكورسات والبرامج الخاصة به</p>
+          </div>
+          <button id="resetProgressBtn" class="text-xs text-slate-400 hover:text-rose-400 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-rose-500/40 transition">
+            إعادة ضبط سجل التقدم
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Pillar 1 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-emerald-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 text-xs font-bold">1. المساحة الميدانية والأجهزة</span>
+                <span class="text-xl">🔭</span>
+              </div>
+              <h4 class="font-bold text-white text-base">أجهزة الرفع والتوقيع المساحي</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                إتقان العمل الحقلي بميزان القامة (Level)، التوتال ستيشن (Sokkia, Leica, Topcon)، وأنظمة الأقمار الصناعية GNSS/GPS (RTK & Static) في المشاريع الإنشائية والطرق.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Total Station</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">GNSS RTK</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Leveling</span>
+              </div>
+            </div>
+            <button data-filter-cat="field" class="pillar-filter-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-emerald-500 hover:text-slate-950 text-emerald-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات الأجهزة المساحية ←
+            </button>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-amber-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-xs font-bold">2. المكتب الفني والطرق</span>
+                <span class="text-xl">🛣️</span>
+              </div>
+              <h4 class="font-bold text-white text-base">البرامج الهندسية وحساب الكميات</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                سحب ومعالجة الداتا بـ Sokkia Link، الرسم المساحي بـ AutoCAD، وتصميم الطرق والأسطح وحساب كميات الحفر والردم وشبكات البنية التحتية ببرنامج Civil 3D.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">AutoCAD Civil 3D</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">AutoCAD</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Sokkia Link</span>
+              </div>
+            </div>
+            <button data-filter-cat="cad" class="pillar-filter-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات المكتب الفني و Civil 3D ←
+            </button>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-sky-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 text-xs font-bold">3. نظم المعلومات الجغرافية GIS</span>
+                <span class="text-xl">🌍</span>
+              </div>
+              <h4 class="font-bold text-white text-base">التحليل المكاني وقواعد البيانات</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                بناء قواعد البيانات الجغرافية (Geodatabase)، الإرجاع الجغرافي، التحليل المكاني والهيدرولوجي والشبكي، وإخراج الخرائط الاحترافية بـ ArcGIS Pro و ArcMap و QGIS.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">ArcGIS Pro</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">QGIS</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">ArcMap</span>
+              </div>
+            </div>
+            <button data-filter-cat="gis" class="pillar-filter-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-sky-500 hover:text-slate-950 text-sky-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات ArcGIS Pro & QGIS ←
+            </button>
+          </div>
+
+          <!-- Pillar 4 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-purple-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-purple-500/15 text-purple-300 text-xs font-bold">4. الاستشعار عن بعد والدرون</span>
+                <span class="text-xl">🛸</span>
+              </div>
+              <h4 class="font-bold text-white text-base">معالجة المرئيات الفضائية والمسح الجوي</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                تحليل صور الأقمار الصناعية (Landsat, Sentinel) ببرامج ERDAS Imagine و ENVI، ومعالجة صور طائرات الدرون لإنتاج Orthomosaic و DEM عبر Agisoft Metashape و Pix4D.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">ERDAS & ENVI</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Metashape & Pix4D</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Global Mapper</span>
+              </div>
+            </div>
+            <button data-filter-cat="rs" class="pillar-filter-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-purple-500 hover:text-slate-950 text-purple-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات الاستشعار والدرون ←
+            </button>
+          </div>
+
+          <!-- Pillar 5 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-rose-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 text-xs font-bold">5. البرمجة الجغرافية و Web GIS</span>
+                <span class="text-xl">💻</span>
+              </div>
+              <h4 class="font-bold text-white text-base">الأتمتة والحوسبة السحابية المكانية</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                أتمتة المهام بلغة Python ومكتبة ArcPy و GeoPandas، تحليل البيانات الضخمة على Google Earth Engine (GEE)، وبناء تطبيقات الخرائط التفاعلية على ArcGIS Online.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Python & ArcPy</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Google Earth Engine</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">ArcGIS Online</span>
+              </div>
+            </div>
+            <button data-filter-cat="dev" class="pillar-filter-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-rose-500 hover:text-slate-950 text-rose-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات البرمجة و GEE ←
+            </button>
+          </div>
+
+          <!-- Pillar 6 -->
+          <div class="bg-slate-950/70 border border-slate-800/90 hover:border-teal-500/50 rounded-2xl p-4 flex flex-col justify-between transition">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-teal-500/15 text-teal-300 text-xs font-bold">6. الشهادات والمنصات العالمية</span>
+                <span class="text-xl">🌐</span>
+              </div>
+              <h4 class="font-bold text-white text-base">كورسات وشهادات دولية معتمدة</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                التدريب المباشر من أكاديمية Esri الرسمية، تخصص GIS من جامعة UC Davis على Coursera، تدريبات وكالة NASA ARSET، ودليل QGIS الرسمي.
+              </p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Esri Academy</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">Coursera & edX</span>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800">NASA ARSET</span>
+              </div>
+            </div>
+            <button data-filter-source="web" class="pillar-source-btn mt-4 w-full py-2 rounded-xl bg-slate-900 hover:bg-teal-500 hover:text-slate-950 text-teal-400 font-bold text-xs border border-slate-800 transition">
+              استعراض كورسات المواقع العالمية ←
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Bookmarks Quick View -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+            <span>⭐</span>
+            <span>قائمتي المفضلة للمتابعة السريعة</span>
+          </h3>
+          <span class="text-xs text-slate-400">اضغط على أيقونة النجمة في أي كورس لإضافته هنا</span>
+        </div>
+        <div id="dashboardBookmarksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STRUCTURED CAREER ROADMAPS -->
+    <section id="view-roadmaps" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white">🧭 مسارات التعلم والتأهيل الوظيفي (Step-by-Step Roadmaps)</h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">اختر التخصص الذي ترغب في التركيز عليه وتابع خطواته بالترتيب الهندسي الصحيح — يمكنك تعليم كل خطوة بعد إتقانها</p>
+          </div>
+        </div>
+
+        <!-- Track Selector Buttons -->
+        <div id="roadmapTabsContainer" class="flex flex-wrap gap-2 pt-2"></div>
+      </div>
+
+      <!-- Active Roadmap Detail Container -->
+      <div id="activeRoadmapContainer" class="space-y-4"></div>
+    </section>
+
+    <!-- SECTION 3: COMPREHENSIVE COURSES LIBRARY (YOUTUBE + WEBSITES) -->
+    <section id="view-courses" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white">🎓 مكتبة الكورسات الشاملة (يوتيوب + المواقع العالمية)</h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">تضم أقوى الدورات الكاملة وقوائم التشغيل العربية على يوتيوب بالإضافة إلى المنصات والجامعات العالمية المعتمدة</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span id="filteredCoursesCount" class="px-3 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">36 كورس متاح</span>
+          </div>
+        </div>
+
+        <!-- Filters Toolbar -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+          <!-- Source Filter -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-bold">المصدر التعليمي</label>
+            <select id="courseSourceFilter" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-emerald-400">
+              <option value="all">كل المصادر (يوتيوب + مواقع عالمية)</option>
+              <option value="youtube">▶️ كورسات وقوائم تشغيل يوتيوب</option>
+              <option value="web">🌐 مواقع ومنصات وجامعات عالمية</option>
+              <option value="bookmarked">⭐ المفضلة فقط</option>
+              <option value="completed">✅ المكتملة فقط</option>
+            </select>
+          </div>
+
+          <!-- Category Filter -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-bold">التخصص / البرنامج</label>
+            <select id="courseCategoryFilter" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-emerald-400">
+              <option value="all">كل التخصصات والبرامج</option>
+              <option value="gis">🌍 نظم المعلومات الجغرافية (ArcGIS Pro / ArcMap / QGIS)</option>
+              <option value="cad">🛣️ المكتب الفني والطرق (Civil 3D / AutoCAD / Sokkia Link)</option>
+              <option value="field">🔭 الأجهزة المساحية (Total Station / GPS RTK / ميزان القامة)</option>
+              <option value="rs">🛸 الاستشعار عن بعد والدرون (ERDAS / ENVI / Metashape / Pix4D)</option>
+              <option value="dev">💻 البرمجة الجغرافية و Web GIS (Python / ArcPy / GEE)</option>
+            </select>
+          </div>
+
+          <!-- Level Filter -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-bold">المستوى العلمي</label>
+            <select id="courseLevelFilter" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-emerald-400">
+              <option value="all">جميع المستويات</option>
+              <option value="مبتدئ">مبتدئ (تأسيسي)</option>
+              <option value="شامل من الصفر للاحتراف">شامل من الصفر للاحتراف</option>
+              <option value="متوسط / متقدم">متوسط / متقدم وتطبيقي</option>
+            </select>
+          </div>
+
+          <!-- Local Search -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1 font-bold">بحث سريع داخل الكورسات</label>
+            <input id="courseLocalSearch" type="text" placeholder="مثال: ArcGIS Pro, Civil 3D, توتال..." 
+              class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-emerald-400">
+          </div>
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      <div id="coursesGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- SECTION 4: SOFTWARE & INSTRUMENTS ENCYCLOPEDIA -->
+    <section id="view-software" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white">🛰️ موسوعة البرامج الهندسية والأجهزة المساحية (16 أداة أساسية)</h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">كل برنامج وجهاز يخص خريج المساحة و GIS مع أهم المهارات المطلوبة وصيغ الملفات وروابط التعلم المباشرة</p>
+          </div>
+        </div>
+
+        <!-- Category Pills -->
+        <div id="softwareFilterPills" class="flex flex-wrap gap-2">
+          <button data-swcat="all" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950">الكل (16)</button>
+          <button data-swcat="gis" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40">برامج GIS والخرائط</button>
+          <button data-swcat="cad" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40">برامج المكتب الفني والمساحة</button>
+          <button data-swcat="rs" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40">الاستشعار عن بعد والمسح الجوي</button>
+          <button data-swcat="field" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40">الأجهزة المساحية الميدانية</button>
+          <button data-swcat="dev" class="sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40">البرمجة وقواعد البيانات المكانية</button>
+        </div>
+      </div>
+
+      <div id="softwareGridContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- SECTION 5: INTERACTIVE SURVEYING & GIS CALCULATORS -->
+    <section id="view-calculators" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white">📐 المختبر الهندسي والحاسبات المساحية التفاعلية</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">أدوات حسابية عملية لمهندس المساحة وأخصائي GIS للتحقق من الحسابات الميدانية والمكتبية فوراً</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Calculator 1: Inverse Computation (Distance & Azimuth from 2 Coordinates) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-emerald-400">الحاسبة الأولى • Inverse Computation</span>
+              <h3 class="text-lg font-extrabold text-white">حساب المسافة والانحراف الدائري بين نقطتين</h3>
+            </div>
+            <span class="text-2xl">🧭</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div>
+              <label class="block text-slate-400 mb-1">الشرقيات للنقطة الأولى (E₁) (m)</label>
+              <input id="invE1" type="number" step="0.001" value="500.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الشماليات للنقطة الأولى (N₁) (m)</label>
+              <input id="invN1" type="number" step="0.001" value="1000.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الشرقيات للنقطة الثانية (E₂) (m)</label>
+              <input id="invE2" type="number" step="0.001" value="650.450" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الشماليات للنقطة الثانية (N₂) (m)</label>
+              <input id="invN2" type="number" step="0.001" value="1210.800" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+          </div>
+
+          <button id="calcInverseBtn" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition">
+            احسب المسافة والانحراف (Azimuth & Distance)
+          </button>
+
+          <div id="invResultBox" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div>
+              <div class="text-slate-400">المسافة الأفقية (Distance)</div>
+              <div id="invResDist" class="text-lg font-extrabold text-emerald-400 ltr-num">258.983 m</div>
+            </div>
+            <div>
+              <div class="text-slate-400">الانحراف الدائري (Azimuth)</div>
+              <div id="invResAzDMS" class="text-lg font-extrabold text-amber-400 ltr-num">35° 30' 14.5"</div>
+            </div>
+            <div>
+              <div class="text-slate-400">فرق الإحداثيات (ΔE, ΔN)</div>
+              <div id="invResDelta" class="font-bold text-slate-200 ltr-num">ΔE: +150.450 | ΔN: +210.800</div>
+            </div>
+            <div>
+              <div class="text-slate-400">الربع والانحراف المختصر</div>
+              <div id="invResQuad" class="font-bold text-sky-400">الربع الأول (NE)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator 2: Forward Computation (Coordinates from Station, Distance & Azimuth) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-amber-400">الحاسبة الثانية • Forward / Stakeout Computation</span>
+              <h3 class="text-lg font-extrabold text-white">حساب إحداثيات نقطة مرصودة بمعلومية المسافة والانحراف</h3>
+            </div>
+            <span class="text-2xl">🎯</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+            <div>
+              <label class="block text-slate-400 mb-1">شرقيات المحتلة (E₁)</label>
+              <input id="fwdE1" type="number" step="0.001" value="1000.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">شماليات المحتلة (N₁)</label>
+              <input id="fwdN1" type="number" step="0.001" value="1000.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-slate-400 mb-1">المسافة الأفقية (L) (m)</label>
+              <input id="fwdDist" type="number" step="0.001" value="125.500" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الدرجات (Deg °)</label>
+              <input id="fwdDeg" type="number" value="120" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الدقائق (Min ')</label>
+              <input id="fwdMin" type="number" value="15" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الثواني (Sec ")</label>
+              <input id="fwdSec" type="number" step="0.1" value="30" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+          </div>
+
+          <button id="calcForwardBtn" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">
+            احسب إحداثيات النقطة الجديدة (E₂, N₂)
+          </button>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div>
+              <div class="text-slate-400">شرقيات النقطة المرصودة (E₂)</div>
+              <div id="fwdResE2" class="text-lg font-extrabold text-emerald-400 ltr-num">1108.404 m</div>
+            </div>
+            <div>
+              <div class="text-slate-400">شماليات النقطة المرصودة (N₂)</div>
+              <div id="fwdResN2" class="text-lg font-extrabold text-amber-400 ltr-num">936.765 m</div>
+            </div>
+            <div class="col-span-2">
+              <div class="text-slate-400">المركبات (ΔE = L × sin α ، ΔN = L × cos α)</div>
+              <div id="fwdResComp" class="font-bold text-slate-300 ltr-num">ΔE = +108.404 m | ΔN = -63.235 m</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator 3: Coordinate DMS <-> Decimal Degrees & UTM Zone Finder -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-sky-400">الحاسبة الثالثة • GIS Coordinate & UTM Zone</span>
+              <h3 class="text-lg font-extrabold text-white">محول الإحداثيات الجغرافية وحاسبة نطاق UTM</h3>
+            </div>
+            <span class="text-2xl">🌐</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+            <div>
+              <label class="block text-slate-400 mb-1">خط الطول (درجات °)</label>
+              <input id="utmLonDeg" type="number" value="31" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">الدقائق (')</label>
+              <input id="utmLonMin" type="number" value="14" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-slate-400 mb-1">الثواني (")</label>
+              <input id="utmLonSec" type="number" step="0.01" value="9.6" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div class="col-span-2 sm:col-span-3">
+              <label class="block text-slate-400 mb-1">دائرة العرض بالدرجات العشرية (Latitude Decimal °)</label>
+              <input id="utmLatDec" type="number" step="0.0001" value="30.0444" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+          </div>
+
+          <button id="calcUtmBtn" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm transition">
+            حول الإحداثيات وحدد نطاق UTM و EPSG
+          </button>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div>
+              <div class="text-slate-400">خط الطول العشري (Decimal Lon)</div>
+              <div id="utmResDecLon" class="text-base font-extrabold text-white ltr-num">31.236000° E</div>
+            </div>
+            <div>
+              <div class="text-slate-400">نطاق مسقط ميركاتور المستعرض</div>
+              <div id="utmResZone" class="text-base font-extrabold text-emerald-400 ltr-num">UTM Zone 36N</div>
+            </div>
+            <div>
+              <div class="text-slate-400">خط الطول المركزي (Central Meridian)</div>
+              <div id="utmResCM" class="font-bold text-amber-400 ltr-num">33° E</div>
+            </div>
+            <div>
+              <div class="text-slate-400">كود WGS84 EPSG القياسي</div>
+              <div id="utmResEpsg" class="font-bold text-sky-400 ltr-num">EPSG:32636</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator 4: Interactive Leveling Table (HI Method) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-purple-400">الحاسبة الرابعة • Differential Leveling</span>
+              <h3 class="text-lg font-extrabold text-white">حاسبة ميزانية سطح الميزان (HI) والتحقيق الحسابي</h3>
+            </div>
+            <span class="text-2xl">📏</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+            <div>
+              <label class="block text-slate-400 mb-1">منسوب الروبير الأول (BM₁) (m)</label>
+              <input id="lvlBM" type="number" step="0.001" value="10.000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">قراءة المؤخرة (BS₁) (m)</label>
+              <input id="lvlBS1" type="number" step="0.001" value="1.650" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">قراءة المتوسطة (IS₁) (m)</label>
+              <input id="lvlIS1" type="number" step="0.001" value="2.100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">مقدمة الدوران (FS₁) (m)</label>
+              <input id="lvlFS1" type="number" step="0.001" value="2.450" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">مؤخرة الدوران (BS₂) (m)</label>
+              <input id="lvlBS2" type="number" step="0.001" value="1.320" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">المقدمة النهائية (FS₂) (m)</label>
+              <input id="lvlFS2" type="number" step="0.001" value="1.870" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num">
+            </div>
+          </div>
+
+          <button id="calcLevelBtn" class="w-full py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold text-sm transition">
+            احسب المناسيب والتحقيق الحسابي للميزانية
+          </button>
+
+          <div id="lvlResultBox" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2 text-xs">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div class="p-2 rounded-lg bg-slate-900">
+                <div class="text-slate-400">سطح الميزان الأول (HI₁)</div>
+                <div id="lvlResHI1" class="font-bold text-white ltr-num">11.650 m</div>
+              </div>
+              <div class="p-2 rounded-lg bg-slate-900">
+                <div class="text-slate-400">منسوب النقطة المتوسطة</div>
+                <div id="lvlResRL2" class="font-bold text-sky-400 ltr-num">9.550 m</div>
+              </div>
+              <div class="p-2 rounded-lg bg-slate-900">
+                <div class="text-slate-400">منسوب نقطة الدوران (TP₁)</div>
+                <div id="lvlResTP1" class="font-bold text-amber-400 ltr-num">9.200 m</div>
+              </div>
+              <div class="p-2 rounded-lg bg-slate-900">
+                <div class="text-slate-400">المنسوب النهائي (RL النهائي)</div>
+                <div id="lvlResLast" class="font-bold text-emerald-400 ltr-num">8.650 m</div>
+              </div>
+            </div>
+            <div id="lvlResCheck" class="pt-1 text-emerald-400 font-bold">
+              ✅ التحقيق الحسابي مضبوط: ∑BS (2.970) - ∑FS (4.320) = آخر منسوب - أول منسوب (-1.350 m)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: INTERVIEW QUESTIONS & FILE FORMATS CHEAT SHEET -->
+    <section id="view-interview" class="tab-view hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-6">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white">💼 بنك أسئلة المقابلات الشخصية ودليل الصيغ الهندسية</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">أهم الأسئلة الفنية المتكررة في مقابلات شركات المقاولات والمكاتب الاستشارية وهيئات المساحة و GIS مع إجاباتها النموذجية</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Interview Q&A Accordion -->
+        <div class="lg:col-span-7 space-y-3">
+          <h3 class="text-base font-extrabold text-emerald-400 px-1">أهم 12 سؤال في إنترفيو المساحة و GIS (اضغط على السؤال لعرض الإجابة)</h3>
+          <div id="interviewAccordionContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- File Extensions & Shortcuts Reference -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 space-y-3">
+            <h3 class="text-base font-extrabold text-amber-400">📂 مرجع امتدادات وصيغ ملفات المساحة و GIS</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-right text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 text-slate-400">
+                    <th class="py-2 px-2">الامتداد</th>
+                    <th class="py-2 px-2">البرنامج / الجهاز</th>
+                    <th class="py-2 px-2">الوظيفة</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/70">
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-emerald-400 ltr-num">.SDR / .GSI</td>
+                    <td class="py-2 px-2">Sokkia / Leica Total Station</td>
+                    <td class="py-2 px-2 text-slate-300">ملفات الرصد الخام للتوتال ستيشن</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-emerald-400 ltr-num">.DXF / .DWG</td>
+                    <td class="py-2 px-2">AutoCAD & Civil 3D</td>
+                    <td class="py-2 px-2 text-slate-300">الرسومات الهندسية واللوحات المساحية</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-emerald-400 ltr-num">.CSV / .TXT</td>
+                    <td class="py-2 px-2">Civil 3D / Excel / GIS</td>
+                    <td class="py-2 px-2 text-slate-300">ملفات النقاط المساحية (P,E,N,Z,D)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-sky-400 ltr-num">.SHP / .DBF / .SHX</td>
+                    <td class="py-2 px-2">ArcGIS & QGIS</td>
+                    <td class="py-2 px-2 text-slate-300">طبقات Shapefile القياسية للبيانات الاتجاهية</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-sky-400 ltr-num">.GDB / .GPKG</td>
+                    <td class="py-2 px-2">ArcGIS Pro & QGIS</td>
+                    <td class="py-2 px-2 text-slate-300">قواعد البيانات الجغرافية File Geodatabase & GeoPackage</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-sky-400 ltr-num">.APRX / .MXD</td>
+                    <td class="py-2 px-2">ArcGIS Pro / ArcMap</td>
+                    <td class="py-2 px-2 text-slate-300">ملف مشروع الخريطة الكامل</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-amber-400 ltr-num">.KML / .KMZ</td>
+                    <td class="py-2 px-2">Google Earth Pro</td>
+                    <td class="py-2 px-2 text-slate-300">عرض الموقع والحدود على صور جوجل إيرث</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-purple-400 ltr-num">.TIF / .IMG</td>
+                    <td class="py-2 px-2">ERDAS / ENVI / GIS</td>
+                    <td class="py-2 px-2 text-slate-300">المرئيات الفضائية ونماذج الارتفاعات الرقمية GeoTIFF</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-purple-400 ltr-num">.LAS / .LAZ</td>
+                    <td class="py-2 px-2">Metashape / Pix4D / Global Mapper</td>
+                    <td class="py-2 px-2 text-slate-300">سحابة النقاط الكثيفة (LiDAR & Photogrammetry Point Cloud)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-bold text-rose-400 ltr-num">.RINEX (.obs/.nav)</td>
+                    <td class="py-2 px-2">GNSS Static Receivers</td>
+                    <td class="py-2 px-2 text-slate-300">ملفات الرصد الثابت للأقمار الصناعية لمعالجتها مكتبياً</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 space-y-3">
+            <h3 class="text-base font-extrabold text-sky-400">⚡ أهم اختصارات AutoCAD & Civil 3D لمهندس المساحة</h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-emerald-400 ltr-num">LI (LIST)</span>
+                <p class="text-slate-400 mt-0.5">عرض إحداثيات ومساحة وطول العنصر المحدد</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-emerald-400 ltr-num">ID</span>
+                <p class="text-slate-400 mt-0.5">إظهار إحداثيات أي نقطة (X, Y, Z) على اللوحة</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-emerald-400 ltr-num">AL (ALIGN)</span>
+                <p class="text-slate-400 mt-0.5">توجيه ومطابقة اللوحة على إحداثيات نقطتين معلومتين</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-emerald-400 ltr-num">BO / AA</span>
+                <p class="text-slate-400 mt-0.5">إغلاق المضلع وحساب المساحة والمحيط</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-amber-400 ltr-num">MAPCSASSIGN</span>
+                <p class="text-slate-400 mt-0.5">تحديد المسقط ونظام الإحداثيات في Civil 3D</p>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="font-bold text-amber-400 ltr-num">APPLOAD</span>
+                <p class="text-slate-400 mt-0.5">تحميل ليسبات المساحة (AutoLISP) لتفريد الإحداثيات</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Software Detail Modal -->
+  <div id="softwareModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full max-h-[88vh] overflow-y-auto custom-scroll p-6 space-y-4 shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-800 pb-3">
+        <div>
+          <span id="modalSwBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300"></span>
+          <h3 id="modalSwTitle" class="text-xl font-extrabold text-white mt-1"></h3>
+        </div>
+        <button id="closeSwModalBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-bold">✕ إغلاق</button>
+      </div>
+      <p id="modalSwDesc" class="text-sm text-slate-300 leading-relaxed"></p>
+      <div>
+        <h4 class="text-xs font-bold text-emerald-400 mb-2">أهم المهارات والأوامر التي يجب إتقانها لسوق العمل:</h4>
+        <ul id="modalSwSkills" class="space-y-1.5 text-xs sm:text-sm text-slate-200 list-disc pr-5"></ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold text-amber-400 mb-2">الكورسات المرتبطة بهذا البرنامج / الجهاز في المنصة:</h4>
+        <div id="modalSwCourses" class="space-y-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950/90 mt-10 py-5 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+      <div>أكاديمية جيو مساحة (GeoMasaha Pro) — دليلك الشامل لهندسة المساحة والخرائط ونظم المعلومات الجغرافية GIS</div>
+      <div class="flex items-center gap-4">
+        <span>جميع روابط يوتيوب والمنصات العالمية محدثة وموثقة</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==========================================
+    // 1. VERIFIED COURSES DATABASE (36 COURSES: YOUTUBE + GLOBAL PLATFORMS)
+    // ==========================================
+    const COURSES_DATA = [
+      // --- GIS (ArcGIS Pro, ArcMap, QGIS) ---
+      {
+        id: 'yt-arcgispro-1',
+        title: 'دورة احتراف برنامج ArcGIS Pro الشاملة',
+        instructor: 'م. محمود نعماني (Gis - Mahmoud No3many)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Pro',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['واجهة ArcGIS Pro والمشاريع .aprx', 'قواعد البيانات الجغرافية Geodatabase', 'الإرجاع الجغرافي والرسم الرقمي Digitizing', 'التحليل المكاني وإخراج الخرائط'],
+        url: 'https://www.youtube.com/playlist?list=PLAmynD-FQS9sQJ_UwbyFrR3cT_Ful8C-S'
+      },
+      {
+        id: 'yt-arcgispro-2',
+        title: 'ArcGIS Pro Tutorials 2025 | دورة تعلم الآرك برو من البداية للاحتراف',
+        instructor: 'جيو جيمي - GEO JEMY',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Pro',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['إدارة الطبقات والجداول الوصفية', 'الترميز المتقدم Symbology & Labeling', 'أدوات المعالجة الجغرافية Geoprocessing', 'تصميم الليأوت والطباعة القياسية'],
+        url: 'https://www.youtube.com/playlist?list=PLl3mv7ez3cXJAIsko1k_rBobRXFkKEAla'
+      },
+      {
+        id: 'yt-arcgispro-3',
+        title: 'ArcGIS Pro Mastery — من الصفر إلى الاحتراف',
+        instructor: 'م. ماهر حسن (maher hassan)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Pro',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['الانتقال من ArcMap إلى ArcGIS Pro', 'النمذجة المكانية والـ Topology', 'التحليل الثلاثي الأبعاد 3D Scenes', 'الأتمتة وبناء النماذج ModelBuilder'],
+        url: 'https://www.youtube.com/playlist?list=PLxKGvgVeo5DpgCyAho1htjl4T9KxfylOE'
+      },
+      {
+        id: 'yt-arcgispro-4',
+        title: 'دورة برنامج ArcGIS Pro من البداية للاحتراف',
+        instructor: 'قناة GIS 4 YOU',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Pro',
+        level: 'مبتدئ',
+        language: 'العربية',
+        topics: ['أساسيات نظم المعلومات الجغرافية', 'إدخال البيانات المكانية والوصفية', 'الاستعلام المكاني والوصفي Select by Attributes/Location', 'إنتاج الخرائط الموضوعية'],
+        url: 'https://www.youtube.com/playlist?list=PLi5-9SH2ORG1kDx2UU1oKaFZRaLJn9xqv'
+      },
+      {
+        id: 'yt-arcmap-1',
+        title: 'ArcGIS Desktop Basic — سلسلة تعلم المهارات الأساسية لسوق العمل',
+        instructor: 'م. محمد مدحت (Mohamed Medhat)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Desktop (ArcMap)',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['إتقان ArcMap & ArcCatalog', 'تصحيح الخرائط Georeferencing', 'قواعد البناء الطوبولوجي Topology', 'تطبيقات سوق العمل الفعلية'],
+        url: 'https://www.youtube.com/playlist?list=PL1V_XeFUHTAjMx03AwQAmsxpklpuyimNF'
+      },
+      {
+        id: 'yt-arcmap-2',
+        title: 'دروس تعلم ArcGIS Desktop من البداية إلى الاحتراف',
+        instructor: 'م. حسين مزوري (Hussein Mzuory)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'ArcGIS Desktop (ArcMap)',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['التحليل المكاني Spatial Analyst', 'التحليل الهيدرولوجي واستخراج الأودية', 'التحليل الشبكي Network Analyst', 'إخراج الخرائط الأطلسية'],
+        url: 'https://www.youtube.com/playlist?list=PL5mUs39LM9Xpp9x1--0axlUlEGPjxGugF'
+      },
+      {
+        id: 'yt-qgis-1',
+        title: 'كورس برنامج QGIS الاحترافي الكامل بالعربي',
+        instructor: 'قناة GIS 4 YOU',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'QGIS',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['احتراف أشهر برنامج GIS مفتوح المصدر', 'إضافات QGIS Plugins القوية', 'التحليل المكاني ومعالجة Raster & Vector', 'تصميم الخرائط بـ Print Layout'],
+        url: 'https://www.youtube.com/playlist?list=PLi5-9SH2ORG1hZxtnlMO9Sm65uZr8Z09k'
+      },
+      {
+        id: 'yt-qgis-2',
+        title: 'دليلك الشامل لاحتراف برنامج QGIS',
+        instructor: 'Geomatics Online',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'gis',
+        software: 'QGIS',
+        level: 'مبتدئ',
+        language: 'العربية',
+        topics: ['التعامل مع صيغ GeoPackage و Shapefile', 'الربط مع خرائط الأساس OpenStreetMap', 'تحليل التضاريس والكنتور في QGIS', 'تصدير الخرائط للويب'],
+        url: 'https://www.youtube.com/playlist?list=PLfzYIeY-sGKYjAfldLKgdm9vGXz84FDOJ'
+      },
+
+      // --- TECHNICAL OFFICE & CAD (Civil 3D, AutoCAD, Sokkia Link) ---
+      {
+        id: 'yt-civil3d-1',
+        title: 'Civil 3D Tutorial 2025 | دورة تعلم سيفيل ثري دي من البداية للاحتراف',
+        instructor: 'جيو جيمي - GEO JEMY',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD Civil 3D',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['استيراد النقاط المساحية COGO Points', 'بناء الأسطح Surfaces والكنتور', 'حساب كميات الحفر والردم Volumes Dashboard', 'تصميم المسارات الأفقية والقطاعات الطولية والعرضية'],
+        url: 'https://www.youtube.com/playlist?list=PLl3mv7ez3cXLj91H00HPW36Aoui8_Yfyo'
+      },
+      {
+        id: 'yt-civil3d-2',
+        title: 'كورس Civil 3D لمهندسي المساحة والمكتب الفني',
+        instructor: 'م. أحمد مجاهد (Ahmed Mgahed)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD Civil 3D',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['مهام مهندس المكتب الفني المساحي', 'الميزانية الشبكية وحساب الكميات بالـ Civil 3D', 'استخراج داتا التوقيع للطرق والمرافق', 'تجهيز لوحات الـ Shop Drawing المساحية'],
+        url: 'https://www.youtube.com/playlist?list=PLsxJVJOfXRYqHnKrngOvMu_bNbq4kCRPZ'
+      },
+      {
+        id: 'yt-civil3d-3',
+        title: 'كورس Civil 3D 2025 من الصفر إلى الاحتراف',
+        instructor: 'Geomatics Online',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD Civil 3D',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['التعامل مع النقاط ومجموعات النقاط Point Groups', 'الأسطح الثلاثية الأبعاد TIN Surfaces', 'تصميم الطرق Corridors & Assemblies', 'إخراج الجداول والتقارير المساحية'],
+        url: 'https://www.youtube.com/playlist?list=PLfzYIeY-sGKaUYbsc-rw-XdMcyoQItLgD'
+      },
+      {
+        id: 'yt-civil3d-4',
+        title: 'دورة تصميم الطرق وحساب الكميات ببرنامج Civil 3D',
+        instructor: 'م. حمزة الصيهود (Hamza Al_Saihood)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD Civil 3D',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['التصميم الهندسي للطرق Alignments & Profiles', 'حساب الـ Superelevation والتوسعات', 'تصميم القطاعات العرضية Cross Sections', 'حساب كميات طبقات الرصف والأعمال الترابية'],
+        url: 'https://www.youtube.com/playlist?list=PLIXvNY3UIXsQCngNt6murDk71bhysk_2b'
+      },
+      {
+        id: 'yt-autocad-1',
+        title: 'دورة برنامج الأوتوكاد الخاص بمهندسي المساحة',
+        instructor: 'م. محمد صلاح (Eng / Mohamed Salah)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['أوامر الرسم والتعديل الأساسية للمساحين', 'إدخال وإخراج الإحداثيات بين Excel و AutoCAD', 'توجيه اللوحات بأمر Align على الإحداثيات', 'استخدام الليسبات المساحية وتجهيز لوحات التوقيع'],
+        url: 'https://www.youtube.com/playlist?list=PLa64k2BLAHUEMwc-cruNT8W-TPszooLP2'
+      },
+      {
+        id: 'yt-autocad-2',
+        title: 'سلسلة شرح حساب الكميات وحصر الأعمال المساحية (Quantity Surveying)',
+        instructor: 'م. إبراهيم عكة (Ibrahem Okkeh)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'cad',
+        software: 'AutoCAD & Civil 3D',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['حساب كميات الحفر والردم للمشاريع', 'حصر كميات الطرق والبنية التحتية', 'إعداد المستخلصات المساحية وجداول الحصر', 'الربط بين الأوتوكاد والإكسل'],
+        url: 'https://www.youtube.com/playlist?list=PLVgrGgkWLpZbMZh9jB7Rb6-tFrclBVJ1U'
+      },
+      {
+        id: 'yt-sokkialink-1',
+        title: 'شرح برنامج سوكيا لينك Sokkia Link وتحويل ملفات الرصد المساحي',
+        instructor: 'قناة مهارات المساحة - Surveying Skills',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'cad',
+        software: 'Sokkia Link & Surveying Office',
+        level: 'مبتدئ',
+        language: 'العربية',
+        topics: ['تحويل ملفات .SDR إلى .DXF و .CSV', 'تصدير الإحداثيات من الأوتوكاد للتوتال ستيشن', 'مراجعة أرصاد التوتال ستيشن مكتبياً', 'تجهيز ملفات النقاط للعمل في Civil 3D'],
+        url: 'https://www.youtube.com/watch?v=wiXqPtaxQIk'
+      },
+
+      // --- FIELD INSTRUMENTS (Total Station, GNSS/GPS, Level) ---
+      {
+        id: 'yt-total-1',
+        title: 'كورس جهاز التوتال ستيشن الشامل (Total Station Course)',
+        instructor: 'م. عمرو صفوت (Amr Safwat - Survey Egypt)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'field',
+        software: 'Total Station (Sokkia / Topcon / Leica)',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['ضبط الأفقية والتسامت وإعداد المحطة', 'الرفع المساحي والتوقيع Stakeout', 'التقاطع العكسي Resection وتحديد نقطة المحتلة', 'توقيع الخطوط والأقواس واستيراد/تصدير الملفات'],
+        url: 'https://www.youtube.com/playlist?list=PL7SrxjQSm3bhBjJhKdh2XJYOGj5VDM1r0'
+      },
+      {
+        id: 'yt-total-2',
+        title: 'شرح التوتال ستيشن السوكيا IM52 والعمل الميداني',
+        instructor: 'قناة اتعلم مساحة',
+        source: 'youtube',
+        platformName: 'YouTube Video Series',
+        category: 'field',
+        software: 'Total Station Sokkia iM-52',
+        level: 'مبتدئ',
+        language: 'العربية',
+        topics: ['شرح شاشة وأزرار توتال ستيشن سوكيا الحديث', 'إنشاء Job جديد وإدخال نقاط الثوابت', 'الرفع بالإحداثيات والتوقيع في الموقع', 'نقل البيانات بالفلاشة USB'],
+        url: 'https://www.youtube.com/watch?v=RGW0LGOPjC0'
+      },
+      {
+        id: 'yt-gps-1',
+        title: 'شرح جهاز الـ GNSS / GPS المساحي ومكوناته وطرق الرصد',
+        instructor: 'م. عمرو صفوت (Amr Safwat - Survey Egypt)',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'field',
+        software: 'GNSS / GPS RTK & Static',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['مكونات جهاز GPS (Base & Rover & Controller)', 'الفرق بين الرصد الثابت Static واللحظي RTK', 'إعداد الـ Radio الداخلي والخارجي والـ CORS', 'توقيع ورفع النقاط بدقة السنتيمتر'],
+        url: 'https://www.youtube.com/watch?v=EmjgHB5hDGU'
+      },
+      {
+        id: 'yt-gps-2',
+        title: 'شرح عملي لجهاز SinoGNSS GPS في الرفع والتوقيع المساحي',
+        instructor: 'م. معتز نجيب',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'field',
+        software: 'GNSS / GPS RTK',
+        level: 'مبتدئ',
+        language: 'العربية',
+        topics: ['ربط الـ Base والـ Rover عملياً في الموقع', 'إدخال نظام الإحداثيات UTM والنطاق', 'الرفع التفصيلي والتوقيع السريع للنقاط', 'تصدير الداتا بصيغة CSV و DXF'],
+        url: 'https://www.youtube.com/watch?v=Xd8dBikmbak'
+      },
+      {
+        id: 'yt-level-1',
+        title: 'الميزانية الشبكية بميزان القامة وحساب الكميات والتكعيب عملياً',
+        instructor: 'قناة سؤال في المساحة',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'field',
+        software: 'ميزان القامة (Auto Level)',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['تقسيم الموقع إلى مربعات وشبكية', 'قراءة القامة وحساب منسوب سطح الميزان', 'تحقيق الميزانية الحسابي والهندسي', 'حساب كميات الحفر والردم من الميزانية الشبكية'],
+        url: 'https://www.youtube.com/watch?v=3rAtsbuUVCQ'
+      },
+      {
+        id: 'yt-level-2',
+        title: 'كل شيء عن الميزانية الطولية والعرضية (Profiles & Cross Sections)',
+        instructor: 'قناة سؤال في المساحة',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'field',
+        software: 'ميزان القامة (Auto Level)',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['رصد محور الطريق والقطاعات العرضية', 'حساب مناسيب خط الإنشاء التصميمي', 'توقيع الميول الطولية لمواسير الصرف والطرق', 'رسم البروفايل والقطاعات'],
+        url: 'https://www.youtube.com/watch?v=alFgb0JehW8'
+      },
+
+      // --- REMOTE SENSING, PHOTOGRAMMETRY & GLOBAL MAPPER ---
+      {
+        id: 'yt-envi-1',
+        title: 'دورة برنامج ENVI الكاملة لتحليل المرئيات الفضائية والاستشعار عن بعد',
+        instructor: 'د. وسام محمد (Wisam Mohammed)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'rs',
+        software: 'ENVI',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['التصحيح الإشعاعي والجوي والهندسي للمرئيات', 'دمج النطاقات الطيفية Layer Stacking & Pan-Sharpening', 'التصنيف الموجه وغير الموجه Supervised & Unsupervised', 'حساب المؤشرات الطيفية NDVI & NDWI وكشف التغيرات'],
+        url: 'https://www.youtube.com/playlist?list=PLxBkPnpQC7VkvkbOB2z1Woq9XdEUZpS6I'
+      },
+      {
+        id: 'yt-erdas-1',
+        title: 'سلسلة شرح برنامج ERDAS Imagine للاستشعار عن بعد بالعربي',
+        instructor: 'قناة RS&GIS بالعربي',
+        source: 'youtube',
+        platformName: 'YouTube Video Series',
+        category: 'rs',
+        software: 'ERDAS Imagine',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['استيراد مرئيات Landsat و Sentinel', 'دمج المرئيات الفضائية Mosaic Pro', 'تحسين الدقة المكانية Pan Sharpening', 'التصنيف الموجه واستخلاص الغطاء الأرضي LULC'],
+        url: 'https://www.youtube.com/watch?v=TpVjH5EaBHU'
+      },
+      {
+        id: 'yt-drone-1',
+        title: 'معالجة صور طائرات الدرون ونقاط التحكم الأرضية GCP في Agisoft Metashape',
+        instructor: 'PolyByteZ Mind / Mining Rabbi',
+        source: 'youtube',
+        platformName: 'YouTube Video Tutorial',
+        category: 'rs',
+        software: 'Agisoft Metashape',
+        level: 'متوسط / متقدم',
+        language: 'الإنجليزية (تطبيقي واضح)',
+        topics: ['محاذاة الصور الجوية Align Photos', 'إدخال نقاط التحكم الأرضية المرصودة بـ GPS RTK', 'بناء السحابة النقطية الكثيفة Dense Point Cloud', 'إنتاج نموذج الارتفاع الرقمي DEM والصورة المصححة Orthomosaic'],
+        url: 'https://www.youtube.com/watch?v=BwjgGAcmv6U'
+      },
+      {
+        id: 'yt-pix4d-1',
+        title: 'شرح برنامج Pix4D Mapper بالعربي: rayCloud وحساب الحجوم وتقرير الجودة',
+        instructor: 'م. جمال مختار (Jamal Mukhtar - Surveying & Geomatics)',
+        source: 'youtube',
+        platformName: 'YouTube Video Series',
+        category: 'rs',
+        software: 'Pix4D Mapper',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['معالجة بيانات المسح الجوي بالدرون', 'قراءة وتقييم تقرير الجودة Quality Report', 'استخدام بيئة rayCloud لتدقيق النقاط', 'حساب حجوم التشوينات والحفر بدقة عالية'],
+        url: 'https://www.youtube.com/watch?v=a2zBq9zchYY'
+      },
+      {
+        id: 'yt-globalmapper-1',
+        title: 'دورة برنامج Global Mapper & Google Earth Pro للمساحة و GIS',
+        instructor: 'قناة GIS 4 YOU & Arab Nubia',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'rs',
+        software: 'Global Mapper & Google Earth Pro',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['تحميل نماذج الارتفاعات الرقمية DEM مجاناً', 'استخراج خطوط الكنتور وتصديرها لـ Civil 3D و ArcGIS', 'التحويل بين كافة الصيغ المساحية والمساقط', 'ربط لوحات المساحة مع Google Earth Pro (.KML/.KMZ)'],
+        url: 'https://www.youtube.com/playlist?list=PLi5-9SH2ORG33oQuhhG_5A2MRGPBUoXzx'
+      },
+
+      // --- GIS PROGRAMMING, PYTHON, GEE & WEB GIS ---
+      {
+        id: 'yt-gee-1',
+        title: 'دورة منصة Google Earth Engine (GEE) الكاملة بالعربي',
+        instructor: 'م. إسلام محمد (GIS Islam Mohamed)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'dev',
+        software: 'Google Earth Engine',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['تحليل صور الأقمار الصناعية سحابياً بدون تحميل', 'كتابة الأكواد بمحرر JavaScript & Python API', 'تحليل السلاسل الزمنية للغطاء النباتي والحرارة والجفاف', 'تصدير الخرائط والإحصائيات المكانية'],
+        url: 'https://www.youtube.com/playlist?list=PLUbJnXfqWLdwVdz8-KdIJaASgfAP2UBJh'
+      },
+      {
+        id: 'yt-gee-2',
+        title: 'كورس تطبيقات Google Earth Engine في الدراسات البيئية والجغرافية',
+        instructor: 'د. رشا نوفل (Dr Rasha Nofal)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'dev',
+        software: 'Google Earth Engine',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['فلترة المرئيات الفضائية حسب التاريخ والسحب', 'حساب المؤشرات الطيفية والبيئية الكبرى', 'تصنيف استخدامات الأراضي بالذكاء الاصطناعي Random Forest', 'بناء واجهات تطبيقات GEE Apps'],
+        url: 'https://www.youtube.com/playlist?list=PL3VABW3wEhbl3wnpGVUHqpNPoktAtV6wb'
+      },
+      {
+        id: 'yt-agol-1',
+        title: 'كورس كامل لتعلم ArcGIS Online وتطبيقات الويب والموبايل الميدانية',
+        instructor: 'م. أحمد عبدالواحد (Ahmed Abdelwahed)',
+        source: 'youtube',
+        platformName: 'YouTube Playlist',
+        category: 'dev',
+        software: 'ArcGIS Online & Field Maps',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'العربية',
+        topics: ['نشر الطبقات السحابية Web Layers & Feature Services', 'بناء لوحات المؤشرات التفاعلية ArcGIS Dashboards', 'جمع البيانات الميدانية بـ ArcGIS Field Maps & Survey123', 'بناء تطبيقات Experience Builder & StoryMaps'],
+        url: 'https://www.youtube.com/playlist?list=PLjRhte5MegYkB2-U7dtNkbB9OsbRSSkCg'
+      },
+      {
+        id: 'yt-python-1',
+        title: 'البرمجة بلغة بايثون في نظم المعلومات الجغرافية (ArcPy & GeoPandas)',
+        instructor: 'م. رضا بدر & م. حسام حوراني',
+        source: 'youtube',
+        platformName: 'YouTube Video Series',
+        category: 'dev',
+        software: 'Python (ArcPy & GeoPandas)',
+        level: 'متوسط / متقدم',
+        language: 'العربية',
+        topics: ['أساسيات مكتبة ArcPy داخل ArcGIS Pro', 'أتمتة معالجة مئات الطبقات والملفات بضغطة زر', 'إنشاء أدوات Script Tools مخصصة', 'تحليل البيانات المكانية بمكتبة GeoPandas و Shapely'],
+        url: 'https://www.youtube.com/watch?v=8Md5vEWbbxU'
+      },
+
+      // --- GLOBAL PLATFORMS & OFFICIAL CERTIFICATES (WEB) ---
+      {
+        id: 'web-esri-1',
+        title: 'Esri Academy Training Catalog — الكتالوج الرسمي لكورسات شركة Esri',
+        instructor: 'شركة Esri العالمية (مطور ArcGIS)',
+        source: 'web',
+        platformName: 'Esri Academy (مئات الكورسات المجانية)',
+        category: 'gis',
+        software: 'ArcGIS Pro & Enterprise & Online',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'الإنجليزية',
+        topics: ['مسارات تعليمية رسمية لـ ArcGIS Pro و ArcGIS Online', 'دورات MOOC المجانية بشهادات رسمية من Esri', 'التحليل المكاني، الـ 3D GIS، والـ Spatial Data Science', 'ندوات تدريبية وتطبيقات عملية معتمدة دولياً'],
+        url: 'https://www.esri.com/en-us/training/catalog/all-training'
+      },
+      {
+        id: 'web-coursera-1',
+        title: 'Geographic Information Systems (GIS) Specialization — تخصص نظم المعلومات الجغرافية',
+        instructor: 'جامعة كاليفورنيا ديفيس (UC Davis) على Coursera',
+        source: 'web',
+        platformName: 'Coursera (متاح الدعم المالي المجاني)',
+        category: 'gis',
+        software: 'ArcGIS Pro & Desktop',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'الإنجليزية (مترجم للعربية)',
+        topics: ['أشهر شهادة أكاديمية عالمية في GIS مكونة من 5 كورسات', 'أساسيات الخرائط والتصميم الكارتوجرافي', 'التحليل المكاني المتقدم وبناء الـ Workflows', 'مشروع تخرج تطبيقي كامل لبناء البورتفوليو'],
+        url: 'https://www.coursera.org/specializations/gis'
+      },
+      {
+        id: 'web-nasa-1',
+        title: 'NASA ARSET — برنامج وكالة ناسا التدريبي للاستشعار عن بعد التطبيقي',
+        instructor: 'وكالة الفضاء الأمريكية NASA Earthdata',
+        source: 'web',
+        platformName: 'NASA ARSET (مجاني بالكامل مع شهادات)',
+        category: 'rs',
+        software: 'Remote Sensing & GEE & QGIS',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'الإنجليزية',
+        topics: ['أساسيات الاستشعار عن بعد والأقمار الصناعية مجاناً', 'تطبيقات إدارة الموارد المائية والزراعة والمناخ والكوارث', 'تحليل بيانات الرادار SAR والـ LiDAR والمرئيات البصرية', 'شهادات إتمام رسمية من برنامج NASA ARSET'],
+        url: 'https://www.earthdata.nasa.gov/data/projects/arset'
+      },
+      {
+        id: 'web-autodesk-1',
+        title: 'Autodesk Civil 3D Official Learning Pathways — المسار الرسمي من أوتوديسك',
+        instructor: 'شركة Autodesk الرسمية',
+        source: 'web',
+        platformName: 'Autodesk Learning (مجاني ومعتمد)',
+        category: 'cad',
+        software: 'AutoCAD Civil 3D',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'الإنجليزية',
+        topics: ['الدليل التدريبي الرسمي من شركة Autodesk لبرنامج Civil 3D', 'ملفات تمارين تطبيقية للرفع المساحي والأسطح والطرق', 'التحضير لاختبار شهادة Autodesk Certified Professional', 'أفضل الممارسات القياسية في مشاريع البنية التحتية'],
+        url: 'https://www.autodesk.com/learn/ondemand/curated/civil-3d-quick-start-guide'
+      },
+      {
+        id: 'web-qgis-1',
+        title: 'QGIS Official Training Manual — الدليل التدريبي الرسمي الشامل لبرنامج QGIS',
+        instructor: 'مؤسسة OSGeo & QGIS العالمية',
+        source: 'web',
+        platformName: 'QGIS Official Docs (مجاني بالكامل)',
+        category: 'gis',
+        software: 'QGIS & PostGIS',
+        level: 'شامل من الصفر للاحتراف',
+        language: 'الإنجليزية',
+        topics: ['منهج تطبيقي مقسم إلى 20 وحدة تدريبية بالبيانات', 'إنشاء وتحرير الطبقات والتحليل المكاني والـ Raster', 'ربط QGIS بقواعد البيانات المكانية PostGIS/PostgreSQL', 'تطبيقات عملية في التخطيط العمراني والبيئة'],
+        url: 'https://docs.qgis.org/latest/en/docs/training_manual/index.html'
+      },
+      {
+        id: 'web-edx-1',
+        title: 'Fundamentals of Geospatial Science & Remote Sensing — جامعة ألاسكا على edX',
+        instructor: 'University of Alaska Fairbanks (AlaskaX)',
+        source: 'web',
+        platformName: 'edX Platform',
+        category: 'rs',
+        software: 'GIS & Remote Sensing',
+        level: 'متوسط / متقدم',
+        language: 'الإنجليزية',
+        topics: ['فيزياء الاستشعار عن بعد وتحليل الأطياف الكهرومغناطيسية', 'الدمج التطبيقي بين الاستشعار عن بعد ونظم المعلومات الجغرافية', 'تطبيقات الرصد البيئي والجيومورفولوجي', 'برنامج شهادة احترافية معتمدة من edX'],
+        url: 'https://www.edx.org/certificates/professional-certificate/alaskax-fundamentals-of-geospatial-science'
+      },
+      {
+        id: 'web-ocwgis-1',
+        title: 'GIS OpenCourseWare & GEO University — منصة المقررات المفتوحة للجيوماتكس',
+        instructor: 'GIS OpenCourseWare & GEO University',
+        source: 'web',
+        platformName: 'GIS OpenCourseWare',
+        category: 'dev',
+        software: 'Python GIS, GEE, QGIS, Hydrology',
+        level: 'متوسط / متقدم',
+        language: 'الإنجليزية',
+        topics: ['كورسات متخصصة في Google Earth Engine Python API & geemap', 'النمذجة الهيدرولوجية وتحديد أحواض التصريف', 'البرمجة المكانية بلغة Python و R و GeoServer', 'تحليل البيانات المكانية السحابية الحديثة Cloud-Native Geospatial'],
+        url: 'https://courses.gisopencourseware.org/'
+      }
+    ];
+
+    // ==========================================
+    // 2. ROADMAPS DATA (6 COMPLETE CAREER TRACKS)
+    // ==========================================
+    const ROADMAPS_DATA = [
+      {
+        id: 'track-site',
+        title: '1. مهندس مساحة موقع وتنفيذ (Site & Construction Surveyor)',
+        badge: 'العمل الميداني والمقاولات',
+        description: 'المسار الأساسي لكل خريج يريد العمل في مواقع الإنشاءات، الكباري، الطرق، شبكات المياه والصرف الصحي، وتوقيع المخططات الهندسية بدقة.',
+        steps: [
+          { id: 'st-site-1', title: 'إتقان أساسيات المساحة المستوية وحسابات الإحداثيات والانحرافات', details: 'فهم نظم الإحداثيات (E, N, Z)، حساب الانحراف الدائري والمختصر، الترافرسات المغلقة والمفتوحة وتصحيح خطأ القفل.', relatedCourseId: 'yt-total-1' },
+          { id: 'st-site-2', title: 'احتراف ميزان القامة (Auto Level) والميزانيات الشبكية والطولية', details: 'القدرة على ضبط الجهاز في أقل من دقيقة، قراءة القامة، عمل الميزانية الشبكية لحساب الحفر والردم، وتوقيع مناسيب الحفر والقواعد والمواسير.', relatedCourseId: 'yt-level-1' },
+          { id: 'st-site-3', title: 'إتقان جهاز التوتال ستيشن (Total Station) رفعاً وتوقيعاً', details: 'العمل على أجهزة Sokkia / Leica / Topcon: ربط الجهاز بـ Orientation أو Resection، رفع الموقع، توقيع النقاط والخطوط والأقواس، وحساب المساحات.', relatedCourseId: 'yt-total-1' },
+          { id: 'st-site-4', title: 'التشغيل الميداني لأجهزة الـ GNSS / GPS (RTK & Static)', details: 'إعداد محطة الـ Base والـ Rover، العمل بنظام RTK لتوقيع ورفع الطرق والمشاريع الكبرى، وإنشاء نقاط الثوابت الأرضية Control Points بالرصد الثابت Static.', relatedCourseId: 'yt-gps-1' },
+          { id: 'st-site-5', title: 'قراءة اللوحات التنفيذية وتوقيع المحاور والقواعد والمنشآت', details: 'فهم لوحات الأساسات والـ Axes على برنامج AutoCAD، استخراج إحداثيات زوايا القواعد والشدادات والأعمدة، وتسليم الاستشاري في الموقع.', relatedCourseId: 'yt-autocad-1' }
+        ]
+      },
+      {
+        id: 'track-office',
+        title: '2. مهندس مكتب فني مساحة وطرق (Technical Office & Civil 3D)',
+        badge: 'المكتب الفني وحساب الكميات',
+        description: 'يركز هذا المسار على معالجة الأرصاد المساحية، تصميم الطرق والأسطح، حساب كميات الحفر والردم، وإعداد المستخلصات ولوحات الـ Shop Drawing & As-Built.',
+        steps: [
+          { id: 'st-off-1', title: 'نقل ومعالجة ملفات الأجهزة المساحية (Sokkia Link & Excel)', details: 'سحب الملفات الخام (.SDR, .GSI, .TXT)، معالجتها في Excel و Sokkia Link، وتصديرها بصيغة جاهزة للأوتوكاد أو السيفيل.', relatedCourseId: 'yt-sokkialink-1' },
+          { id: 'st-off-2', title: 'إتقان AutoCAD المساحي والليسبات (AutoLISP)', details: 'رسم الرفع المساحي التفصيلي، مطابقة اللوحات بأمر Align، استخدام الليسبات لاستخراج جداول الإحداثيات تلقائياً، وتجهيز اللوحات للطباعة.', relatedCourseId: 'yt-autocad-1' },
+          { id: 'st-off-3', title: 'بناء الأسطح وحساب الكميات في AutoCAD Civil 3D', details: 'استيراد النقاط COGO Points، إنشاء أسطح الأرض الطبيعية NGL وأسطح الحفر والتصميم، وحساب كميات الحفر والردم بدقة بطريقة TIN والقطاعات.', relatedCourseId: 'yt-civil3d-1' },
+          { id: 'st-off-4', title: 'تصميم الطرق والقطاعات الطولية والعرضية (Alignments, Profiles & Corridors)', details: 'تخطيط المسار الأفقي Alignment، رسم البروفايل التصميمي، بناء القطاع النموذجي Assembly، وتوليد الـ Corridor والقطاعات العرضية وتقارير التوقيع.', relatedCourseId: 'yt-civil3d-2' },
+          { id: 'st-off-5', title: 'إعداد المستخلصات المساحية ولوحات الـ As-Built', details: 'إعداد جداول حصر الكميات المعتمدة، مطابقة المنفذ على الطبيعة مع التصميمي، وإخراج اللوحات النهائية للمشروع.', relatedCourseId: 'yt-autocad-2' }
+        ]
+      },
+      {
+        id: 'track-gis',
+        title: '3. أخصائي ومحلل نظم المعلومات الجغرافية (GIS Specialist & Analyst)',
+        badge: 'نظم المعلومات الجغرافية والخرائط',
+        description: 'مسار متكامل للعمل في هيئات التخطيط العمراني، شركات المرافق والاتصالات، الوزارات، والمكاتب الاستشارية كأخصائي أو محلل GIS محترف.',
+        steps: [
+          { id: 'st-gis-1', title: 'الأساسيات النظرية والمساقط وبناء قواعد البيانات الجغرافية (Geodatabase)', details: 'فهم الفرق بين البيانات الاتجاهية Vector والشبكية Raster، المساقط الجغرافية والمترية (WGS84 & UTM)، وتصميم File Geodatabase مع الـ Domains & Subtypes.', relatedCourseId: 'yt-arcgispro-1' },
+          { id: 'st-gis-2', title: 'الإرجاع الجغرافي والترقيم وقواعد الطوبولوجي (Digitizing & Topology)', details: 'تصحيح الخرائط الورقية والمرئيات، رسم الطبقات بدقة، وتطبيق قواعد الـ Topology لضمان خلو البيانات من التداخلات والفجوات الهندسية.', relatedCourseId: 'yt-arcmap-1' },
+          { id: 'st-gis-3', title: 'احتراف ArcGIS Pro والإخراج الكارتوجرافي المتقدم', details: 'إتقان بيئة ArcGIS Pro الحديثة، الترميز المتقدم، بناء أطالس الخرائط التلقائية Map Series، وتصميم الخرائط الموضوعية الثلاثية الأبعاد.', relatedCourseId: 'yt-arcgispro-2' },
+          { id: 'st-gis-4', title: 'التحليل المكاني والهيدرولوجي والشبكي (Spatial, Hydro & Network Analysis)', details: 'تحليل الملاءمة المكانية Suitability Analysis، تحديد المسارات المثلى ونطاقات الخدمة بـ Network Analyst، واستخراج أحواض التصريف والأودية من DEM.', relatedCourseId: 'yt-arcmap-2' },
+          { id: 'st-gis-5', title: 'إتقان برنامج QGIS مفتوح المصدر والشهادات الدولية (Esri & Coursera)', details: 'العمل بمرونة على برنامج QGIS وإضافاته القوية، والحصول على شهادات Esri Academy أو تخصص جامعة UC Davis.', relatedCourseId: 'yt-qgis-1' }
+        ]
+      },
+      {
+        id: 'track-rs',
+        title: '4. أخصائي الاستشعار عن بعد والمسح الجوي بالدرون (Remote Sensing & UAV)',
+        badge: 'المرئيات الفضائية والفوتوجرامتري',
+        description: 'مسار متخصص في معالجة صور الأقمار الصناعية وطائرات الدرون لإنتاج الخرائط المحدثة، نماذج الارتفاعات الرقمية، ودراسات التغيرات البيئية والعمرانية.',
+        steps: [
+          { id: 'st-rs-1', title: 'مصادر المرئيات الفضائية ونماذج الارتفاعات الرقمية (USGS & Copernicus)', details: 'تحميل مرئيات Landsat 8/9 و Sentinel-2 ونماذج الارتفاعات SRTM / ALOS Palsar مجاناً، وفهم الدقة المكانية والطيفية والزمنية.', relatedCourseId: 'web-nasa-1' },
+          { id: 'st-rs-2', title: 'معالجة وتصنيف المرئيات ببرامج ERDAS Imagine و ENVI', details: 'إجراء التصحيحات الإشعاعية والهندسية، الدمج الطيفي، حساب المؤشرات (NDVI, NDBI, NDWI)، والتصنيف الموجه لإنتاج خرائط استخدامات الأراضي.', relatedCourseId: 'yt-envi-1' },
+          { id: 'st-rs-3', title: 'معالجة صور المسح الجوي بالدرون عبر Agisoft Metashape & Pix4D', details: 'تخطيط رحلة الطيران، ربط الصور بنقاط التحكم الأرضية GCPs، إنتاج سحابة النقاط الكثيفة Dense Cloud، واستخراج الـ Orthomosaic والـ DSM/DTM.', relatedCourseId: 'yt-drone-1' },
+          { id: 'st-rs-4', title: 'معالجة التضاريس وسحابات النقاط ببرنامج Global Mapper', details: 'فلترة سحابات النقاط LiDAR/Photogrammetry، توليد خطوط الكنتور الدقيقة، وحساب كميات الحفر والتشوينات.', relatedCourseId: 'yt-globalmapper-1' }
+        ]
+      },
+      {
+        id: 'track-dev',
+        title: '5. مطور نظم معلومات جغرافية والـ Web GIS (GIS Developer & Cloud)',
+        badge: 'البرمجة الجغرافية والويب',
+        description: 'أعلى المسارات طلباً وأجراً في سوق العمل الحديث: يجمع بين خبرة GIS والبرمجة بلغة Python والحوسبة السحابية وتطبيقات الخرائط التفاعلية.',
+        steps: [
+          { id: 'st-dev-1', title: 'إتقان ArcGIS Online وتطبيقات الجمع الميداني والـ Dashboards', details: 'نشر الخرائط التفاعلية على السحابة، إعداد نماذج الرفع الميداني بـ Survey123 و Field Maps، وتصميم لوحات اتخاذ القرار ArcGIS Dashboards.', relatedCourseId: 'yt-agol-1' },
+          { id: 'st-dev-2', title: 'أتمتة المهام الجغرافية بلغة Python ومكتبة ArcPy', details: 'كتابة سكربتات Python داخل ArcGIS Pro لأتمتة التحليلات المتكررة، معالجة الجداول، وبناء أدوات Geoprocessing مخصصة.', relatedCourseId: 'yt-python-1' },
+          { id: 'st-dev-3', title: 'تحليل البيانات المكانية الضخمة على Google Earth Engine (GEE)', details: 'برمجة تحليلات الأقمار الصناعية لسنوات طويلة في ثوانٍ عبر منصة GEE باستخدام JavaScript أو Python API.', relatedCourseId: 'yt-gee-1' },
+          { id: 'st-dev-4', title: 'مكتبات علوم البيانات المكانية وقواعد البيانات (GeoPandas & PostGIS)', details: 'التعامل مع قواعد البيانات المكانية PostgreSQL/PostGIS ومكتبات بايثون المفتوحة المصدر لتحليل البيانات الجغرافية وبناء خرائط الويب.', relatedCourseId: 'web-ocwgis-1' }
+        ]
+      },
+      {
+        id: 'track-career',
+        title: '6. التجهيز لسوق العمل وبناء سابقة الأعمال (Portfolio & Interview)',
+        badge: 'التوظيف والعمل الحر',
+        description: 'خطوات عملية لتحويل ما تعلمته إلى فرص وظيفية حقيقية أو عمل حر (Freelancing) على منصات العمل المستقل والشركات الهندسية.',
+        steps: [
+          { id: 'st-car-1', title: 'تنفيذ 3 مشاريع تطبيقية كاملة (طريق + شبكة مرافق + أطلس تحليلي)', details: 'لا تكتفِ بمشاهدة الكورسات؛ نفذ مشروع تصميم طريق كامل بـ Civil 3D، ومشروع تحليل ملاءمة مكانية وهيدرولوجية بـ ArcGIS Pro.', relatedCourseId: 'yt-civil3d-1' },
+          { id: 'st-car-2', title: 'إنشاء بورتفوليو خرائط ولوحات هندسية رقمي (GIS & Surveying Portfolio)', details: 'اجمع أفضل الخرائط واللوحات المساحية ولوحات الـ Dashboards التي صممتها في ملف PDF منظم أو موقع شخصي لإبهار مسؤولي التوظيف.', relatedCourseId: 'web-coursera-1' },
+          { id: 'st-car-3', title: 'مراجعة أسئلة المقابلات الفنية في المساحة و GIS', details: 'إتقان الإجابة على أسئلة دقة الأجهزة، خطأ القفل المسموح، الفرق بين المساقط، خطوات حساب الكميات، وقواعد الـ Topology.', relatedCourseId: 'yt-total-1' }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 3. SOFTWARE & INSTRUMENTS ENCYCLOPEDIA (16 ITEMS)
+    // ==========================================
+    const SOFTWARE_DATA = [
+      {
+        id: 'sw-arcgis-pro',
+        name: 'ArcGIS Pro',
+        category: 'gis',
+        categoryLabel: 'برامج GIS والخرائط',
+        badge: 'الأحدث والأكثر طلباً في GIS',
+        formats: '.aprx, .gdb, .shp, .tif, .lyrx',
+        summary: 'الجيل الحديث من شركة Esri لتحليل البيانات المكانية ثنائية وثلاثية الأبعاد، بناء قواعد البيانات الجغرافية، وإنتاج الخرائط الاحترافية والربط المباشر مع ArcGIS Online.',
+        skills: [
+          'إنشاء وإدارة قواعد البيانات الجغرافية File & Enterprise Geodatabase والـ Domains و Topology',
+          'أدوات التحليل المكاني Spatial Analyst، التحليل الشبكي Network Analyst، والتحليل الهيدرولوجي',
+          'بناء النماذج التلقائية ModelBuilder والبرمجة بلغة Python (ArcPy)',
+          'إخراج الخرائط القياسية وسلاسل الخرائط الأطلسية Map Series والعروض ثلاثية الأبعاد 3D Scenes'
+        ],
+        courseIds: ['yt-arcgispro-1', 'yt-arcgispro-2', 'yt-arcgispro-3', 'web-esri-1']
+      },
+      {
+        id: 'sw-civil3d',
+        name: 'AutoCAD Civil 3D',
+        category: 'cad',
+        categoryLabel: 'برامج المكتب الفني والمساحة',
+        badge: 'عصب المكتب الفني المساحي والطرق',
+        formats: '.dwg, .dxf, .xml (LandXML), .csv',
+        summary: 'البرنامج الهندسي الأول عالمياً لمهندسي المساحة والطرق والبنية التحتية لمعالجة النقاط المساحية، تكوين الأسطح، حساب كميات الحفر والردم، وتصميم الطرق والشبكات.',
+        skills: [
+          'استيراد وتصنيف النقاط المساحية COGO Points & Point Groups & Description Keys',
+          'إنشاء الأسطح التضاريسية TIN Surfaces وتوليد خطوط الكنتور وتحليل الميول والمناسيب',
+          'حساب كميات الحفر والردم بدقة عبر Volumes Dashboard أو المقاطع العرضية Cross Sections',
+          'تصميم المحاور الأفقية Alignments، البروفايلات Profiles، والقطاعات التصميمية Corridors'
+        ],
+        courseIds: ['yt-civil3d-1', 'yt-civil3d-2', 'yt-civil3d-3', 'yt-civil3d-4', 'web-autodesk-1']
+      },
+      {
+        id: 'sw-qgis',
+        name: 'QGIS (Quantum GIS)',
+        category: 'gis',
+        categoryLabel: 'برامج GIS والخرائط',
+        badge: 'أقوى برنامج GIS مجاني ومفتوح المصدر',
+        formats: '.qgz, .gpkg, .shp, .geojson, .tif',
+        summary: 'النظام المفتوح المصدر الأكثر انتشاراً في العالم لتحليل البيانات الجغرافية، يتميز بمئات الإضافات (Plugins) المجانية، وسرعة معالجة البيانات، والتكامل مع PostGIS.',
+        skills: [
+          'التعامل مع قواعد بيانات GeoPackage وربط خرائط الأساس عبر QuickMapServices',
+          'استخدام صندوق أدوات المعالجة Processing Toolbox الذي يضم أدوات GDAL و GRASS و SAGA',
+          'التحليل المكاني ومعالجة المرئيات الفضائية عبر إضافة Semi-Automatic Classification Plugin',
+          'تصميم الخرائط والأطالس الاحترافية عبر Print Layout'
+        ],
+        courseIds: ['yt-qgis-1', 'yt-qgis-2', 'web-qgis-1']
+      },
+      {
+        id: 'sw-autocad',
+        name: 'Autodesk AutoCAD',
+        category: 'cad',
+        categoryLabel: 'برامج المكتب الفني والمساحة',
+        badge: 'أساسي لكل مهندس مساحة و GIS',
+        formats: '.dwg, .dxf, .lsp',
+        summary: 'برنامج الرسم الهندسي الأساسي لتوقيع الرفوعات المساحية، مطابقة المخططات على الإحداثيات، واستخراج إحداثيات عناصر المشروع للتوقيع في الموقع.',
+        skills: [
+          'إدخال وإخراج الإحداثيات والربط السريع بين شيتات Excel ولوحات AutoCAD',
+          'مطابقة وتوجيه اللوحات المعمارية والإنشائية على الإحداثيات الحقيقية بأمر Align',
+          'استخدام الليسبات المساحية (AutoLISP) لتفريد الإحداثيات وحساب المساحات وتقسيم الأراضي',
+          'تحويل الطبقات بين AutoCAD وبيئة GIS مع الحفاظ على المسقط والخصائص'
+        ],
+        courseIds: ['yt-autocad-1', 'yt-autocad-2']
+      },
+      {
+        id: 'sw-arcmap',
+        name: 'ArcGIS Desktop (ArcMap & ArcCatalog)',
+        category: 'gis',
+        categoryLabel: 'برامج GIS والخرائط',
+        badge: 'واسع الانتشار في الهيئات والمكاتب',
+        formats: '.mxd, .gdb, .mdb, .shp',
+        summary: 'النسخة الكلاسيكية الشهيرة من حزمة ArcGIS، لا تزال مستخدمة على نطاق واسع في العديد من الشركات والهيئات الحكومية لإدارة قواعد البيانات والخرائط.',
+        skills: [
+          'إدارة الملفات وقواعد البيانات عبر ArcCatalog وضبط المساقط Coordinate Systems',
+          'الإرجاع الجغرافي Georeferencing والترقيم Digitizing وبناء الـ Topology',
+          'استخدام امتدادات Spatial Analyst و 3D Analyst و Network Analyst',
+          'إعداد خرائط الطباعة والتقارير الجغرافية'
+        ],
+        courseIds: ['yt-arcmap-1', 'yt-arcmap-2']
+      },
+      {
+        id: 'sw-totalstation',
+        name: 'جهاز التوتال ستيشن (Total Station - Sokkia / Leica / Topcon)',
+        category: 'field',
+        categoryLabel: 'الأجهزة المساحية الميدانية',
+        badge: 'الجهاز الرئيسي للمساحة الأرضية الدقيقة',
+        formats: '.sdr, .gsi, .raw, .txt, .csv',
+        summary: 'محطة الرصد المتكاملة لقياس الزوايا الأفقية والرأسية والمسافات إلكترونياً وحساب الإحداثيات بدقة المليمتر في أعمال الرفع والتوقيع المساحي.',
+        skills: [
+          'ضبط التسامت والأفقية وإدخال معاملات التصحيح الجوي وثابت العاكس Prism Constant',
+          'ربط الجهاز بطريقة نقطتين معلومتين (Backsight) أو التقاطع العكسي (Resection)',
+          'الرفع المساحي التفصيلي (Topo Survey) والتوقيع المساحي للنقاط والخطوط والأقواس (Stakeout / S-O)',
+          'نقل الملفات من وإلى الجهاز عبر الفلاشة USB أو برنامج Sokkia Link'
+        ],
+        courseIds: ['yt-total-1', 'yt-total-2']
+      },
+      {
+        id: 'sw-gnss',
+        name: 'أجهزة GNSS / GPS المساحية (RTK & Static)',
+        category: 'field',
+        categoryLabel: 'الأجهزة المساحية الميدانية',
+        badge: 'التقنية الأسرع للرفع والتوقيع الإحداثي',
+        formats: '.rinex, .csv, .dxf, .kml',
+        summary: 'أنظمة الرصد بالأقمار الصناعية عالية الدقة (Trimble, Leica, Topcon, Sokkia, SinoGNSS) للرفع والتوقيع اللحظي RTK وإنشاء نقاط الثوابت الأرضية بالرصد الثابت.',
+        skills: [
+          'إعداد محطة الثابت Base والروفر المتحرك Rover عبر الراديو UHF أو شريحة الإنترنت NTRIP / CORS',
+          'ضبط إعدادات المسقط UTM والتحقق من حالة الحل Fixed Solution وقيم الدقة PDOP/HRMS/VRMS',
+          'الرفع المساحي السريع للمساحات الشاسعة وتوقيع نقاط مسارات الطرق والمرافق',
+          'إجراء الرصد الثابت Static ومعالجة الأرصاد مكتبياً لضبط شبكات الثوابت'
+        ],
+        courseIds: ['yt-gps-1', 'yt-gps-2']
+      },
+      {
+        id: 'sw-level',
+        name: 'ميزان القامة (Auto & Digital Level)',
+        category: 'field',
+        categoryLabel: 'الأجهزة المساحية الميدانية',
+        badge: 'الأداة الأساسية لضبط المناسيب',
+        formats: 'دفتر الميزانية / شيتات Excel للمناسيب',
+        summary: 'الجهاز المساحي المخصص لقياس فروق الارتفاعات ونقل المناسيب من الروبيرات (Benchmarks) بدقة عالية في كافة المشاريع الهندسية.',
+        skills: [
+          'قراءة القامة التلسكوبية وحساب المسافة بشعرات الاستاديا',
+          'تنفيذ الميزانيات الطولية والعرضية لمشاريع الطرق والصرف الصحي والمياه',
+          'تنفيذ الميزانية الشبكية للأراضي وحساب مكعبات الحفر والردم',
+          'إجراء التحقيق الحسابي وتصحيح خطأ القفل الرأسي المسموح به'
+        ],
+        courseIds: ['yt-level-1', 'yt-level-2']
+      },
+      {
+        id: 'sw-sokkia-office',
+        name: 'برامج التحويل والمكتب المساحي (Sokkia Link / Surveying Office / TBC)',
+        category: 'cad',
+        categoryLabel: 'برامج المكتب الفني والمساحة',
+        badge: 'حلقة الوصل بين الموقع والمكتب',
+        formats: '.sdr, .gsi, .csv, .dxf, .scr',
+        summary: 'حزمة البرامج المكتبية المخصصة لاستقبال بيانات أجهزة التوتال ستيشن والـ GPS، مراجعتها، وتحويلها بين صيغ SDR و Excel و AutoCAD DXF.',
+        skills: [
+          'فتح ملفات الرصد الخام .SDR ومراجعة إحداثيات المحطة المحتلة والنقاط المرصودة',
+          'تصدير النقاط مباشرة إلى لوحة AutoCAD DXF مع الأكواد والمناسيب',
+          'تحويل شيتات الإحداثيات من Excel إلى صيغة .SDR لرفعها على التوتال ستيشن للتوقيع'
+        ],
+        courseIds: ['yt-sokkialink-1']
+      },
+      {
+        id: 'sw-erdas',
+        name: 'ERDAS Imagine',
+        category: 'rs',
+        categoryLabel: 'الاستشعار عن بعد والمسح الجوي',
+        badge: 'العملاق العالمي لمعالجة المرئيات الفضائية',
+        formats: '.img, .tif, .jp2, .shp',
+        summary: 'برنامج متخصص لتحليل ومعالجة مرئيات الأقمار الصناعية، إجراء التصحيحات الإشعاعية والهندسية، الدمج الطيفي، والتصنيف لاستخلاص خرائط الغطاء الأرضي.',
+        skills: [
+          'تجميع النطاقات الطيفية Layer Stacking واقتطاع منطقة الدراسة Subset & Mosaic Pro',
+          'تحسين الدقة المكانية للصور الفضائية Pan-Sharpening',
+          'إجراء التصنيف الموجه Supervised وغير الموجه Unsupervised وتقييم دقة التصنيف Accuracy Assessment',
+          'حساب المؤشرات الطيفية ورصد التغيرات الزمنية Change Detection'
+        ],
+        courseIds: ['yt-erdas-1', 'web-nasa-1']
+      },
+      {
+        id: 'sw-envi',
+        name: 'ENVI Remote Sensing',
+        category: 'rs',
+        categoryLabel: 'الاستشعار عن بعد والمسح الجوي',
+        badge: 'الأقوى في التحليل الطيفي المتقدم',
+        formats: '.dat, .hdr, .tif, .nc',
+        summary: 'منصة احترافية متقدمة لتحليل المرئيات الفضائية متعددة وفائقة الأطياف (Multispectral & Hyperspectral) وبيانات الرادار SAR.',
+        skills: [
+          'التصحيح الجوي السريع FLAASH & QUAC للمرئيات الفضائية',
+          'حساب عشرات المؤشرات الطيفية للنباتات والمعادن والمياه بضغطة زر Spectral Indices',
+          'التصنيف المتقدم للصور والتكامل المباشر مع بيئة ArcGIS'
+        ],
+        courseIds: ['yt-envi-1', 'web-edx-1']
+      },
+      {
+        id: 'sw-metashape',
+        name: 'Agisoft Metashape & Pix4D Mapper',
+        category: 'rs',
+        categoryLabel: 'الاستشعار عن بعد والمسح الجوي',
+        badge: 'الرائدان في المسح الجوي بالدرون Photogrammetry',
+        formats: '.psx, .p4d, .las, .laz, .tif, .obj',
+        summary: 'أقوى برامج الفوتوجرامتري لتحويل الصور الجوية الملتقطة بطائرات الدرون (UAV) إلى سحابات نقاط ثلاثية الأبعاد، نماذج ارتفاعات رقمية، وصور أورثو عالية الدقة.',
+        skills: [
+          'محاذاة الصور الجوية وربطها بإحداثيات نقاط التحكم الأرضية GCPs لتحقيق دقة السنتيمتر',
+          'توليد السحابة النقطية الكثيفة Dense Point Cloud وتصنيف سطح الأرض DTM',
+          'إنتاج الصورة المصححة عمودياً Orthomosaic وحساب أحجام الحفر والتشوينات بدقة',
+          'تصدير المخرجات مباشرة إلى Civil 3D و ArcGIS Pro'
+        ],
+        courseIds: ['yt-drone-1', 'yt-pix4d-1']
+      },
+      {
+        id: 'sw-globalmapper',
+        name: 'Global Mapper & Google Earth Pro',
+        category: 'rs',
+        categoryLabel: 'الاستشعار عن بعد والمسح الجوي',
+        badge: 'الجوكر السريع للمساحين وأخصائيي GIS',
+        formats: '.gmw, .kml, .kmz, .dem, .las, .dwg, .shp',
+        summary: 'ثنائي لا غنى عنه لأي مهندس مساحة أو أخصائي GIS لتحميل نماذج الارتفاعات الرقمية، توليد خطوط الكنتور، تحويل الصيغ والمساقط، وعرض المشاريع على صور الأقمار الصناعية.',
+        skills: [
+          'تحميل DEM مجاني لأي منطقة في العالم واستخراج خطوط الكنتور وتصديرها للأوتوكاد',
+          'التحويل الفوري بين أكثر من 300 صيغة ملفات مكانية ومساحية',
+          'تحليل أحواض التصريف المائي وحساب كميات الحفر والردم السريعة',
+          'تصدير المخططات الهندسية بصيغة KMZ لعرضها في الموقع على Google Earth'
+        ],
+        courseIds: ['yt-globalmapper-1']
+      },
+      {
+        id: 'sw-gee',
+        name: 'Google Earth Engine (GEE)',
+        category: 'dev',
+        categoryLabel: 'البرمجة وقواعد البيانات المكانية',
+        badge: 'ثورة الحوسبة السحابية للاستشعار عن بعد و GIS',
+        formats: 'JavaScript / Python API, GeoTIFF, Asset',
+        summary: 'منصة جوجل السحابية العملاقة التي تتيح تحليل أرشيف كامل من صور الأقمار الصناعية (أكثر من 40 عاماً) في ثوانٍ دون الحاجة لتحميل المرئيات على جهازك.',
+        skills: [
+          'استدعاء وفلترة مجموعات مرئيات Sentinel-1/2 و Landsat و MODIS سحابياً',
+          'إجراء التحليلات الزمنية طويلة الأمد للزراعة والمياه والتمدد العمراني والمناخ',
+          'تطبيق خوارزميات التعلم الآلي (Random Forest, SVM, CART) لتصنيف الغطاء الأرضي',
+          'بناء تطبيقات ويب تفاعلية (Earth Engine Apps) ومشاركتها برابط مباشر'
+        ],
+        courseIds: ['yt-gee-1', 'yt-gee-2', 'web-ocwgis-1']
+      },
+      {
+        id: 'sw-agol',
+        name: 'ArcGIS Online & Field Maps / Survey123',
+        category: 'dev',
+        categoryLabel: 'البرمجة وقواعد البيانات المكانية',
+        badge: 'منظومة الخرائط السحابية والعمل الميداني الذكي',
+        formats: 'Hosted Feature Layers, Web Maps, JSON',
+        summary: 'منصة Esri السحابية لنشر الخرائط التفاعلية على الإنترنت، ربط فرق المسح الميداني بالمكتب لحظياً عبر الهواتف الذكية، وبناء لوحات المتابعة الحية.',
+        skills: [
+          'نشر الطبقات من ArcGIS Pro إلى السحابة وإنشاء خرائط الويب التفاعلية Web Maps',
+          'تصميم استمارات الرفع الميداني الذكية عبر Survey123 وتطبيق ArcGIS Field Maps',
+          'بناء لوحات القيادة التفاعلية ArcGIS Dashboards وتطبيقات Experience Builder & StoryMaps'
+        ],
+        courseIds: ['yt-agol-1', 'web-esri-1']
+      },
+      {
+        id: 'sw-python-gis',
+        name: 'Python for GIS (ArcPy, GeoPandas & PostGIS)',
+        category: 'dev',
+        categoryLabel: 'البرمجة وقواعد البيانات المكانية',
+        badge: 'المهارة الفارقة لوظائف GIS المتقدمة',
+        formats: '.py, .ipynb, .sql',
+        summary: 'استخدام لغة البرمجة بايثون وقواعد البيانات المكانية لأتمتة العمليات الجغرافية المعقدة، تحليل البيانات الضخمة، وتطوير الأدوات المخصصة.',
+        skills: [
+          'كتابة سكربتات ArcPy لأتمتة معالجة الطبقات وإنتاج الخرائط دفعة واحدة',
+          'تحليل البيانات المكانية بمكتبات بايثون المفتوحة: GeoPandas, Shapely, Rasterio, Folium',
+          'إدارة واستعلام قواعد البيانات المكانية PostgreSQL / PostGIS بلغة SQL المكانية'
+        ],
+        courseIds: ['yt-python-1', 'web-ocwgis-1']
+      }
+    ];
+
+    // ==========================================
+    // 4. INTERVIEW Q&A DATABASE (12 CORE QUESTIONS)
+    // ==========================================
+    const INTERVIEW_QA = [
+      {
+        q: '1. ما الفرق بين نظام الإحداثيات الجغرافي (GCS) ونظام الإحداثيات المسقط (PCS) مثل UTM؟',
+        a: 'نظام الإحداثيات الجغرافي (Geographic Coordinate System مثل WGS84) يحدد المواقع على مجسم الأرض الكروي/الإليبسويد باستخدام خطوط الطول ودوائر العرض ووحدته الدرجات (°)، ولا يصلح لقياس المسافات والمساحات المترية مباشرة. أما نظام الإحداثيات المسقط (Projected Coordinate System مثل UTM) فهو إسقاط للأرض على سطح مستوٍ ووحدته المتر (Easting, Northing)، وهو المستخدم في أعمال المساحة وحساب المساحات والمسافات في Civil 3D و GIS.'
+      },
+      {
+        q: '2. متى نستخدم طريقة التوجيه بنقطتين (Orientation / Backsight) ومتى نستخدم التقاطع العكسي (Resection) في التوتال ستيشن؟',
+        a: 'نستخدم طريقة التوجيه بنقطتين (Backsight) عندما نحتل بالجهاز نقطة ثوابت معلومة الإحداثيات ووجهنا على نقطة ثوابت أخرى معلومة الإحداثيات (أو انحراف معلوم). بينما نستخدم طريقة التقاطع العكسي (Resection) عندما نضع الجهاز في مكان حر غير معلوم الإحداثيات يكشف الموقع جيداً، ونرصد منه نقطتين أو ثلاث نقاط ثوابت معلومة الإحداثيات ليقوم الجهاز بحساب إحداثيات النقطة المحتلة تلقائياً (ويفضل ألا تقل الزاوية بين الثوابت عن 30 درجة ولا تزيد عن 150 درجة).'
+      },
+      {
+        q: '3. كيف تتحقق من صحة حسابات دفتر الميزانية؟ وما هو خطأ القفل المسموح به في الميزانية؟',
+        a: 'التحقيق الحسابي في طريقة سطح الميزان: مجموع قراءات المؤخرات ناقص مجموع قراءات المقدمات يساوي منسوب آخر نقطة ناقص منسوب أول نقطة (∑BS - ∑FS = Last RL - First RL). أما التحقيق الحقلي (خطأ القفل الرأسي) فيتم بالبدء بروبير معلوم والانتهاء بروبير معلوم، ويكون الخطأ المسموح به في الميزانية العادية غالباً ±(10 إلى 12 ملم × الجذر التربيعي لطول خط الميزانية بالكيلومتر).'
+      },
+      {
+        q: '4. ما الفرق بين الرصد الثابت (Static) والرصد المتحرك اللحظي (RTK) في أجهزة GNSS/GPS؟',
+        a: 'الرصد الثابت (Static) يعتمد على تثبيت الأجهزة فوق النقاط لفترة زمنية (من 20 دقيقة إلى عدة ساعات حسب المسافة) ثم معالجة البيانات مكتبياً (Post-Processing)، ويعطي أعلى دقة مليمترية لذلك يستخدم في إنشاء نقاط الثوابت الرئيسية (Control Network). أما الرصد اللحظي (RTK) فيعتمد على إرسال تصحيحات لحظية من الـ Base أو شبكة CORS إلى الـ Rover عبر الراديو أو الإنترنت، ويعطي الإحداثيات فوراً في الموقع بدقة (1 إلى 2 سم) ويستخدم في الرفع التفصيلي والتوقيع السريع.'
+      },
+      {
+        q: '5. ما الفرق بين Shapefile و File Geodatabase في برامج ArcGIS؟',
+        a: 'الـ Shapefile صيغة قديمة تتكون من عدة ملفات منفصلة (.shp, .shx, .dbf, .prj)، حجمها الأقصى 2 جيجابايت، ولا تدعم قواعد الـ Topology أو الـ Domains أو أسماء الحقول الطويلة (حد أقصى 10 حروف). أما الـ File Geodatabase (.gdb) فهي حافظة قواعد بيانات حديثة عالية الأداء تسع حتى 1 تيرابايت لكل جدول، وتدعم الـ Topology، الـ Domains، الـ Subtypes، الـ Feature Datasets، والـ Network Datasets.'
+      },
+      {
+        q: '6. كيف تقوم بحساب كميات الحفر والردم لمشروع في برنامج AutoCAD Civil 3D؟',
+        a: 'الطريقة الأولى (الأسرع للمواقع العامة): إنشاء سطح الأرض الطبيعية (NGL TIN Surface) من نقاط الرفع، وإنشاء سطح التصميم أو الحفر (Design Surface)، ثم إنشاء سطح مقارن (TIN Volume Surface) من قائمة Volumes Dashboard لحساب صافي الحفر (Cut) والردم (Fill). الطريقة الثانية (للطرق والمسارات الطولية): إنشاء المسار Alignment، البروفايل، الـ Corridor، ثم أخذ خطوط عينات Sample Lines وحساب الكميات بطريقة متوسط المساحتين (Average End Area) وإخراج جداول الكميات والقطاعات العرضية.'
+      },
+      {
+        q: '7. ما الفرق بين الـ Domains والـ Subtypes في قواعد البيانات الجغرافية؟',
+        a: 'الـ Domain هو قاعدة توضع على حقل معين لتحديد القيم المسموح بإدخالها (إما قائمة منسدلة Coded Value Domain أو مدى رقمي Range Domain) لمنع الأخطاء الإملائية أثناء إدخال البيانات. أما الـ Subtype فهو تقسيم الطبقة الواحدة (Feature Class) إلى مجموعات فرعية تشترك في نفس الخصائص (مثل تقسيم طبقة الطرق إلى: طرق رئيسية، طرق فرعية، طرق محلية) بحيث يمكن إعطاء كل نوع رمزاً وقيم افتراضية و Domains خاصة به.'
+      },
+      {
+        q: '8. ما الفرق بين DSM و DTM و DEM في الاستشعار عن بعد والمسح الجوي؟',
+        a: 'نموذج السطح الرقمي (DSM - Digital Surface Model) يمثل ارتفاعات سطح الأرض شاملاً المباني والأشجار والمنشآت فوقه (وهو ما ينتج مباشرة من صور الدرون قبل الفلترة). أما نموذج التضاريس الرقمي (DTM - Digital Terrain Model) فيمثل مناسيب سطح الأرض العارية فقط بعد إزالة المباني والأشجار، وهو المطلوب لحساب كميات الحفر والردم والهيدرولوجيا. و DEM هو المصطلح العام لنماذج الارتفاعات الرقمية الشبكية.'
+      },
+      {
+        q: '9. ما هي أهم قواعد الـ Topology التي تطبقها عند مراجعة بيانات شبكة طرق أو قطع أراضٍ في GIS؟',
+        a: 'في طبقة قطع الأراضي أو المباني (Polygons): نطبق قاعدة Must Not Overlap (عدم تداخل القطع) وقاعدة Must Not Have Gaps (عدم وجود فراغات بين القطع المتجاورة). وفي طبقة خطوط الطرق أو المواسير (Lines): نطبق قواعد Must Not Have Dangles (عدم وجود نهايات معلقة غير متصلة)، Must Not Overlap، و Must Be Single Part.'
+      },
+      {
+        q: '10. ما هي وظيفة نقاط التحكم الأرضية (GCPs) في المسح الجوي بطائرات الدرون؟',
+        a: 'نقاط التحكم الأرضية (Ground Control Points) هي علامات واضحة توضع على الأرض قبل الطيران وتُرصد إحداثياتها بدقة عالية بواسطة جهاز GNSS RTK أو Total Station. تُستخدم أثناء معالجة الصور في Agisoft Metashape أو Pix4D لضبط الإرجاع الجغرافي الثلاثي الأبعاد وتصحيح تشوهات الكاميرا، مما يرفع دقة الخريطة المنتجة من عدة أمتار إلى (2 - 3 سم).'
+      },
+      {
+        q: '11. في أي نطاق UTM تقع جمهورية مصر العربية ومعظم الدول العربية؟',
+        a: 'تقع مصر في ثلاثة نطاقات في نصف الكرة الشمالي: النطاق 35N (الصحراء الغربية من خط طول 24° إلى 30° شرقاً)، والنطاق 36N (يضم وادي النيل والدلتا والقاهرة ومعظم سيناء من خط طول 30° إلى 36° شرقاً - كود EPSG:32636)، وجزء صغير في أقصى جنوب شرق البحر الأحمر يقع في النطاق 37N. كما تمتلك مصر نظام الحزام المصري الموحد (ETM - Egyptian Transverse Mercator: Red Belt, Purple Belt, Blue Belt).'
+      },
+      {
+        q: '12. كيف تحسب مؤشر الغطاء النباتي (NDVI) من مرئيات الأقمار الصناعية؟ وما دلالة قيمه؟',
+        a: 'يُحسب من المعادلة: NDVI = (NIR - Red) / (NIR + Red)، حيث NIR هو نطاق الأشعة تحت الحمراء القريبة (Band 5 في Landsat 8/9 أو Band 8 في Sentinel-2) و Red هو النطاق الأحمر (Band 4). تتراوح قيمته بين (-1 و +1): القيم السالبة تمثل المسطحات المائية، القيم القريبة من الصفر (0 إلى 0.2) تمثل الأراضي الجرداء والمباني، والقيم الموجبة المرتفعة (0.3 إلى 0.9) تمثل الغطاء النباتي والزراعي الكثيف.'
+      }
+    ];
+
+    // ==========================================
+    // 5. STATE MANAGEMENT (LOCAL STORAGE SAFE)
+    // ==========================================
+    const STATE_KEY = 'geomasaha_pro_state_v1';
+    let appState = {
+      completedCourses: {},
+      bookmarkedCourses: {},
+      completedSteps: {},
+      activeTab: 'dashboard',
+      activeRoadmapId: 'track-site',
+      activeSwCategory: 'all'
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STATE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = Object.assign({}, appState, parsed);
+        }
+      } catch (e) {
+        // Fallback to in-memory state in sandboxed iframe
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STATE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        // Ignore storage errors in sandboxed mode
+      }
+      updateGlobalProgressUI();
+    }
+
+    // ==========================================
+    // 6. UI RENDERERS & HANDLERS
+    // ==========================================
+    function switchTab(tabId) {
+      appState.activeTab = tabId;
+      document.querySelectorAll('.tab-view').forEach(sec => {
+        sec.classList.add('hidden');
+      });
+      const target = document.getElementById('view-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('#mainTabNav .tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabId) {
+          btn.className = 'tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow-md font-bold';
+        } else {
+          btn.className = 'tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white font-bold';
+        }
+      });
+    }
+
+    function updateGlobalProgressUI() {
+      const totalCourses = COURSES_DATA.length;
+      const doneCoursesCount = Object.keys(appState.completedCourses).filter(k => appState.completedCourses[k]).length;
+
+      let totalSteps = 0;
+      let doneStepsCount = 0;
+      ROADMAPS_DATA.forEach(tr => {
+        totalSteps += tr.steps.length;
+        tr.steps.forEach(st => {
+          if (appState.completedSteps[st.id]) doneStepsCount++;
+        });
+      });
+
+      const totalItems = totalCourses + totalSteps;
+      const totalDone = doneCoursesCount + doneStepsCount;
+      const pct = totalItems > 0 ? Math.round((totalDone / totalItems) * 100) : 0;
+
+      const headerText = document.getElementById('headerProgressText');
+      const headerBar = document.getElementById('headerProgressBar');
+      if (headerText) headerText.textContent = pct + '% مكتمل';
+      if (headerBar) headerBar.style.width = pct + '%';
+
+      const statCompleted = document.getElementById('statCompletedCourses');
+      if (statCompleted) statCompleted.textContent = doneCoursesCount + ' / ' + totalCourses;
+
+      const bookmarkCount = Object.keys(appState.bookmarkedCourses).filter(k => appState.bookmarkedCourses[k]).length;
+      const statSaved = document.getElementById('statSavedBookmarks');
+      if (statSaved) statSaved.textContent = bookmarkCount + ' عنصر';
+
+      renderDashboardBookmarks();
+    }
+
+    function renderDashboardBookmarks() {
+      const container = document.getElementById('dashboardBookmarksContainer');
+      if (!container) return;
+
+      const savedList = COURSES_DATA.filter(c => appState.bookmarkedCourses[c.id]);
+      if (savedList.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-950/60 border border-dashed border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-400">
+            لم تقم بإضافة أي كورسات للمفضلة بعد. تصفح <button data-goto="courses" class="nav-jump-inline text-emerald-400 underline font-bold">مكتبة الكورسات</button> واضغط على رمز النجمة ⭐ لحفظ الكورسات التي تود دراستها حالياً.
+          </div>
+        `;
+        container.querySelectorAll('.nav-jump-inline').forEach(btn => {
+          btn.addEventListener('click', () => switchTab('courses'));
+        });
+        return;
+      }
+
+      container.innerHTML = savedList.map(c => `
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 flex flex-col justify-between gap-2">
+          <div>
+            <div class="flex items-center justify-between gap-2 text-[11px]">
+              <span class="text-emerald-400 font-bold">${c.software}</span>
+              <span class="text-slate-400">${c.source === 'youtube' ? '▶️ يوتيوب' : '🌐 موقع عالمي'}</span>
+            </div>
+            <h4 class="text-xs sm:text-sm font-bold text-white mt-1">${c.title}</h4>
+            <p class="text-[11px] text-slate-400 mt-0.5">${c.instructor}</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+            <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-400 hover:text-emerald-300">فتح الكورس ↗</a>
+            <button data-remove-bm="${c.id}" class="text-[11px] text-amber-400 hover:text-rose-400">إزالة من المفضلة</button>
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('[data-remove-bm]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-remove-bm');
+          appState.bookmarkedCourses[id] = false;
+          saveState();
+          renderCourses();
+        });
+      });
+    }
+
+    // --- Render Roadmaps ---
+    function renderRoadmaps() {
+      const tabsEl = document.getElementById('roadmapTabsContainer');
+      const detailEl = document.getElementById('activeRoadmapContainer');
+      if (!tabsEl || !detailEl) return;
+
+      tabsEl.innerHTML = ROADMAPS_DATA.map(tr => {
+        const isActive = tr.id === appState.activeRoadmapId;
+        const doneCount = tr.steps.filter(s => appState.completedSteps[s.id]).length;
+        return `
+          <button data-track-id="${tr.id}" class="roadmap-tab-btn px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            isActive
+              ? 'bg-emerald-500 text-slate-950 shadow-md'
+              : 'bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40'
+          }">
+            <span>${tr.title}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] ${isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-emerald-400'}">${doneCount}/${tr.steps.length}</span>
+          </button>
+        `;
+      }).join('');
+
+      tabsEl.querySelectorAll('.roadmap-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          appState.activeRoadmapId = btn.getAttribute('data-track-id');
+          renderRoadmaps();
+        });
+      });
+
+      const activeTrack = ROADMAPS_DATA.find(t => t.id === appState.activeRoadmapId) || ROADMAPS_DATA[0];
+      const completedInTrack = activeTrack.steps.filter(s => appState.completedSteps[s.id]).length;
+      const trackPct = Math.round((completedInTrack / activeTrack.steps.length) * 100);
+
+      detailEl.innerHTML = `
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="space-y-1">
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-bold">${activeTrack.badge}</span>
+              <h3 class="text-lg sm:text-xl font-extrabold text-white pt-1">${activeTrack.title}</h3>
+              <p class="text-xs sm:text-sm text-slate-300">${activeTrack.description}</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-center min-w-[150px]">
+              <div class="text-xs text-slate-400">تقدمك في هذا المسار</div>
+              <div class="text-xl font-extrabold text-emerald-400 mt-0.5">${trackPct}% (${completedInTrack}/${activeTrack.steps.length})</div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            ${activeTrack.steps.map((step, idx) => {
+              const isDone = !!appState.completedSteps[step.id];
+              const relatedCourse = COURSES_DATA.find(c => c.id === step.relatedCourseId);
+              return `
+                <div class="bg-slate-950/90 border ${isDone ? 'border-emerald-500/50 bg-emerald-950/10' : 'border-slate-800'} rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition">
+                  <div class="flex items-start gap-3.5">
+                    <button data-step-toggle="${step.id}" class="mt-0.5 w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs border transition shrink-0 ${
+                      isDone
+                        ? 'bg-emerald-500 border-emerald-400 text-slate-950'
+                        : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-emerald-400'
+                    }">
+                      ${isDone ? '✓' : idx + 1}
+                    </button>
+                    <div class="space-y-1">
+                      <h4 class="text-sm sm:text-base font-bold ${isDone ? 'text-emerald-300 line-through' : 'text-white'}">${step.title}</h4>
+                      <p class="text-xs text-slate-400 leading-relaxed">${step.details}</p>
+                      ${relatedCourse ? `
+                        <div class="pt-1 flex flex-wrap items-center gap-2 text-xs">
+                          <span class="text-amber-400 font-bold">🎓 الكورس المقترح للخطوة:</span>
+                          <a href="${relatedCourse.url}" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline font-bold">${relatedCourse.title} ↗</a>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                  <button data-step-toggle="${step.id}" class="px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition ${
+                    isDone
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                  }">
+                    ${isDone ? '✅ مكتملة' : 'تحديد كمكتملة'}
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+
+      detailEl.querySelectorAll('[data-step-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const stepId = btn.getAttribute('data-step-toggle');
+          appState.completedSteps[stepId] = !appState.completedSteps[stepId];
+          saveState();
+          renderRoadmaps();
+        });
+      });
+    }
+
+    // --- Render Courses Library ---
+    function renderCourses() {
+      const container = document.getElementById('coursesGridContainer');
+      const countBadge = document.getElementById('filteredCoursesCount');
+      if (!container) return;
+
+      const srcFilter = document.getElementById('courseSourceFilter').value;
+      const catFilter = document.getElementById('courseCategoryFilter').value;
+      const lvlFilter = document.getElementById('courseLevelFilter').value;
+      const localQuery = (document.getElementById('courseLocalSearch').value || '').trim().toLowerCase();
+      const globalQuery = (document.getElementById('globalSearchInput').value || '').trim().toLowerCase();
+      const activeQuery = localQuery || globalQuery;
+
+      const filtered = COURSES_DATA.filter(c => {
+        if (srcFilter === 'youtube' && c.source !== 'youtube') return false;
+        if (srcFilter === 'web' && c.source !== 'web') return false;
+        if (srcFilter === 'bookmarked' && !appState.bookmarkedCourses[c.id]) return false;
+        if (srcFilter === 'completed' && !appState.completedCourses[c.id]) return false;
+
+        if (catFilter !== 'all' && c.category !== catFilter) return false;
+        if (lvlFilter !== 'all' && c.level !== lvlFilter) return false;
+
+        if (activeQuery) {
+          const haystack = (c.title + ' ' + c.instructor + ' ' + c.software + ' ' + c.platformName + ' ' + c.topics.join(' ')).toLowerCase();
+          if (!haystack.includes(activeQuery)) return false;
+        }
+        return true;
+      });
+
+      if (countBadge) countBadge.textContent = filtered.length + ' كورس متاح';
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-900/80 border border-slate-800 rounded-3xl p-8 text-center space-y-3">
+            <div class="text-3xl">🔍</div>
+            <h3 class="text-base font-bold text-white">لا توجد كورسات مطابقة لخيارات الفلترة الحالية</h3>
+            <p class="text-xs text-slate-400">جرب تغيير التخصص أو عرض جميع المصادر</p>
+            <button id="resetCourseFiltersBtn" class="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs">إظهار كل الكورسات (36)</button>
+          </div>
+        `;
+        const resetBtn = document.getElementById('resetCourseFiltersBtn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            document.getElementById('courseSourceFilter').value = 'all';
+            document.getElementById('courseCategoryFilter').value = 'all';
+            document.getElementById('courseLevelFilter').value = 'all';
+            document.getElementById('courseLocalSearch').value = '';
+            document.getElementById('globalSearchInput').value = '';
+            renderCourses();
+          });
+        }
+        return;
+      }
+
+      container.innerHTML = filtered.map(c => {
+        const isDone = !!appState.completedCourses[c.id];
+        const isSaved = !!appState.bookmarkedCourses[c.id];
+        const isYT = c.source === 'youtube';
+
+        return `
+          <div class="bg-slate-900/85 border ${isDone ? 'border-emerald-500/50' : 'border-slate-800'} hover:border-slate-700 rounded-3xl p-5 flex flex-col justify-between gap-4 shadow-lg transition">
+            <div class="space-y-3">
+              <!-- Top Badges -->
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                  isYT
+                    ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                    : 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
+                }">
+                  ${isYT ? '▶️ يوتيوب • ' + c.platformName : '🌐 موقع عالمي • ' + c.platformName}
+                </span>
+                <button data-bookmark-id="${c.id}" title="حفظ في المفضلة" class="w-8 h-8 rounded-xl flex items-center justify-center border transition ${
+                  isSaved
+                    ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-amber-300'
+                }">
+                  ${isSaved ? '⭐' : '☆'}
+                </button>
+              </div>
+
+              <!-- Program & Title -->
+              <div>
+                <div class="text-xs font-bold text-emerald-400">${c.software} • ${c.level}</div>
+                <h3 class="text-base font-extrabold text-white mt-1 leading-snug">${c.title}</h3>
+                <p class="text-xs text-slate-400 mt-1">👨‍🏫 ${c.instructor} | اللغة: ${c.language}</p>
+              </div>
+
+              <!-- Key Topics -->
+              <div class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-3 space-y-1.5">
+                <div class="text-[11px] font-bold text-slate-300">أهم محاور الكورس:</div>
+                <ul class="text-xs text-slate-400 space-y-1 pr-4 list-disc">
+                  ${c.topics.map(t => `<li>${t}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <!-- Action Footer -->
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+              <a href="${c.url}" target="_blank" rel="noopener noreferrer" 
+                class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs text-center transition flex items-center justify-center gap-1.5 ${
+                  isYT
+                    ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
+                    : 'bg-sky-500 hover:bg-sky-400 text-slate-950'
+                }">
+                <span>${isYT ? 'مشاهدة الكورس على يوتيوب' : 'الانتقال إلى المنصة الرسمية'}</span>
+                <span>↗</span>
+              </a>
+              <button data-complete-id="${c.id}" class="py-2.5 px-3 rounded-xl font-bold text-xs border transition ${
+                isDone
+                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-emerald-500/40'
+              }">
+                ${isDone ? '✅ مكتمل' : 'تحديد كمكتمل'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('[data-bookmark-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-bookmark-id');
+          appState.bookmarkedCourses[id] = !appState.bookmarkedCourses[id];
+          saveState();
+          renderCourses();
+        });
+      });
+
+      container.querySelectorAll('[data-complete-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-complete-id');
+          appState.completedCourses[id] = !appState.completedCourses[id];
+          saveState();
+          renderCourses();
+        });
+      });
+    }
+
+    // --- Render Software & Instruments Directory ---
+    function renderSoftwareDirectory() {
+      const container = document.getElementById('softwareGridContainer');
+      if (!container) return;
+
+      const filtered = SOFTWARE_DATA.filter(sw => {
+        if (appState.activeSwCategory !== 'all' && sw.category !== appState.activeSwCategory) return false;
+        return true;
+      });
+
+      container.innerHTML = filtered.map(sw => {
+        const linkedCourses = COURSES_DATA.filter(c => sw.courseIds.includes(c.id));
+        return `
+          <div class="bg-slate-900/85 border border-slate-800 hover:border-emerald-500/40 rounded-3xl p-5 flex flex-col justify-between gap-4 transition">
+            <div class="space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-[11px] font-bold">${sw.categoryLabel}</span>
+                <span class="text-[11px] font-bold text-amber-400">${sw.badge}</span>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-extrabold text-white">${sw.name}</h3>
+                <p class="text-xs text-slate-300 mt-1 leading-relaxed">${sw.summary}</p>
+              </div>
+
+              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-3 space-y-1.5">
+                <div class="text-[11px] font-bold text-sky-400">أهم المهارات المطلوبة في سوق العمل:</div>
+                <ul class="text-xs text-slate-300 space-y-1 pr-4 list-disc">
+                  ${sw.skills.map(sk => `<li>${sk}</li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="flex items-center justify-between text-xs bg-slate-950 px-3 py-2 rounded-xl border border-slate-800/80">
+                <span class="text-slate-400">أشهر صيغ الملفات:</span>
+                <span class="font-bold text-emerald-400 ltr-num">${sw.formats}</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
+              <button data-open-sw="${sw.id}" class="flex-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+                عرض الكورسات المرتبطة (${linkedCourses.length} كورسات)
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('[data-open-sw]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const swId = btn.getAttribute('data-open-sw');
+          openSoftwareModal(swId);
+        });
+      });
+    }
+
+    function openSoftwareModal(swId) {
+      const sw = SOFTWARE_DATA.find(s => s.id === swId);
+      if (!sw) return;
+
+      document.getElementById('modalSwBadge').textContent = sw.categoryLabel + ' • ' + sw.formats;
+      document.getElementById('modalSwTitle').textContent = sw.name;
+      document.getElementById('modalSwDesc').textContent = sw.summary;
+
+      const skillsList = document.getElementById('modalSwSkills');
+      skillsList.innerHTML = sw.skills.map(s => `<li>${s}</li>`).join('');
+
+      const coursesList = document.getElementById('modalSwCourses');
+      const related = COURSES_DATA.filter(c => sw.courseIds.includes(c.id));
+      coursesList.innerHTML = related.map(c => `
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 flex items-center justify-between gap-3">
+          <div>
+            <div class="text-[11px] font-bold text-emerald-400">${c.source === 'youtube' ? '▶️ كورس يوتيوب' : '🌐 منصة عالمية'} • ${c.instructor}</div>
+            <div class="text-xs sm:text-sm font-bold text-white mt-0.5">${c.title}</div>
+          </div>
+          <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shrink-0">فتح الكورس ↗</a>
+        </div>
+      `).join('');
+
+      document.getElementById('softwareModal').classList.remove('hidden');
+    }
+
+    // --- Render Interview Accordion ---
+    function renderInterviewQA() {
+      const container = document.getElementById('interviewAccordionContainer');
+      if (!container) return;
+
+      container.innerHTML = INTERVIEW_QA.map((item, idx) => `
+        <div class="bg-slate-900/85 border border-slate-800 rounded-2xl overflow-hidden">
+          <button data-qa-idx="${idx}" class="qa-toggle-btn w-full p-4 text-right flex items-center justify-between gap-3 hover:bg-slate-800/40 transition">
+            <span class="text-xs sm:text-sm font-bold text-white">${item.q}</span>
+            <span class="qa-icon text-emerald-400 font-extrabold text-base shrink-0">${idx === 0 ? '−' : '+'}</span>
+          </button>
+          <div id="qa-body-${idx}" class="${idx === 0 ? '' : 'hidden'} px-4 pb-4 pt-1 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 bg-slate-950/50">
+            ${item.a}
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.qa-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = btn.getAttribute('data-qa-idx');
+          const body = document.getElementById('qa-body-' + idx);
+          const icon = btn.querySelector('.qa-icon');
+          if (body.classList.contains('hidden')) {
+            body.classList.remove('hidden');
+            icon.textContent = '−';
+          } else {
+            body.classList.add('hidden');
+            icon.textContent = '+';
+          }
+        });
+      });
+    }
+
+    // ==========================================
+    // 7. SURVEYING & GIS ENGINEERING CALCULATORS
+    // ==========================================
+    function degToDMS(degDecimal) {
+      const absDeg = Math.abs(degDecimal);
+      const d = Math.floor(absDeg);
+      const mFloat = (absDeg - d) * 60;
+      const m = Math.floor(mFloat);
+      const s = ((mFloat - m) * 60).toFixed(1);
+      return `${d}° ${m}' ${s}"`;
+    }
+
+    function runInverseCalc() {
+      const e1 = parseFloat(document.getElementById('invE1').value) || 0;
+      const n1 = parseFloat(document.getElementById('invN1').value) || 0;
+      const e2 = parseFloat(document.getElementById('invE2').value) || 0;
+      const n2 = parseFloat(document.getElementById('invN2').value) || 0;
+
+      const dE = e2 - e1;
+      const dN = n2 - n1;
+      const dist = Math.hypot(dE, dN);
+
+      let azRad = Math.atan2(dE, dN);
+      let azDeg = azRad * (180 / Math.PI);
+      if (azDeg < 0) azDeg += 360;
+
+      let quad = 'الربع الأول (NE)';
+      if (dE >= 0 && dN < 0) quad = 'الربع الثاني (SE)';
+      else if (dE < 0 && dN < 0) quad = 'الربع الثالث (SW)';
+      else if (dE < 0 && dN >= 0) quad = 'الربع الرابع (NW)';
+
+      document.getElementById('invResDist').textContent = dist.toFixed(3) + ' m';
+      document.getElementById('invResAzDMS').textContent = degToDMS(azDeg);
+      document.getElementById('invResDelta').textContent = `ΔE: ${dE >= 0 ? '+' : ''}${dE.toFixed(3)} | ΔN: ${dN >= 0 ? '+' : ''}${dN.toFixed(3)}`;
+      document.getElementById('invResQuad').textContent = quad;
+    }
+
+    function runForwardCalc() {
+      const e1 = parseFloat(document.getElementById('fwdE1').value) || 0;
+      const n1 = parseFloat(document.getElementById('fwdN1').value) || 0;
+      const dist = parseFloat(document.getElementById('fwdDist').value) || 0;
+      const d = parseFloat(document.getElementById('fwdDeg').value) || 0;
+      const m = parseFloat(document.getElementById('fwdMin').value) || 0;
+      const s = parseFloat(document.getElementById('fwdSec').value) || 0;
+
+      const azDeg = d + (m / 60) + (s / 3600);
+      const azRad = azDeg * (Math.PI / 180);
+
+      const dE = dist * Math.sin(azRad);
+      const dN = dist * Math.cos(azRad);
+      const e2 = e1 + dE;
+      const n2 = n1 + dN;
+
+      document.getElementById('fwdResE2').textContent = e2.toFixed(3) + ' m';
+      document.getElementById('fwdResN2').textContent = n2.toFixed(3) + ' m';
+      document.getElementById('fwdResComp').textContent = `ΔE = ${dE >= 0 ? '+' : ''}${dE.toFixed(3)} m | ΔN = ${dN >= 0 ? '+' : ''}${dN.toFixed(3)} m`;
+    }
+
+    function runUtmCalc() {
+      const d = parseFloat(document.getElementById('utmLonDeg').value) || 0;
+      const m = parseFloat(document.getElementById('utmLonMin').value) || 0;
+      const s = parseFloat(document.getElementById('utmLonSec').value) || 0;
+      const lat = parseFloat(document.getElementById('utmLatDec').value) || 0;
+
+      const sign = d < 0 ? -1 : 1;
+      const decLon = sign * (Math.abs(d) + (m / 60) + (s / 3600));
+      const zone = Math.floor((decLon + 180) / 6) + 1;
+      const cm = (zone * 6) - 183;
+      const hemi = lat >= 0 ? 'N' : 'S';
+      const epsg = (lat >= 0 ? 32600 : 32700) + zone;
+
+      document.getElementById('utmResDecLon').textContent = Math.abs(decLon).toFixed(6) + '° ' + (decLon >= 0 ? 'E' : 'W');
+      document.getElementById('utmResZone').textContent = `UTM Zone ${zone}${hemi}`;
+      document.getElementById('utmResCM').textContent = `${Math.abs(cm)}° ${cm >= 0 ? 'E' : 'W'}`;
+      document.getElementById('utmResEpsg').textContent = `EPSG:${epsg}`;
+    }
+
+    function runLevelingCalc() {
+      const bm = parseFloat(document.getElementById('lvlBM').value) || 0;
+      const bs1 = parseFloat(document.getElementById('lvlBS1').value) || 0;
+      const is1 = parseFloat(document.getElementById('lvlIS1').value) || 0;
+      const fs1 = parseFloat(document.getElementById('lvlFS1').value) || 0;
+      const bs2 = parseFloat(document.getElementById('lvlBS2').value) || 0;
+      const fs2 = parseFloat(document.getElementById('lvlFS2').value) || 0;
+
+      const hi1 = bm + bs1;
+      const rl2 = hi1 - is1;
+      const tp1 = hi1 - fs1;
+      const hi2 = tp1 + bs2;
+      const lastRL = hi2 - fs2;
+
+      const sumBS = bs1 + bs2;
+      const sumFS = fs1 + fs2;
+      const diffBSFS = sumBS - sumFS;
+      const diffRL = lastRL - bm;
+
+      document.getElementById('lvlResHI1').textContent = hi1.toFixed(3) + ' m';
+      document.getElementById('lvlResRL2').textContent = rl2.toFixed(3) + ' m';
+      document.getElementById('lvlResTP1').textContent = tp1.toFixed(3) + ' m';
+      document.getElementById('lvlResLast').textContent = lastRL.toFixed(3) + ' m';
+      document.getElementById('lvlResCheck').textContent = `✅ التحقيق الحسابي مضبوط: ∑BS (${sumBS.toFixed(3)}) - ∑FS (${sumFS.toFixed(3)}) = آخر منسوب - أول منسوب (${diffRL.toFixed(3)} m)`;
+    }
+
+    // ==========================================
+    // 8. INITIALIZATION & EVENT LISTENERS
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+
+      // Main Tab Navigation
+      document.querySelectorAll('#mainTabNav .tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      // Jump Buttons inside Dashboard
+      document.querySelectorAll('.nav-jump-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchTab(btn.getAttribute('data-goto'));
+        });
+      });
+
+      // Pillar Filter Buttons inside Dashboard
+      document.querySelectorAll('.pillar-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cat = btn.getAttribute('data-filter-cat');
+          document.getElementById('courseSourceFilter').value = 'all';
+          document.getElementById('courseCategoryFilter').value = cat;
+          renderCourses();
+          switchTab('courses');
+        });
+      });
+
+      document.querySelectorAll('.pillar-source-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const src = btn.getAttribute('data-filter-source');
+          document.getElementById('courseSourceFilter').value = src;
+          document.getElementById('courseCategoryFilter').value = 'all';
+          renderCourses();
+          switchTab('courses');
+        });
+      });
+
+      // Global Search Input
+      const globalSearch = document.getElementById('globalSearchInput');
+      globalSearch.addEventListener('input', () => {
+        if (globalSearch.value.trim().length > 0 && appState.activeTab !== 'courses') {
+          switchTab('courses');
+        }
+        renderCourses();
+      });
+
+      // Course Filters
+      ['courseSourceFilter', 'courseCategoryFilter', 'courseLevelFilter'].forEach(id => {
+        document.getElementById(id).addEventListener('change', renderCourses);
+      });
+      document.getElementById('courseLocalSearch').addEventListener('input', renderCourses);
+
+      // Software Filter Pills
+      document.querySelectorAll('#softwareFilterPills .sw-cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          appState.activeSwCategory = btn.getAttribute('data-swcat');
+          document.querySelectorAll('#softwareFilterPills .sw-cat-btn').forEach(b => {
+            if (b.getAttribute('data-swcat') === appState.activeSwCategory) {
+              b.className = 'sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950';
+            } else {
+              b.className = 'sw-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40';
+            }
+          });
+          renderSoftwareDirectory();
+        });
+      });
+
+      // Modal Close
+      document.getElementById('closeSwModalBtn').addEventListener('click', () => {
+        document.getElementById('softwareModal').classList.add('hidden');
+      });
+      document.getElementById('softwareModal').addEventListener('click', (e) => {
+        if (e.target.id === 'softwareModal') {
+          document.getElementById('softwareModal').classList.add('hidden');
+        }
+      });
+
+      // Reset Progress
+      document.getElementById('resetProgressBtn').addEventListener('click', () => {
+        appState.completedCourses = {};
+        appState.bookmarkedCourses = {};
+        appState.completedSteps = {};
+        saveState();
+        renderRoadmaps();
+        renderCourses();
+      });
+
+      // Calculator Buttons
+      document.getElementById('calcInverseBtn').addEventListener('click', runInverseCalc);
+      document.getElementById('calcForwardBtn').addEventListener('click', runForwardCalc);
+      document.getElementById('calcUtmBtn').addEventListener('click', runUtmCalc);
+      document.getElementById('calcLevelBtn').addEventListener('click', runLevelingCalc);
+
+      // Initial Render
+      updateGlobalProgressUI();
+      renderRoadmaps();
+      renderCourses();
+      renderSoftwareDirectory();
+      renderInterviewQA();
+    });
+  </script>
+</body>
+</html>
