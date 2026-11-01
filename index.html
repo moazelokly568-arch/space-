@@ -158,6 +158,10 @@
         <button data-tab="interview" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
           <span>💼</span><span>أسئلة الإنترفيو ومرجع الصيغ</span>
         </button>
+        <button data-tab="exams" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950">
+          <span>📝</span><span>الاختبارات التفاعلية والشهادات</span>
+          <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-slate-900 text-amber-300">24</span>
+        </button>
         <button data-tab="student-profile" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950">
           <span>👨‍🎓</span><span>لوحة الطالب الذكية والملف الشخصي</span>
         </button>
@@ -252,6 +256,9 @@
               </button>
               <button data-goto="calculators" class="nav-jump-btn px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-bold text-sm transition">
                 <span>📐 الحاسبات المساحية</span>
+              </button>
+              <button data-goto="exams" class="nav-jump-btn px-4 py-2.5 rounded-xl bg-purple-500/20 hover:bg-purple-500 hover:text-slate-950 text-purple-300 border border-purple-500/40 font-bold text-sm transition flex items-center gap-1.5">
+                <span>📝 الاختبارات التفاعلية (24 اختبار)</span>
               </button>
             </div>
           </div>
@@ -1061,6 +1068,241 @@
         </div>
 
         <div id="stuCoursesProgressList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- Student Exam Results Summary inside Student Profile -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+              <span>🏆</span><span>ملخص سجل الاختبارات التفاعلية في حسابك</span>
+            </h3>
+            <p class="text-xs text-slate-400">جميع نتائج اختباراتك محفوظة في قاعدة البيانات ومربوطة بحسابك</p>
+          </div>
+          <button type="button" data-goto="exams" class="nav-jump-btn px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition">
+            📝 الانتقال إلى قسم الاختبارات وسجل النتائج الكامل ←
+          </button>
+        </div>
+        <div id="stuProfileExamHistoryPreview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: INTERACTIVE EXAMS SYSTEM (PHASE 2) -->
+    <section id="view-exams" class="tab-view hidden space-y-6">
+      <!-- Top Header & Sub-Navigation (Catalog / Active Exam / Exam History) -->
+      <div class="bg-gradient-to-l from-slate-900 via-slate-900/95 to-indigo-950/50 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xl">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">
+              <span>📝 المرحلة الثانية • Interactive Exams System</span>
+            </div>
+            <h2 class="text-xl sm:text-3xl font-extrabold text-white">منظومة الاختبارات التفاعلية وتقييم المستوى الهندسي</h2>
+            <p class="text-xs sm:text-sm text-slate-300">اختبر مستواك في 6 تخصصات مساحية وجغرافية بـ 3 مستويات (مبتدئ، متوسط، متقدم) بالإضافة إلى الاختبارات النهائية للمسارات التعليمية مع تصحيح فوري وشرح علمي لكل سؤال.</p>
+          </div>
+
+          <!-- Sub-mode switcher buttons -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-950/90 p-1.5 rounded-2xl border border-slate-800 shrink-0 w-full sm:w-auto">
+            <button type="button" id="examSubTabCatalogBtn" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition flex items-center justify-center gap-1.5">
+              <span>📚</span><span>بنك الاختبارات (24)</span>
+            </button>
+            <button type="button" id="examSubTabHistoryBtn" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5">
+              <span>📊</span><span>سجل اختباراتك ونتائجك</span>
+              <span id="examHistoryCountBadge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800 text-emerald-400 ltr-num">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Exam KPIs Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-3.5">
+            <div class="text-[11px] text-slate-400 font-bold">إجمالي الاختبارات المتاحة</div>
+            <div class="text-lg sm:text-xl font-extrabold text-white mt-0.5">24 اختباراً</div>
+            <div class="text-[10px] text-emerald-400">18 تخصصي + 6 نهائي للمسارات</div>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-3.5">
+            <div class="text-[11px] text-slate-400 font-bold">اختبارات أجريتها</div>
+            <div id="examKpiTotalTaken" class="text-lg sm:text-xl font-extrabold text-amber-400 mt-0.5 ltr-num">0</div>
+            <div class="text-[10px] text-slate-400">محفوظة في قاعدة البيانات</div>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-3.5">
+            <div class="text-[11px] text-slate-400 font-bold">مرات النجاح والاجتياز</div>
+            <div id="examKpiPassedCount" class="text-lg sm:text-xl font-extrabold text-emerald-400 mt-0.5 ltr-num">0</div>
+            <div class="text-[10px] text-slate-400">بنسبة نجاح ≥ 60%</div>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-3.5">
+            <div class="text-[11px] text-slate-400 font-bold">متوسط درجاتك</div>
+            <div id="examKpiAverageScore" class="text-lg sm:text-xl font-extrabold text-sky-400 mt-0.5 ltr-num">0%</div>
+            <div id="examKpiStudentStatus" class="text-[10px] text-slate-400">ابدأ أول اختبار الآن</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 1: EXAMS CATALOG & FILTERS -->
+      <div id="examCatalogSubView" class="space-y-5">
+        <!-- Timer Option & Filters Bar -->
+        <div class="bg-slate-900/85 border border-slate-800 rounded-3xl p-4 sm:p-5 space-y-4">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <!-- Specialty Filter Pills -->
+            <div id="examSpecialtyPills" class="flex flex-wrap gap-1.5">
+              <button type="button" data-exam-spec="all" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition">الكل (24)</button>
+              <button type="button" data-exam-spec="land" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">🔭 المساحة الأرضية</button>
+              <button type="button" data-exam-spec="gis" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">🌍 GIS ونظم المعلومات</button>
+              <button type="button" data-exam-spec="arcgispro" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">🗺️ ArcGIS Pro</button>
+              <button type="button" data-exam-spec="rs" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">🛸 الاستشعار عن بعد</button>
+              <button type="button" data-exam-spec="cad" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">🛣️ AutoCAD وCivil 3D</button>
+              <button type="button" data-exam-spec="instruments" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition">📡 الأجهزة المساحية</button>
+              <button type="button" data-exam-spec="track-finals" class="exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition">🏆 الاختبارات النهائية للمسارات (6)</button>
+            </div>
+
+            <!-- Optional Timer Toggle Switch -->
+            <label class="flex items-center gap-2.5 bg-slate-950 px-3.5 py-2 rounded-2xl border border-slate-800 cursor-pointer shrink-0">
+              <input id="examEnableTimerToggle" type="checkbox" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+              <span class="text-xs font-bold text-slate-200">⏱️ تفعيل المؤقت الزمني للاختبار (اختياري)</span>
+            </label>
+          </div>
+
+          <!-- Level Filter Pills -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div id="examLevelPills" class="flex flex-wrap items-center gap-2">
+              <span class="text-xs text-slate-400 font-bold ml-1">المستوى:</span>
+              <button type="button" data-exam-lvl="all" class="exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition">جميع المستويات</button>
+              <button type="button" data-exam-lvl="مبتدئ" class="exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-amber-400 transition">🟢 مبتدئ</button>
+              <button type="button" data-exam-lvl="متوسط" class="exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-amber-400 transition">🟡 متوسط</button>
+              <button type="button" data-exam-lvl="متقدم" class="exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-amber-400 transition">🔴 متقدم / نهائي</button>
+            </div>
+            <span id="examFilteredCountLabel" class="text-xs font-bold text-emerald-400">24 اختبار متاح</span>
+          </div>
+        </div>
+
+        <!-- Exams Grid -->
+        <div id="examsCatalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- SUB-VIEW 2: ACTIVE INTERACTIVE EXAM RUNNER (SINGLE QUESTION AT A TIME) -->
+      <div id="examRunnerSubView" class="hidden space-y-5">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5 sm:p-7 space-y-6 shadow-2xl">
+          <!-- Runner Top Header & Timer -->
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="runnerExamSpecialtyBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold"></span>
+                <span id="runnerExamLevelBadge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold"></span>
+              </div>
+              <h3 id="runnerExamTitle" class="text-lg sm:text-2xl font-extrabold text-white mt-1"></h3>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <!-- Timer Box -->
+              <div id="runnerTimerBox" class="bg-slate-950 border border-amber-500/40 px-4 py-2 rounded-2xl text-center">
+                <div class="text-[10px] text-slate-400 font-bold">الوقت المتبقي</div>
+                <div id="runnerTimerDisplay" class="text-base sm:text-lg font-extrabold text-amber-400 ltr-num">08:00</div>
+              </div>
+              <button type="button" id="runnerExitExamBtn" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-xs font-bold transition">
+                ✕ إنهاء والعودة
+              </button>
+            </div>
+          </div>
+
+          <!-- Question Progress Bar & Number Navigator Dots -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs">
+              <span id="runnerQuestionCounterText" class="font-extrabold text-emerald-400">السؤال 1 من 5</span>
+              <span id="runnerAnsweredCounterText" class="text-slate-400 font-bold">تمت الإجابة على 0 من 5</span>
+            </div>
+            <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div id="runnerProgressBar" class="h-full bg-gradient-to-l from-emerald-400 to-teal-500 transition-all duration-300" style="width: 20%"></div>
+            </div>
+            <!-- Question Jump Pills -->
+            <div id="runnerQuestionDots" class="flex flex-wrap items-center gap-2 pt-1"></div>
+          </div>
+
+          <!-- Single Question Card (No answers leaked before submission!) -->
+          <div class="bg-slate-950/90 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-5">
+            <div class="flex items-center justify-between gap-2">
+              <span id="runnerQuestionTypeBadge" class="px-3 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 text-xs font-bold">اختيار من متعدد</span>
+              <span class="text-[11px] text-slate-400">اختر إجابة واحدة؛ يمكنك مراجعة وتغيير إجابتك قبل التسليم</span>
+            </div>
+
+            <h4 id="runnerQuestionText" class="text-base sm:text-xl font-extrabold text-white leading-relaxed"></h4>
+
+            <!-- Options Container -->
+            <div id="runnerOptionsContainer" class="space-y-3"></div>
+          </div>
+
+          <!-- Navigation & Submit Footer -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800">
+            <button type="button" id="runnerPrevQuestionBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 transition disabled:opacity-40">
+              → السؤال السابق
+            </button>
+
+            <div class="flex items-center gap-2.5">
+              <button type="button" id="runnerNextQuestionBtn" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs sm:text-sm transition">
+                السؤال التالي ←
+              </button>
+              <button type="button" id="runnerSubmitExamBtn" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-950/50 transition">
+                ✅ تسليم الاختبار والتصحيح الفوري
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 3: EXAM RESULT & DETAILED SCIENTIFIC REVIEW -->
+      <div id="examResultSubView" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-slate-800 pb-6">
+            <div class="space-y-2">
+              <span id="resultStatusBadge" class="px-3 py-1 rounded-full text-xs font-extrabold"></span>
+              <h3 id="resultExamTitle" class="text-xl sm:text-3xl font-extrabold text-white"></h3>
+              <p id="resultEncouragementMsg" class="text-sm sm:text-base font-bold text-emerald-300 leading-relaxed"></p>
+              <p id="resultSavedDbNote" class="text-xs text-slate-400">💾 تم حفظ النتيجة في قاعدة البيانات وربطها بسجل اختبارات الطالب.</p>
+            </div>
+
+            <!-- Score Circle / Card -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-5 text-center min-w-[200px] shrink-0">
+              <div class="text-xs text-slate-400 font-bold">النتيجة النهائية والنسبة</div>
+              <div id="resultScorePercent" class="text-3xl sm:text-4xl font-extrabold text-emerald-400 mt-1 ltr-num">0%</div>
+              <div id="resultScoreFraction" class="text-xs sm:text-sm font-bold text-white mt-1">0 من 5 إجابات صحيحة</div>
+              <div id="resultPassingNote" class="text-[11px] text-slate-400 mt-1">نسبة النجاح المطلوبة: 60%</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" id="resultRetakeExamBtn" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition">
+              🔄 إعادة الاختبار لتحسين الدرجة
+            </button>
+            <button type="button" id="resultBackToCatalogBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 transition">
+              📚 العودة لبنك الاختبارات
+            </button>
+            <button type="button" id="resultGoToHistoryBtn" class="px-5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-bold text-xs sm:text-sm transition">
+              📊 عرض سجل جميع اختباراتك
+            </button>
+          </div>
+
+          <!-- Detailed Question-by-Question Review & Explanations -->
+          <div class="space-y-4 pt-4 border-t border-slate-800">
+            <h4 class="text-base sm:text-lg font-extrabold text-white">🔍 التقرير التفصيلي للإجابات الصحيحة والشرح العلمي لكل سؤال:</h4>
+            <div id="resultQuestionsReviewList" class="space-y-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 4: STUDENT PREVIOUS EXAMS HISTORY TABLE & LOG -->
+      <div id="examHistorySubView" class="hidden space-y-5">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-white">📊 سجل الاختبارات السابقة ونتائج الطالب</h3>
+              <p class="text-xs text-slate-400 mt-0.5">يعرض جميع محاولاتك الحقيقية المحفوظة في قاعدة البيانات مع الدرجة والنسبة المئوية وحالة الاجتياز</p>
+            </div>
+            <button type="button" id="historyBackToCatalogBtn" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition">
+              + خوض اختبار جديد
+            </button>
+          </div>
+
+          <div id="examHistoryListContainer" class="space-y-3"></div>
+        </div>
       </div>
     </section>
 
@@ -2242,6 +2484,7 @@
       completedSteps: {},
       courseLessonsProgress: {}, // { [courseId]: { completedTopicIndices: [0, 1], lastTopicIndex: 1, updatedAt: ISOString } }
       lastLessonReached: null,   // { courseId, courseTitle, lessonIndex, lessonTitle, timestamp }
+      examHistory: [],           // Array of completed exam attempts saved in DB: { attemptId, examId, examTitle, specialtyLabel, level, score, total, percent, passed, timestamp, answers }
       activeTab: 'dashboard',
       activeRoadmapId: 'track-site',
       activeSwCategory: 'all'
@@ -2443,12 +2686,14 @@
           bookmarkedCourses: appState.bookmarkedCourses || {},
           completedSteps: appState.completedSteps || {},
           courseLessonsProgress: appState.courseLessonsProgress || {},
-          lastLessonReached: appState.lastLessonReached || null
+          lastLessonReached: appState.lastLessonReached || null,
+          examHistory: appState.examHistory || []
         };
         await dbSaveStudent(currentUser);
       }
       updateGlobalProgressUI();
       renderStudentProfileDashboard();
+      renderExamsSectionUI();
     }
 
     // ==========================================
@@ -2678,12 +2923,43 @@
         </div>
       `;
 
+      // Append Final Track Exam Card inside the active roadmap
+      const trackFinalExam = EXAMS_DATA.find(ex => ex.isTrackFinal && ex.trackId === activeTrack.id);
+      if (trackFinalExam) {
+        const bestAttempt = getBestExamAttempt(trackFinalExam.id);
+        const finalCardHtml = `
+          <div class="mt-5 bg-gradient-to-l from-amber-950/40 via-slate-950 to-emerald-950/40 border-2 ${bestAttempt && bestAttempt.passed ? 'border-emerald-500/60' : 'border-amber-500/50'} rounded-3xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+            <div class="space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-xs font-extrabold">🏆 الاختبار النهائي للمسار</span>
+                ${bestAttempt ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${bestAttempt.passed ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'}">أفضل نتيجة: ${bestAttempt.percent}% (${bestAttempt.passed ? 'ناجح' : 'حاول مجدداً'})</span>` : '<span class="text-xs text-slate-400">لم تختبر بعد</span>'}
+              </div>
+              <h4 class="text-base sm:text-lg font-extrabold text-white">${trackFinalExam.title}</h4>
+              <p class="text-xs text-slate-300">${trackFinalExam.description}</p>
+            </div>
+            <button type="button" data-start-track-exam="${trackFinalExam.id}" class="px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm shrink-0 shadow-lg transition">
+              📝 بدء الاختبار النهائي للمسار ←
+            </button>
+          </div>
+        `;
+        const wrapper = detailEl.querySelector('.bg-slate-900\\/90');
+        if (wrapper) wrapper.insertAdjacentHTML('beforeend', finalCardHtml);
+      }
+
       detailEl.querySelectorAll('[data-step-toggle]').forEach(btn => {
         btn.addEventListener('click', () => {
           const stepId = btn.getAttribute('data-step-toggle');
           appState.completedSteps[stepId] = !appState.completedSteps[stepId];
           saveState();
           renderRoadmaps();
+        });
+      });
+
+      detailEl.querySelectorAll('[data-start-track-exam]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const exId = btn.getAttribute('data-start-track-exam');
+          switchTab('exams');
+          startInteractiveExam(exId);
         });
       });
     }
@@ -3482,6 +3758,9 @@
         appState.completedSteps = student.progress.completedSteps || {};
         appState.courseLessonsProgress = student.progress.courseLessonsProgress || {};
         appState.lastLessonReached = student.progress.lastLessonReached || null;
+        if (Array.isArray(student.progress.examHistory)) {
+          appState.examHistory = student.progress.examHistory;
+        }
       }
       await saveState();
       updateAuthHeaderAndProfileUI();
@@ -3498,6 +3777,2391 @@
       updateAuthHeaderAndProfileUI();
       renderStudentProfileDashboard();
       showToast('تم تسجيل الخروج بنجاح', 'info');
+    }
+
+    // ==========================================
+    // 7.8 PHASE 2: INTERACTIVE EXAMS DATABASE & ENGINE (24 EXAMS)
+    // ==========================================
+    const EXAMS_DATA = [
+  {
+    "id": "exam-land-beg",
+    "title": "اختبار المساحة الأرضية — المستوى المبتدئ",
+    "specialty": "land",
+    "specialtyLabel": "المساحة الأرضية",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يغطي المفاهيم الأساسية للمساحة المستوية، وحدات القياس، حساب الانحرافات الدائرية والمختصرة، ومبادئ الميزانية.",
+    "questions": [
+      {
+        "id": "q-lb-1",
+        "type": "mcq",
+        "q": "في المساحة المستوية، كيف يُقاس الانحراف الدائري (Whole Circle Bearing / Azimuth) لأي ضلع؟",
+        "options": [
+          "من اتجاه الشمال مع عقارب الساعة من 0° إلى 360°",
+          "من اتجاه الجنوب عكس عقارب الساعة من 0° إلى 180°",
+          "من اتجاه الشرق أو الغرب من 0° إلى 90°",
+          "من اتجاه الضلع السابق بزاوية داخلية فقط"
+        ],
+        "correct": 0,
+        "explanation": "الانحراف الدائري (Azimuth) يُقاس دائماً من اتجاه الشمال الجغرافي أو المغناطيسي أو الافتراضي في اتجاه دوران عقارب الساعة وتتراوح قيمته بين 0° و360°."
+      },
+      {
+        "id": "q-lb-2",
+        "type": "tf",
+        "q": "صح أم خطأ: الفرق بين الانحراف الأمامي والانحراف الخلفي لأي خط مستقيم في المساحة المستوية يساوي دائماً ±180 درجة.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ فإذا كان الانحراف الأمامي أقل من 180° نجمع عليه 180°، وإذا كان أكبر من 180° نطرح منه 180° للحصول على الانحراف الخلفي."
+      },
+      {
+        "id": "q-lb-3",
+        "type": "mcq",
+        "q": "إذا كان الانحراف الدائري للضلع AB يساوي 130°، ففي أي ربع يقع هذا الضلع وما قيمة انحرافه المختصر؟",
+        "options": [
+          "الربع الثاني (S 50° E)",
+          "الربع الأول (N 50° E)",
+          "الربع الثالث (S 50° W)",
+          "الربع الرابع (N 50° W)"
+        ],
+        "correct": 0,
+        "explanation": "الزاوية 130° تقع بين 90° و180° أي في الربع الثاني (الجنوب الشرقي SE)، وقيمة الانحراف المختصر = 180° - 130° = S 50° E."
+      },
+      {
+        "id": "q-lb-4",
+        "type": "mcq",
+        "q": "في أعمال الميزانية الهندسية، ماذا نسمي أول قراءة تؤخذ على القامة بعد نصب وضبط جهاز الميزان مباشرة على روبير معلوم المنسوب؟",
+        "options": [
+          "المؤخرة (Backsight - BS)",
+          "المقدمة (Foresight - FS)",
+          "المتوسطة (Intermediate Sight - IS)",
+          "منسوب سطح الميزان (HI)"
+        ],
+        "correct": 0,
+        "explanation": "أول قراءة تؤخذ بعد ضبط الميزان تسمى المؤخرة (BS)، وتُجمع مع منسوب الروبير (BM) لحساب منسوب سطح الميزان (HI = RL + BS)."
+      },
+      {
+        "id": "q-lb-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في المساحة المستوية يُهمل كروية الأرض في المساحات الصغيرة التي لا تتجاوز 250 كم² تقريباً.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ في المساحة المستوية (Plane Surveying) نعتبر سطح الأرض مستوياً في المشاريع المحدودة المساحة بينما تؤخذ كروية الأرض في الاعتبار في المساحة الجيوديسية."
+      }
+    ]
+  },
+  {
+    "id": "exam-land-int",
+    "title": "اختبار المساحة الأرضية — المستوى المتوسط",
+    "specialty": "land",
+    "specialtyLabel": "المساحة الأرضية",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يركز على حسابات الترافرسات المغلقة، المركبات الأفقية والرأسية، التحقيق الحسابي للميزانية، وحساب المساحات بالإحداثيات.",
+    "questions": [
+      {
+        "id": "q-li-1",
+        "type": "mcq",
+        "q": "ما هو القانون الصحيح لحساب المجموع النظري للزوايا الداخلية لأي مضلع مغلق (ترافرس مغلق) عدد أضلاعه (n)؟",
+        "options": [
+          "(n - 2) × 180°",
+          "(n + 2) × 180°",
+          "n × 180°",
+          "(2n - 4) × 180°"
+        ],
+        "correct": 0,
+        "explanation": "مجموع الزوايا الداخلية للمضلع المغلق يساوي (n - 2) × 180°، بينما مجموع الزوايا الخارجية يساوي (n + 2) × 180°."
+      },
+      {
+        "id": "q-li-2",
+        "type": "mcq",
+        "q": "عند حساب إحداثيات نقطة ثانية بمعلومية طول الضلع (L) وانحرافه الدائري (α)، ما هي معادلة فرق الشرقيات (ΔE) وفرق الشماليات (ΔN)؟",
+        "options": [
+          "ΔE = L × sin(α)  ،  ΔN = L × cos(α)",
+          "ΔE = L × cos(α)  ،  ΔN = L × sin(α)",
+          "ΔE = L × tan(α)  ،  ΔN = L / cos(α)",
+          "ΔE = L + sin(α)  ،  ΔN = L + cos(α)"
+        ],
+        "correct": 0,
+        "explanation": "بما أن الانحراف الدائري يُقاس من محور الشمال (N)، فإن مركبة الشرقيات تأخذ جيب الزاوية ΔE = L sin(α) ومركبة الشماليات تأخذ جيب التمام ΔN = L cos(α)."
+      },
+      {
+        "id": "q-li-3",
+        "type": "tf",
+        "q": "صح أم خطأ: نقطة الدوران (Turning Point - TP) في الميزانية الطولية يُرصد عليها قراءتان هما مقدمة (FS) قبل نقل الجهاز ومؤخرة (BS) بعد نقل الجهاز.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ نقطة الدوران وظيفتها ربط أوضاع الميزان المتتالية، لذا يؤخذ عليها قراءة مقدمة من الوضع الأول ثم قراءة مؤخرة من الوضع الجديد."
+      },
+      {
+        "id": "q-li-4",
+        "type": "mcq",
+        "q": "أي طريقة تُستخدم لتصحيح خطأ القفل الضلعي في الترافرس المغلق عندما تكون دقة قياس الزوايا مساوية لدقة قياس الأطوال؟",
+        "options": [
+          "طريقة بودتش (Bowditch / Compass Rule)",
+          "طريقة الترانزيت (Transit Rule) فقط",
+          "طريقة أشباه المنحرفات",
+          "طريقة سيمبسون"
+        ],
+        "correct": 0,
+        "explanation": "قاعدة بودتش (Bowditch Rule) هي الأكثر شيوعاً في تصحيح مركبات الترافرس وتفترض تساوي دقة الرصد الزاوي والخطي وتوزع الخطأ بنسبة طول كل ضلع إلى مجموع أطوال الأضلاع."
+      },
+      {
+        "id": "q-li-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في الترافرس المغلق الموزون تماماً بعد التصحيح، يجب أن يكون المجموع الجبري لمركبات الشرقيات (∑ΔE = 0) والمجموع الجبري لمركبات الشماليات (∑ΔN = 0).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ لأن الترافرس يبدأ من نقطة وينتهي عند نفس النقطة، فلا بد أن تكون محصلة المركبات الأفقية والراسية مساوية للصفر بعد التصحيح."
+      }
+    ]
+  },
+  {
+    "id": "exam-land-adv",
+    "title": "اختبار المساحة الأرضية — المستوى المتقدم",
+    "specialty": "land",
+    "specialtyLabel": "المساحة الأرضية",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يتناول دقة الترافرسات النسبية، المنحنيات الأفقية والرأسية للطرق، الميزانية الشبكية والتكعيب، ومعاملات مقياس المسقط.",
+    "questions": [
+      {
+        "id": "q-la-1",
+        "type": "mcq",
+        "q": "إذا كان خطأ القفل الخطي الكلي لترافرس مغلق يساوي 0.05 متر ومجموع أطوال أضلاع الترافرس يساوي 1000 متر، فكم تبلغ الدقة النسبية للترافرس؟",
+        "options": [
+          "1 : 20,000",
+          "1 : 5,000",
+          "1 : 50,000",
+          "1 : 2,000"
+        ],
+        "correct": 0,
+        "explanation": "الدقة النسبية = 1 / (مجموع الأطوال ÷ خطأ القفل الخطي) = 1 / (1000 ÷ 0.05) = 1 : 20,000 وهي دقة ممتازة لأعمال الثوابت المساحية."
+      },
+      {
+        "id": "q-la-2",
+        "type": "mcq",
+        "q": "في تصميم وتوقيع المنحنيات الدائرية البسيطة للطرق، ما هي معادلة حساب طول المماس (Tangent Length - T) بمعلومية نصف القطر (R) وزاوية التقاطع (Δ)؟",
+        "options": [
+          "T = R × tan(Δ / 2)",
+          "T = R × sin(Δ)",
+          "T = 2 × R × sin(Δ / 2)",
+          "T = R × (sec(Δ / 2) - 1)"
+        ],
+        "correct": 0,
+        "explanation": "طول المماس من نقطة التلاقي (PI) إلى بداية المنحنى (PC) أو نهايته (PT) يُحسب من العلاقة المثلثية الأساسية: T = R × tan(Δ / 2)."
+      },
+      {
+        "id": "q-la-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند تحويل المسافة المقاسة في الموقع على ارتفاع سطح البحر إلى مسافة على مسقط UTM عند خط الطول المركزي، نضرب في معامل المقياس المركزي (Scale Factor = 0.9996).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ معامل المقياس عند خط الطول المركزي لمسقط UTM هو 0.9996 لتقليل التشوه عبر عرض النطاق البالغ 6 درجات."
+      },
+      {
+        "id": "q-la-4",
+        "type": "mcq",
+        "q": "في حساب مكعبات الحفر والردم لقطاعات الطرق الطولية، أي معادلة تعطي دقة أعلى من طريقة متوسط المساحتين عند تغير مساحة المقطع بشكل كبير؟",
+        "options": [
+          "معادلة المنشور الناقص (Prismoidal Formula)",
+          "طريقة المربعات المتساوية فقط",
+          "طريقة خطوط الكنتور التقريبية",
+          "معادلة المثلث البسيط"
+        ],
+        "correct": 0,
+        "explanation": "معادلة المنشور الناقص (Prismoidal Formula: V = L/6 × (A1 + 4Am + A2)) تأخذ مساحة القطاع الأوسط في الحسبان وتعطي حجماً أدق من متوسط المساحتين."
+      },
+      {
+        "id": "q-la-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في الميزانية الدقيقة لمسافات طويلة، يتسبب انحناء سطح الأرض في زيادة قراءة القامة بينما يتسبب الانكسار الجوي في تقليل هذا التأثير بنحو السُبع.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ التصحيح المشترك لكروية الأرض والانكسار الجوي يُطرح من قراءة القامة ويساوي تقريباً 0.0673 × D² (حيث D المسافة بالكيلومتر)."
+      }
+    ]
+  },
+  {
+    "id": "exam-gis-beg",
+    "title": "اختبار نظم المعلومات الجغرافية GIS — المستوى المبتدئ",
+    "specialty": "gis",
+    "specialtyLabel": "GIS ونظم المعلومات الجغرافية",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يختبر الأساسيات الجوهرية لنظم المعلومات الجغرافية، الفرق بين بيانات Vector وRaster، والجداول الوصفية.",
+    "questions": [
+      {
+        "id": "q-gb-1",
+        "type": "mcq",
+        "q": "أي من العناصر التالية يمثل الأشكال الهندسية الثلاثة الأساسية لتمثيل البيانات الاتجاهية (Vector Data) في GIS؟",
+        "options": [
+          "نقطة (Point)، خط (Polyline)، مضلع (Polygon)",
+          "خلية (Pixel)، نطاق طيفي (Band)، شبكة (Grid)",
+          "صورة جوية، نموذج ارتفاع رقمي، رادار",
+          "جدول إكسل، ملف نصي، ملف صوتي"
+        ],
+        "correct": 0,
+        "explanation": "البيانات الاتجاهية (Vector) تمثل الظواهر المكانية بواسطة النقاط (مثل الآبار)، والخطوط (مثل الطرق)، والمضلعات (مثل قطع الأراضي)."
+      },
+      {
+        "id": "q-gb-2",
+        "type": "tf",
+        "q": "صح أم خطأ: نماذج الارتفاعات الرقمية (DEM) ومرئيات الأقمار الصناعية تندرج تحت نوع البيانات الشبكية (Raster Data).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ البيانات الشبكية (Raster) تتكون من مصفوفة من الخلايا (Pixels) يحمل كل منها قيمة رقمية كالارتفاع أو الانعكاس الطيفي."
+      },
+      {
+        "id": "q-gb-3",
+        "type": "mcq",
+        "q": "ما هي العملية التي يتم فيها ربط خريطة ورقية ممسوحة ضوئياً (Scanned Map) بإحداثياتها الحقيقية على سطح الأرض؟",
+        "options": [
+          "الإرجاع الجغرافي (Georeferencing)",
+          "الحرم المكاني (Buffer)",
+          "الاستعلام الوصفي (Select by Attributes)",
+          "الدمج الطيفي (Layer Stacking)"
+        ],
+        "correct": 0,
+        "explanation": "الإرجاع الجغرافي (Georeferencing) هو تعريف موقع الصورة أو الخريطة الممسوحة ضوئياً في الفراغ الجغرافي باستخدام نقاط تحكم معلومة الإحداثيات."
+      },
+      {
+        "id": "q-gb-4",
+        "type": "mcq",
+        "q": "ما هو الكود العالمي القياسي (EPSG) لنظام الإحداثيات الجغرافي العالمي WGS 1984؟",
+        "options": [
+          "EPSG:4326",
+          "EPSG:32636",
+          "EPSG:3857",
+          "EPSG:22992"
+        ],
+        "correct": 0,
+        "explanation": "الكود EPSG:4326 يرمز لنظام الإحداثيات الجغرافي العالمي WGS84 بالدرجات، بينما EPSG:32636 يرمز لمسقط UTM Zone 36N بالمتر."
+      },
+      {
+        "id": "q-gb-5",
+        "type": "tf",
+        "q": "صح أم خطأ: ملف Shapefile يتكون من ملف واحد فقط امتداده (.shp) ولا يحتاج إلى أي ملفات مساعدة لفتحه في برامج GIS.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 1,
+        "explanation": "عبارة خاطئة؛ الـ Shapefile يتطلب على الأقل 3 ملفات أساسية معاً (.shp للشكل الهندسي، و.shx للفهرس، و.dbf للجدول الوصفي) بالإضافة إلى .prj للمسقط."
+      }
+    ]
+  },
+  {
+    "id": "exam-gis-int",
+    "title": "اختبار نظم المعلومات الجغرافية GIS — المستوى المتوسط",
+    "specialty": "gis",
+    "specialtyLabel": "GIS ونظم المعلومات الجغرافية",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يتناول قواعد البيانات الجغرافية، أدوات المعالجة المكانية (Geoprocessing)، الربط المكاني، والمساقط.",
+    "questions": [
+      {
+        "id": "q-gi-1",
+        "type": "mcq",
+        "q": "أي أداة من أدوات المعالجة الجغرافية (Geoprocessing) تُستخدم لاقتطاع طبقة معالم بناءً على حدود مضلع منطقة الدراسة؟",
+        "options": [
+          "أداة القص (Clip)",
+          "أداة الإذابة (Dissolve)",
+          "أداة الدمج (Merge)",
+          "أداة الحرم المكاني (Buffer)"
+        ],
+        "correct": 0,
+        "explanation": "أداة Clip تعمل كقالب قاطع لاقتطاع المعالم التي تقع داخل حدود طبقة القص (Clip Feature) مع الحفاظ على خصائص الطبقة المقصوصة."
+      },
+      {
+        "id": "q-gi-2",
+        "type": "mcq",
+        "q": "ما هي الوظيفة الأساسية لإعداد نطاق القيم (Domains) داخل قاعدة البيانات الجغرافية (Geodatabase)؟",
+        "options": [
+          "ضبط جودة إدخال البيانات ومنع الأخطاء عبر تحديد قائمة قيم أو مدى رقمي مسموح به للحقل",
+          "تغيير نظام إحداثيات الخريطة تلقائياً",
+          "تحويل البيانات الاتجاهية إلى بيانات شبكية",
+          "ضغط حجم الصور الفضائية"
+        ],
+        "correct": 0,
+        "explanation": "الـ Domains تحافظ على سلامة البيانات الوصفية (Data Integrity) من خلال إلزام مدخل البيانات باختيار قيم محددة مسبقاً (Coded Values) أو ضمن مدى رقمي (Range)."
+      },
+      {
+        "id": "q-gi-3",
+        "type": "tf",
+        "q": "صح أم خطأ: الربط المكاني (Spatial Join) ينقل البيانات الوصفية من طبقة إلى أخرى بناءً على العلاقة المكانية بينهما (مثل الاحتواء أو التقاطع) وليس بناءً على حقل مشترك.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ بينما يعتمد Attribute Join على حقل مشترك (Key Field)، يعتمد Spatial Join على الموقع الجغرافي المشترك بين الطبقتين."
+      },
+      {
+        "id": "q-gi-4",
+        "type": "mcq",
+        "q": "إذا أردنا دمج المضلعات المتجاورة التي تشترك في نفس اسم المحافظة داخل طبقة المراكز الإدارية لتكوين طبقة حدود المحافظات، نستخدم أداة:",
+        "options": [
+          "Dissolve (الإذابة)",
+          "Intersect (التقاطع)",
+          "Erase (المسح)",
+          "Symmetrical Difference"
+        ],
+        "correct": 0,
+        "explanation": "أداة Dissolve تقوم بتجميع وإذابة الحدود الفاصلة بين المعالم التي تمتلك نفس القيمة في حقل وصفي محدد (Dissolve Field)."
+      },
+      {
+        "id": "q-gi-5",
+        "type": "tf",
+        "q": "صح أم خطأ: لا يجوز حساب المساحات أو الأطوال بالمتر مباشرة على طبقة ذات نظام إحداثيات جغرافي (Geographic Coordinate System) دون إسقاطها أولاً أو استخدام الحساب الجيوديسي.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ لأن وحدات النظام الجغرافي هي الدرجات الزاوية التي تختلف قيمتها المترية حسب خط العرض، لذا يجب التحويل لمسقط متري (مثل UTM) أو استخدام Calculate Geometry Geodesic."
+      }
+    ]
+  },
+  {
+    "id": "exam-gis-adv",
+    "title": "اختبار نظم المعلومات الجغرافية GIS — المستوى المتقدم",
+    "specialty": "gis",
+    "specialtyLabel": "GIS ونظم المعلومات الجغرافية",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يختبر قواعد البناء الطوبولوجي (Topology)، التحليل الهيدرولوجي، التحليل الشبكي، ونمذجة الملاءمة المكانية.",
+    "questions": [
+      {
+        "id": "q-ga-1",
+        "type": "mcq",
+        "q": "في التحليل الهيدرولوجي لاستخراج المجاري المائية من نموذج الارتفاع الرقمي (DEM)، ما هو الترتيب المنطقي الصحيح لتطبيق الأدوات؟",
+        "options": [
+          "Fill ➔ Flow Direction ➔ Flow Accumulation ➔ Stream Order",
+          "Stream Order ➔ Flow Accumulation ➔ Fill ➔ Flow Direction",
+          "Flow Accumulation ➔ Fill ➔ Slope ➔ Aspect",
+          "Clip ➔ Buffer ➔ Dissolve ➔ Kriging"
+        ],
+        "correct": 0,
+        "explanation": "نبدأ دائماً بملء الفجوات الشاذة (Fill Sinks)، ثم حساب اتجاه الجريان (Flow Direction)، ثم تراكم الجريان (Flow Accumulation)، وأخيراً استخراج رتب الأودية (Stream Order)."
+      },
+      {
+        "id": "q-ga-2",
+        "type": "mcq",
+        "q": "أي قاعدة طوبولوجية (Topology Rule) تضمن عدم وجود نهايات معلقة أو غير متصلة في شبكة مواسير المياه أو شبكة الطرق؟",
+        "options": [
+          "Must Not Have Dangles",
+          "Must Not Have Gaps",
+          "Must Be Covered By Polygon",
+          "Contains Point"
+        ],
+        "correct": 0,
+        "explanation": "قاعدة Must Not Have Dangles تُطبق على طبقات الخطوط لكشف النهايات الحرة غير المتصلة (Overshoots / Undershoots) في الشبكات الهندسية."
+      },
+      {
+        "id": "q-ga-3",
+        "type": "tf",
+        "q": "صح أم خطأ: طريقة التقدير المكاني (Kriging) تعتمد على الترابط الإحصائي المكاني (Spatial Autocorrelation) والـ Semivariogram على عكس طريقة IDW الحتمية.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تعتبر Kriging من الطرق الجيوإحصائية المتقدمة (Geostatistical Interpolation) التي تقيس اتجاه وتباين البيانات مكانياً."
+      },
+      {
+        "id": "q-ga-4",
+        "type": "mcq",
+        "q": "عند إجراء تحليل ملاءمة مكانية متعدد المعايير (Weighted Overlay) لاختيار أفضل موقع لمحطة طاقة شمسية، ما الخطوة الإلزامية قبل جمع الطبقات؟",
+        "options": [
+          "إعادة تصنيف جميع الطبقات (Reclassify) إلى مقياس موحد (مثلاً من 1 إلى 9) وتحديد أوزان مئوية مجموعها 100%",
+          "تحويل جميع الطبقات إلى ملفات AutoCAD DXF",
+          "حذف الجداول الوصفية من قاعدة البيانات",
+          "تغيير جميع الألوان إلى اللون الأبيض والأسود"
+        ],
+        "correct": 0,
+        "explanation": "لدمج معايير ذات وحدات مختلفة (ميل بالدرجات، مسافة بالمتر، إشعاع بالواط)، يجب توحيد مقياسها عبر Reclassify ثم ضرب كل معيار في وزنه النسبي."
+      },
+      {
+        "id": "q-ga-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في تحليل الشبكات (Network Analyst)، يُستخدم تحليل نطاق الخدمة (Service Area) لتحديد المناطق التي يمكن لسيارة الإسعاف الوصول إليها خلال زمن محدد (مثلاً 5 و10 دقائق).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ Service Area يحسب المضلعات المخدومة على طول شبكة الطرق الحقيقية بناءً على زمن القيادة أو المسافة الفعلية."
+      }
+    ]
+  },
+  {
+    "id": "exam-arcgispro-beg",
+    "title": "اختبار برنامج ArcGIS Pro — المستوى المبتدئ",
+    "specialty": "arcgispro",
+    "specialtyLabel": "ArcGIS Pro",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يقيس إلمامك بواجهة ArcGIS Pro الحديثة، امتدادات المشاريع، إدارة الخرائط، والفرق بينه وبين ArcMap.",
+    "questions": [
+      {
+        "id": "q-apb-1",
+        "type": "mcq",
+        "q": "ما هو الامتداد الرسمي لملف المشروع الكامل في برنامج ArcGIS Pro؟",
+        "options": [
+          ".aprx",
+          ".mxd",
+          ".qgz",
+          ".dwg"
+        ],
+        "correct": 0,
+        "explanation": "مشاريع ArcGIS Pro تُحفظ بامتداد (.aprx) ويمكن أن تحتوي على عدة خرائط ولوحات طباعة ومشاهد ثلاثية الأبعاد، بينما (.mxd) كان خاصاً ببرنامج ArcMap القديم."
+      },
+      {
+        "id": "q-apb-2",
+        "type": "tf",
+        "q": "صح أم خطأ: يتيح برنامج ArcGIS Pro إنشاء أكثر من خريطة ثنائية الأبعاد (2D Map) وأكثر من مشهد ثلاثي الأبعاد (3D Scene) وأكثر من لوحة طباعة (Layout) داخل نفس المشروع الواحد.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ وهذه من أبرز مزايا ArcGIS Pro مقارنة بـ ArcMap الذي كان يقتصر على خريطة واحدة وليأوت واحد لكل ملف."
+      },
+      {
+        "id": "q-apb-3",
+        "type": "mcq",
+        "q": "في واجهة ArcGIS Pro، من أي نافذة (Pane) يمكنك إدارة قواعد البيانات، المجلدات المتصلة (Folder Connections)، والنماذج البرمجية؟",
+        "options": [
+          "نافذة الكتالوج (Catalog Pane)",
+          "نافذة المحتويات فقط (Contents Pane)",
+          "شريط الحالة السفلي",
+          "نافذة الطباعة"
+        ],
+        "correct": 0,
+        "explanation": "نافذة Catalog Pane في ArcGIS Pro تدمج كافة وظائف برنامج ArcCatalog السابق في قلب المشروع مباشرة."
+      },
+      {
+        "id": "q-apb-4",
+        "type": "mcq",
+        "q": "عند إنشاء مشروع جديد في ArcGIS Pro، ما الذي يتم إنشاؤه تلقائياً بشكل افتراضي داخل مجلد المشروع؟",
+        "options": [
+          "قاعدة بيانات جغرافية افتراضية (Default File Geodatabase .gdb) وصندوق أدوات افتراضي (.atbx)",
+          "ملف أوتوكاد فارغ",
+          "مرئية فضائية للقمر لاندسات",
+          "ملف شيب فايل واحد فقط"
+        ],
+        "correct": 0,
+        "explanation": "يقوم ArcGIS Pro تلقائياً بإنشاء قاعدة بيانات File Geodatabase تحمل اسم المشروع وصندوق أدوات Toolbox لحفظ كافة مخرجات التحليل فيها."
+      },
+      {
+        "id": "q-apb-5",
+        "type": "tf",
+        "q": "صح أم خطأ: يعتمد برنامج ArcGIS Pro على شريط الأدوات السياقي العلوي (Contextual Ribbon) الذي يتغير تلقائياً حسب العنصر المحدد حالياً.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ فعند تحديد طبقة Vector تظهر تبويبات Feature Layer، وعند تحديد طبقة Raster تظهر تبويبات Raster Layer."
+      }
+    ]
+  },
+  {
+    "id": "exam-arcgispro-int",
+    "title": "اختبار برنامج ArcGIS Pro — المستوى المتوسط",
+    "specialty": "arcgispro",
+    "specialtyLabel": "ArcGIS Pro",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يركز على الترميز المتقدم، تعبيرات Arcade، تحرير المعالم، وسلاسل الخرائط الأطلسية (Map Series).",
+    "questions": [
+      {
+        "id": "q-api-1",
+        "type": "mcq",
+        "q": "ما هي لغة التعبيرات البرمجية الخفيفة المدمجة في ArcGIS Pro وArcGIS Online لتخصيص التسميات (Labels) والترميز والنوافذ المنبثقة ديناميكياً؟",
+        "options": [
+          "ArcGIS Arcade",
+          "AutoLISP",
+          "FORTRAN",
+          "COBOL"
+        ],
+        "correct": 0,
+        "explanation": "لغة ArcGIS Arcade هي لغة تعبيرات سريعة وآمنة من Esri تتيح إجراء حسابات شرطية وتنسيق النصوص على الطاير دون الحاجة لإنشاء حقول جديدة."
+      },
+      {
+        "id": "q-api-2",
+        "type": "mcq",
+        "q": "أي ميزة في لوحة الطباعة (Layout) داخل ArcGIS Pro تُستخدم لإنتاج أطلس خرائط كامل (عشرات اللوحات المتتالية تلقائياً) بناءً على طبقة فهرس شبكي؟",
+        "options": [
+          "Map Series (Spatial Map Series)",
+          "Bookmark Manager",
+          "Georeference Tool",
+          "Pairwise Clip"
+        ],
+        "correct": 0,
+        "explanation": "ميزة Map Series (التي حلت محل Data Driven Pages في ArcMap) تولد صفحات خرائط متعددة تلقائياً مع تحديث العنوان والجدول ومقياس الرسم لكل صفحة."
+      },
+      {
+        "id": "q-api-3",
+        "type": "tf",
+        "q": "صح أم خطأ: في ArcGIS Pro، لا يتطلب البدء في رسم أو تعديل المعالم الضغط على زر Start Editing كما كان في ArcMap، بل يمكن التحرير مباشرة من تبويب Edit مع حفظ أو التراجع عن التعديلات.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ جلسة التحرير في ArcGIS Pro مفعلة تلقائياً للطبقات القابلة للتعديل مع وجود زري Save وDiscard لحفظ أو إلغاء التغييرات."
+      },
+      {
+        "id": "q-api-4",
+        "type": "mcq",
+        "q": "لتصفية عرض معالم طبقة معينة في الخريطة (مثلاً إظهار المدن التي يزيد سكانها عن مليون نسمة فقط) دون حذف باقي المعالم من قاعدة البيانات، نستخدم:",
+        "options": [
+          "Definition Query (استعلام التعريف) من خصائص الطبقة",
+          "Delete Features",
+          "Truncate Table",
+          "Export Raster"
+        ],
+        "correct": 0,
+        "explanation": "Definition Query يطبق شرط SQL لعرض المعالم المطلوبة فقط في الخريطة وفي عمليات التحليل مع بقاء البيانات الأصلية سليمة."
+      },
+      {
+        "id": "q-api-5",
+        "type": "tf",
+        "q": "صح أم خطأ: يمكن في ArcGIS Pro تحويل أي خريطة ثنائية الأبعاد (2D Map) إلى مشهد ثلاثي الأبعاد (3D Local or Global Scene) بضغطة زر من قائمة View ➔ Convert.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يدعم ArcGIS Pro التحويل الفوري بين العرض ثنائي الأبعاد وثلاثي الأبعاد مع إمكانية رفع المباني (Extrusion) بناءً على عدد الأدوار أو الارتفاع."
+      }
+    ]
+  },
+  {
+    "id": "exam-arcgispro-adv",
+    "title": "اختبار برنامج ArcGIS Pro — المستوى المتقدم",
+    "specialty": "arcgispro",
+    "specialtyLabel": "ArcGIS Pro",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يتناول الأتمتة بـ ModelBuilder وArcPy (Python 3)، الأدوات المتوازية Pairwise، ومشاركة خدمات الويب.",
+    "questions": [
+      {
+        "id": "q-apa-1",
+        "type": "mcq",
+        "q": "ما هو إصدار لغة بايثون المعتمد داخل بيئة ArcGIS Pro لتشغيل مكتبة ArcPy ودفاتر الملاحظات (ArcGIS Notebooks)؟",
+        "options": [
+          "Python 3 (مع إدارة البيئات عبر Conda)",
+          "Python 2.7 القديم فقط",
+          "Java 8",
+          "PHP 5"
+        ],
+        "correct": 0,
+        "explanation": "انتقل ArcGIS Pro بالكامل إلى بيئة Python 3 الحديثة مع دعم مكتبات علوم البيانات المكانية ودفاتر Jupyter Notebooks المدمجة."
+      },
+      {
+        "id": "q-apa-2",
+        "type": "mcq",
+        "q": "لماذا يُنصح في ArcGIS Pro باستخدام أدوات (Pairwise Clip / Pairwise Intersect / Pairwise Dissolve) بدلاً من الأدوات الكلاسيكية عند التعامل مع بيانات ضخمة؟",
+        "options": [
+          "لأنها مصممة للمعالجة المتوازية متعددة الأنوية (Multi-core Parallel Processing) وتنجز التحليل بسرعة أعلى بكثير",
+          "لأنها تحذف نصف المعالم عشوائياً",
+          "لأنها تعمل بدون كهرباء",
+          "لأنها مخصصة للصور الشخصية فقط"
+        ],
+        "correct": 0,
+        "explanation": "مجموعة أدوات Pairwise Overlay في ArcGIS Pro تستغل كافة أنوية المعالج الحديث لتحليل الطبقات الضخمة في جزء بسيط من الوقت المعتاد."
+      },
+      {
+        "id": "q-apa-3",
+        "type": "tf",
+        "q": "صح أم خطأ: في ModelBuilder داخل ArcGIS Pro، تُستخدم أدوات التكرار (Iterators مثل Iterate Feature Classes) لتطبيق نفس سلسلة المعالجة تلقائياً على عشرات الطبقات داخل قاعدة البيانات.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ الـ Iterators في ModelBuilder توفر ساعات من العمل المتكرر عبر المرور الآلي على كل طبقة أو ملف أو صف وتنفيذ النموذج عليه."
+      },
+      {
+        "id": "q-apa-4",
+        "type": "mcq",
+        "q": "ما هو امتداد ملف حزمة المشروع الكاملة في ArcGIS Pro الذي يجمع المشروع مع كافة قواعد بياناته وطبقاته في ملف واحد مضغوط لنقله لجهاز آخر؟",
+        "options": [
+          ".ppkx (Project Package)",
+          ".mpk",
+          ".shp",
+          ".csv"
+        ],
+        "correct": 0,
+        "explanation": "Project Package (.ppkx) يحزم ملف الـ .aprx وكافة البيانات والرموز المربوطة به لضمان فتح المشروع على أي جهاز آخر دون فقدان أي مسار (Broken Links)."
+      },
+      {
+        "id": "q-apa-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في مكتبة ArcPy، يُعد استخدام (arcpy.da.SearchCursor / UpdateCursor) أسرع بكثير في قراءة وتحديث آلاف السجلات مقارنة بـ Cursor القديم.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ وحدة البيانات (arcpy.da) تتعامل مع السجلات كمصفوفات سريعة (Tuples) مما يضاعف سرعة التنفيذ البرمجي عدة مرات."
+      }
+    ]
+  },
+  {
+    "id": "exam-rs-beg",
+    "title": "اختبار الاستشعار عن بعد — المستوى المبتدئ",
+    "specialty": "rs",
+    "specialtyLabel": "الاستشعار عن بعد",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يغطي أساسيات الطيف الكهرومغناطيسي، أنواع الدقة في المرئيات الفضائية، والأقمار الصناعية الشهيرة.",
+    "questions": [
+      {
+        "id": "q-rsb-1",
+        "type": "mcq",
+        "q": "ما المقصود بالدقة المكانية (Spatial Resolution) لمرئية القمر الصناعي؟",
+        "options": [
+          "أبعاد أصغر وحدة مساحية (الخلية / Pixel) التي يميزها المستشعر على سطح الأرض (مثلاً 10 متر أو 30 متر)",
+          "عدد المرات التي يزور فيها القمر نفس المنطقة شهرياً",
+          "عدد النطاقات الطيفية التي يلتقطها المستشعر",
+          "ارتفاع القمر الصناعي عن سطح الأرض بالكيلومتر"
+        ],
+        "correct": 0,
+        "explanation": "الدقة المكانية تعبر عن طول ضلع البكسل الواحد على الأرض؛ فدقة Sentinel-2 في النطاقات المرئية هي 10 أمتار، ودقة Landsat 8/9 هي 30 متراً."
+      },
+      {
+        "id": "q-rsb-2",
+        "type": "tf",
+        "q": "صح أم خطأ: النباتات الخضراء السليمة تمتص معظم الأشعة الحمراء (Red) لعملية البناء الضوئي وتعكس نسبة عالية جداً من الأشعة تحت الحمراء القريبة (NIR).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ وهذا التباين القوي بين امتصاص الأحمر وانعكاس الأشعة تحت الحمراء القريبة هو الأساس العلمي لحساب مؤشر الغطاء النباتي NDVI."
+      },
+      {
+        "id": "q-rsb-3",
+        "type": "mcq",
+        "q": "أي من المستشعرات التالية يُعد من نظم الاستشعار عن بعد الفعالة (Active Remote Sensing) التي ترسل أشعتها الخاصة وتستقبل ارتدادها ليلاً ونهاراً؟",
+        "options": [
+          "الرادار (SAR) والليدار (LiDAR)",
+          "كاميرا التصوير الفوتوغرافي العادية",
+          "المستشعر البصري على القمر لاندسات",
+          "العين البشرية"
+        ],
+        "correct": 0,
+        "explanation": "الرادار (مثل Sentinel-1) والليدار هي مستشعرات نشطة (Active) تبث طاقتها الخاصة، بينما المستشعرات البصرية تعتمد على أشعة الشمس المنعكسة (Passive)."
+      },
+      {
+        "id": "q-rsb-4",
+        "type": "mcq",
+        "q": "ما هي قيمة مؤشر الغطاء النباتي (NDVI) التي تدل عادةً على وجود غطاء نباتي كثيف وصحي؟",
+        "options": [
+          "قيم موجبة مرتفعة بين +0.4 و +0.9",
+          "قيم سالبة بين -0.1 و -0.8",
+          "قيمة تساوي الصفر تماماً",
+          "قيم أكبر من 100"
+        ],
+        "correct": 0,
+        "explanation": "يتراوح مؤشر NDVI بين -1 و+1؛ فالقيم السالبة تمثل المياه، والقريبة من الصفر (0.1) تمثل التربة الجرداء، والمرتفعة (+0.4 إلى +0.9) تمثل النباتات الكثيفة."
+      },
+      {
+        "id": "q-rsb-5",
+        "type": "tf",
+        "q": "صح أم خطأ: الدقة الزمنية (Temporal Resolution) تعني الفترة الزمنية التي يستغرقها القمر الصناعي لإعادة تصوير نفس البقعة على سطح الأرض.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ فكلما قلت الفترة الزمنية بين التصويرين زادت الدقة الزمنية للمستشعر، وهو أمر حيوي في رصد الكوارث والزراعة."
+      }
+    ]
+  },
+  {
+    "id": "exam-rs-int",
+    "title": "اختبار الاستشعار عن بعد — المستوى المتوسط",
+    "specialty": "rs",
+    "specialtyLabel": "الاستشعار عن بعد",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يركز على معالجة المرئيات ببرامج ERDAS وENVI، الدمج الطيفي، Pan-Sharpening، والتصنيف الموجه وغير الموجه.",
+    "questions": [
+      {
+        "id": "q-rsi-1",
+        "type": "mcq",
+        "q": "ما اسم العملية التي ندمج فيها النطاقات متعددة الأطياف ذات الدقة 30م مع النطاق البانكروماتي (Panchromatic) ذي الدقة 15م في مرئية Landsat للحصول على مرئية ملونة بدقة 15م؟",
+        "options": [
+          "Pan-Sharpening (التحسين المكاني للمرئية)",
+          "Unsupervised Classification",
+          "Buffer Analysis",
+          "Atmospheric Absorption"
+        ],
+        "correct": 0,
+        "explanation": "عملية Pan-Sharpening تجمع بين الدقة الطيفية العالية للنطاقات الملونة والدقة المكانية العالية للنطاق البانكروماتي (Band 8 في لاندسات 8/9)."
+      },
+      {
+        "id": "q-rsi-2",
+        "type": "mcq",
+        "q": "ما هو الفرق الأساسي بين التصنيف الموجه (Supervised) والتصنيف غير الموجه (Unsupervised) للمرئيات الفضائية؟",
+        "options": [
+          "التصنيف الموجه يعتمد على اختيار الباحث لعينات تدريبية (Training Samples) معلومة مسبقاً، بينما غير الموجه يجمع البكسلات المتشابهة آلياً (Clustering)",
+          "التصنيف الموجه لا يحتاج إلى مرئية فضائية",
+          "التصنيف غير الموجه يُجرى يدوياً بالقلم الرصاص",
+          "لا يوجد أي فرق بينهما"
+        ],
+        "correct": 0,
+        "explanation": "في التصنيف الموجه يحدد المحلل بصمات طيفية (Signatures) لأصناف معروفة (ماء، زراعة، عمران)، بينما يعتمد غير الموجه على خوارزميات مثل K-Means وISODATA."
+      },
+      {
+        "id": "q-rsi-3",
+        "type": "tf",
+        "q": "صح أم خطأ: التصحيح الجوي (Atmospheric Correction مثل FLAASH في برنامج ENVI) يهدف إلى إزالة تأثير التشتت والامتصاص الناتج عن الغلاف الجوي وتحويل القيم إلى انعكاس سطحي حقيقي (Surface Reflectance).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ التصحيح الإشعاعي والجوي ضروري جداً خاصة عند مقارنة مرئيات ملتقطة في تواريخ مختلفة (Change Detection)."
+      },
+      {
+        "id": "q-rsi-4",
+        "type": "mcq",
+        "q": "أي مؤشر طيفي يُستخدم خصيصاً لتحديد المسطحات المائية ورصد خط الشاطئ من المرئيات الفضائية؟",
+        "options": [
+          "مؤشر المياه الفارق الطبيعي (NDWI)",
+          "مؤشر العمران (NDBI)",
+          "مؤشر حرارة السطح (LST)",
+          "مؤشر الانحدار (Slope)"
+        ],
+        "correct": 0,
+        "explanation": "مؤشر NDWI (Normalized Difference Water Index) يعتمد على النطاق الأخضر ونطاق الأشعة تحت الحمراء القريبة أو القصيرة لإبراز المسطحات المائية بوضوح."
+      },
+      {
+        "id": "q-rsi-5",
+        "type": "tf",
+        "q": "صح أم خطأ: عملية (Layer Stacking) في برنامجي ERDAS Imagine وENVI تُستخدم لجمع النطاقات الطيفية المنفصلة (Bands) في ملف مرئية واحد متعدد النطاقات.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تأتي مرئيات Landsat وSentinel كملفات GeoTIFF منفصلة لكل نطاق، وتقوم أداة Layer Stacking بدمجها في ملف واحد."
+      }
+    ]
+  },
+  {
+    "id": "exam-rs-adv",
+    "title": "اختبار الاستشعار عن بعد والمسح الجوي — المستوى المتقدم",
+    "specialty": "rs",
+    "specialtyLabel": "الاستشعار عن بعد",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يغطي الفوتوجرامتري والمسح الجوي بالدرون (Metashape & Pix4D)، تقييم دقة التصنيف (Kappa)، وGoogle Earth Engine.",
+    "questions": [
+      {
+        "id": "q-rsa-1",
+        "type": "mcq",
+        "q": "في المسح الجوي بطائرات الدرون (UAV Photogrammetry)، ما هي النسبة الموصى بها للتداخل الأمامي (Front Overlap) والتداخل الجانبي (Side Overlap) بين الصور الجوية لضمان جودة النموذج ثلاثي الأبعاد؟",
+        "options": [
+          "تداخل أمامي 75% إلى 80% ، وتداخل جانبي 65% إلى 70%",
+          "تداخل أمامي 10% ، وتداخل جانبي 5%",
+          "صفر بالمائة (بدون أي تداخل)",
+          "تداخل أمامي 100% في صورة واحدة فقط"
+        ],
+        "correct": 0,
+        "explanation": "تتطلب خوارزميات Structure from Motion (SfM) في Metashape وPix4D تداخلاً أمامياً لا يقل عن 75-80% وجانبياً 65-70% لربط النقاط المشتركة (Tie Points) بدقة."
+      },
+      {
+        "id": "q-rsa-2",
+        "type": "mcq",
+        "q": "عند إنتاج نماذج الارتفاعات من سحابة نقاط الدرون، ما الفرق الجوهري بين DSM وDTM؟",
+        "options": [
+          "الـ DSM يشمل ارتفاعات المباني والأشجار فوق الأرض، بينما الـ DTM يمثل منسوب سطح الأرض العارية فقط بعد فلترة العوائق",
+          "الـ DSM ثنائي الأبعاد والـ DTM أحادي البعد",
+          "الـ DTM يشمل السحب والغلاف الجوي",
+          "لا يوجد فرق بينهما في حساب الكميات"
+        ],
+        "correct": 0,
+        "explanation": "لحساب كميات الحفر والردم الهندسية أو خطوط الكنتور الدقيقة، يجب تصنيف السحابة النقطية لإزالة المباني والأشجار واستخراج سطح الأرض الطبيعية DTM."
+      },
+      {
+        "id": "q-rsa-3",
+        "type": "tf",
+        "q": "صح أم خطأ: مصفوفة الخطأ (Confusion / Error Matrix) ومعامل كابا (Kappa Coefficient) يُستخدمان لتقييم الدقة الإحصائية لخرائط الغطاء الأرضي الناتجة عن تصنيف المرئيات الفضائية.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تقارن مصفوفة الخطأ بين الأصناف المتوقعة على الخريطة ونقاط التحقق المرجعية (Ground Truth) لحساب Overall Accuracy ومعامل Kappa."
+      },
+      {
+        "id": "q-rsa-4",
+        "type": "mcq",
+        "q": "في منصة Google Earth Engine (GEE)، ما هو الكائن البرمجي الذي يمثل سلسلة زمنية كاملة أو أرشيفاً من صور قمر صناعي معين (مثل جميع صور Sentinel-2)؟",
+        "options": [
+          "ee.ImageCollection",
+          "ee.Feature",
+          "ee.Geometry.Point",
+          "ee.Number"
+        ],
+        "correct": 0,
+        "explanation": "الكائن ee.ImageCollection يمثل مجموعة من المرئيات التي يمكن فلترتها حسب التاريخ (.filterDate) وحدود المنطقة (.filterBounds) ونسبة السحب."
+      },
+      {
+        "id": "q-rsa-5",
+        "type": "tf",
+        "q": "صح أم خطأ: الصورة المصححة عمودياً (Orthomosaic) الناتجة عن برامج المسح الجوي تتميز بأن مقياس رسمها ثابت وموحد، ويمكن قياس المسافات والمساحات الحقيقية منها مباشرة كخريطة هندسية.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ لأن عملية التقويم العمودي (Orthorectification) تزيل تشوهات ميل الكاميرا وفروق التضاريس."
+      }
+    ]
+  },
+  {
+    "id": "exam-cad-beg",
+    "title": "اختبار AutoCAD وCivil 3D — المستوى المبتدئ",
+    "specialty": "cad",
+    "specialtyLabel": "AutoCAD وCivil 3D",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يغطي أوامر الرسم المساحي الأساسية في AutoCAD، صيغ ملفات النقاط، وإدخال الإحداثيات.",
+    "questions": [
+      {
+        "id": "q-cb-1",
+        "type": "mcq",
+        "q": "عند استيراد ملف نقاط مساحية نصي إلى برنامج AutoCAD Civil 3D بصيغة (PENZD)، فإلى ماذايرمز كل حرف على الترتيب؟",
+        "options": [
+          "رقم النقطة (Point)، الشرقيات (Easting)، الشماليات (Northing)، المنسوب (Elevation Z)، الوصف/الكود (Description)",
+          "المسار، الانحراف، الشمال، الزاوية، المسافة",
+          "المضلع، الحافة، الشبكة، العمق، القطر",
+          "الضغط، الطاقة، الكثافة، الزمن، المسافة"
+        ],
+        "correct": 0,
+        "explanation": "صيغة PENZD هي الصيغة القياسية الأكثر استخداماً في المكتب الفني المساحي: P=رقم النقطة، E=الشرقيات X، N=الشماليات Y، Z=المنسوب، D=الكود."
+      },
+      {
+        "id": "q-cb-2",
+        "type": "mcq",
+        "q": "أي أمر في برنامج AutoCAD يُستخدم لعرض إحداثيات (X, Y, Z) لأي نقطة تنقر عليها مباشرة على اللوحة؟",
+        "options": [
+          "أمر ID",
+          "أمر TRIM",
+          "أمر OFFSET",
+          "أمر FILLET"
+        ],
+        "correct": 0,
+        "explanation": "كتابة الاختصار ID في شريط أوامر الأوتوكاد ثم النقر على أي ركن أو نقطة يُظهر إحداثياتها (X, Y, Z) فوراً."
+      },
+      {
+        "id": "q-cb-3",
+        "type": "tf",
+        "q": "صح أم خطأ: في برنامج AutoCAD، يمثل المحور الأفقي (X) قيمة الشرقيات (Easting)، ويمثل المحور الرأسي (Y) قيمة الشماليات (Northing).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يجب الانتباه دائماً عند إدخال الإحداثيات في الأوتوكاد أن الترتيب هو (X,Y) أي (Easting, Northing)."
+      },
+      {
+        "id": "q-cb-4",
+        "type": "mcq",
+        "q": "ما هو الاختصار السريع في AutoCAD لتحميل ملفات الليسبات المساحية (AutoLISP .lsp) داخل البرنامج؟",
+        "options": [
+          "APPLOAD (أو AP)",
+          "PLOT",
+          "PURGE",
+          "MATCHPROP"
+        ],
+        "correct": 0,
+        "explanation": "أمر APPLOAD يفتح نافذة تحميل تطبيقات وبرامج AutoLISP التي تسهل تفريد الإحداثيات وإنشاء الجداول المساحية."
+      },
+      {
+        "id": "q-cb-5",
+        "type": "tf",
+        "q": "صح أم خطأ: برنامج Sokkia Link يُستخدم لتحويل ملفات الرصد الخام (.SDR) المسحوبة من جهاز التوتال ستيشن إلى لوحات (.DXF) أو شيتات (.CSV).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يعد Sokkia Link حلقة وصل أساسية بين أجهزة الرصد الحقلية وبرامج المكتب الفني مثل AutoCAD وCivil 3D."
+      }
+    ]
+  },
+  {
+    "id": "exam-cad-int",
+    "title": "اختبار AutoCAD وCivil 3D — المستوى المتوسط",
+    "specialty": "cad",
+    "specialtyLabel": "AutoCAD وCivil 3D",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يتناول توجيه اللوحات بأمر Align، مجموعات النقاط، بناء الأسطح TIN Surfaces، وحساب كميات الحفر والردم.",
+    "questions": [
+      {
+        "id": "q-ci-1",
+        "type": "mcq",
+        "q": "عند استلام لوحة معمارية أو إنشائية مرسومة في مكان عشوائي، ما هو الأمر المستخدم في AutoCAD لتوجيهها ومطابقتها على نقطتي إحداثيات حقيقيتين في الموقع؟",
+        "options": [
+          "أمر ALIGN (الاختصار AL)",
+          "أمر EXPLODE",
+          "أمر ARRAY",
+          "أمر HATCH"
+        ],
+        "correct": 0,
+        "explanation": "أمر ALIGN يقوم بنقل وتدوير (واختيارياً تغيير مقياس) عناصر اللوحة بمعلومية نقطتي مصدر ونقطتي هدف معلومتي الإحداثيات."
+      },
+      {
+        "id": "q-ci-2",
+        "type": "mcq",
+        "q": "في برنامج AutoCAD Civil 3D، ما هي الميزة التي تقوم بتوزيع النقاط المستوردة تلقائياً على طبقات ورموز مختلفة بمجرد قراءة كود النقطة (مثل TR للشجر وRD للطريق)؟",
+        "options": [
+          "مفاتيح الوصف (Description Keys)",
+          "Alignments",
+          "Pipe Networks",
+          "Superelevation"
+        ],
+        "correct": 0,
+        "explanation": "مفاتيح الوصف (Description Key Sets) تتعرف على الكود النصي للنقطة أثناء استيرادها وتطبق عليها Point Style وLabel Style والطبقة المحددة تلقائياً."
+      },
+      {
+        "id": "q-ci-3",
+        "type": "tf",
+        "q": "صح أم خطأ: لحساب كميات الحفر والردم بين سطح الأرض الطبيعية (NGL) وسطح التسوية التصميمي في Civil 3D، ننشئ سطح حجوم مقارن (TIN Volume Surface) من لوحة Volumes Dashboard.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يحدد المهندس في TIN Volume Surface السطح الأساسي (Base Surface = NGL) وسطح المقارنة (Comparison Surface = Design) ليحسب البرنامج الحفر والردم بدقة."
+      },
+      {
+        "id": "q-ci-4",
+        "type": "mcq",
+        "q": "لإجبار مثلثات السطح (TIN Surface) في Civil 3D على احترام الحواف الحادة في الطبيعة مثل حافة الرصيف أو قاع الترعة وعدم تقاطع المثلثات عبرها، نضيف هذه الخطوط للسطح كـ:",
+        "options": [
+          "خطوط انكسار (Breaklines)",
+          "نصوص عادية (MText)",
+          "أبعاد (Dimensions)",
+          "نقاط عشوائية"
+        ],
+        "correct": 0,
+        "explanation": "خطوط الانكسار (Breaklines) تمنع أضلاع شبكة المثلثات غير المنتظمة (TIN) من عبور الخط، مما يضمن تمثيلاً هندسياً صحيحاً للميول والحواف."
+      },
+      {
+        "id": "q-ci-5",
+        "type": "tf",
+        "q": "صح أم خطأ: الأمر (MAPCSASSIGN) في برنامج Civil 3D يُستخدم لتعيين نظام الإحداثيات والمسقط الجغرافي (مثل UTM84-36N) للوحة العمل.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ أمر MAPCSASSIGN أو من إعدادات Drawing Settings يربط لوحة السيفيل بالمسقط العالمي الصحيح."
+      }
+    ]
+  },
+  {
+    "id": "exam-cad-adv",
+    "title": "اختبار AutoCAD وCivil 3D — المستوى المتقدم",
+    "specialty": "cad",
+    "specialtyLabel": "AutoCAD وCivil 3D",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يختبر تصميم الطرق المتقدم في Civil 3D (Alignments, Profiles, Assemblies, Corridors, Sample Lines) وتبادل البيانات.",
+    "questions": [
+      {
+        "id": "q-ca-1",
+        "type": "mcq",
+        "q": "ما هي العناصر الثلاثة الأساسية التي يجب توافرها لبناء مجسم الطريق الثلاثي الأبعاد (Corridor) في برنامج AutoCAD Civil 3D؟",
+        "options": [
+          "المسار الأفقي (Alignment) + القطاع الطولي التصميمي (Profile) + القطاع العرضي النموذجي (Assembly)",
+          "نقطة واحدة + دائرة + نص",
+          "صورة جوية + جدول إكسل فقط",
+          "طبقة شيب فايل + ملف وورد"
+        ],
+        "correct": 0,
+        "explanation": "يتكون الـ Corridor من دمج المسار الأفقي (Alignment) مع مناسيب البروفايل التصميمي (Profile) وتركيب القطاع العرضي النموذجي للطريق (Assembly)."
+      },
+      {
+        "id": "q-ca-2",
+        "type": "mcq",
+        "q": "ما هي الصيغة القياسية العالمية مفتوحة المصدر المستخدمة لنقل الأسطح والمسارات الأفقية والبروفايلات وشبكات المرافق بكامل خصائصها الهندسية بين Civil 3D وبرامج المساحة والأجهزة؟",
+        "options": [
+          "صيغة LandXML (.xml)",
+          "صيغة JPEG (.jpg)",
+          "صيغة MP4",
+          "صيغة PDF"
+        ],
+        "correct": 0,
+        "explanation": "ملفات LandXML (.xml) تنقل الذكاء الهندسي الكامل للأسطح والمحاور والبروفايلات بين Civil 3D وبرامج التوتال ستيشن والـ GPS وTrimble Business Center."
+      },
+      {
+        "id": "q-ca-3",
+        "type": "tf",
+        "q": "صح أم خطأ: لحساب كميات طبقات الرصف والحفر والردم على طول مسار الطريق وإخراج اللوحات العرضية، نقوم بإنشاء خطوط أخذ العينات (Sample Lines) ثم حساب المواد (Compute Materials).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تقطع خطوط Sample Lines مسار الـ Corridor على مسافات منتظمة (مثلاً كل 20 أو 25 متر) لرسم القطاعات العرضية (Section Views) وحساب الحجوم."
+      },
+      {
+        "id": "q-ca-4",
+        "type": "mcq",
+        "q": "ماذا نسمي الرفع الجانبي لحافة الطريق الخارجية في المنحنيات الأفقية لمقاومة القوة الطاردة المركزية المؤثرة على المركبات؟",
+        "options": [
+          "الـ Superelevation (التعلية الجانبية للظهر عن البطن)",
+          "الـ Georeferencing",
+          "الـ Kriging",
+          "الـ Pan-Sharpening"
+        ],
+        "correct": 0,
+        "explanation": "يقوم Civil 3D بحساب الـ Superelevation تلقائياً على المنحنيات الأفقية وفق الكود الهندسي (AASHTO) وتطبيقه على الـ Corridor."
+      },
+      {
+        "id": "q-ca-5",
+        "type": "tf",
+        "q": "صح أم خطأ: عند تعديل منسوب خط التصميم في الـ Profile داخل Civil 3D، يمكن إعادة بناء الـ Corridor وجداول الكميات والقطاعات العرضية ديناميكياً دون إعادة رسمها من الصفر.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يعتمد Civil 3D على النمذجة الديناميكية المترابطة (Dynamic Engineering Model) حيث يؤدي تعديل البروفايل إلى تحديث الـ Corridor والكميات بمجرد عمل Rebuild."
+      }
+    ]
+  },
+  {
+    "id": "exam-inst-beg",
+    "title": "اختبار الأجهزة المساحية — المستوى المبتدئ",
+    "specialty": "instruments",
+    "specialtyLabel": "الأجهزة المساحية",
+    "level": "مبتدئ",
+    "durationMinutes": 8,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يغطي أساسيات التعامل الميداني مع ميزان القامة (Auto Level)، التوتال ستيشن، والعاكس المساحي.",
+    "questions": [
+      {
+        "id": "q-ib-1",
+        "type": "mcq",
+        "q": "ماذا تعني عملية «التسامت» (Centering) عند نصب جهاز التوتال ستيشن فوق نقطة الثوابت الأرضية؟",
+        "options": [
+          "جعل المحور الرأسي للجهاز يمر تماماً بمركز النقطة الأرضية باستخدام المنظار البصري أو الليزر",
+          "توجيه التلسكوب نحو الشمس",
+          "مسح ذاكرة الجهاز بالكامل",
+          "شحن بطارية الجهاز"
+        ],
+        "correct": 0,
+        "explanation": "التسامت (Centering) والأفقية (Leveling) هما أول خطوتين إلزاميتين عند نصب التوتال ستيشن لضمان وقوع مركز الجهاز فوق شمسية النقطة تماماً."
+      },
+      {
+        "id": "q-ib-2",
+        "type": "tf",
+        "q": "صح أم خطأ: في ميزان القامة الأوتوماتيكي (Auto Level)، يقوم المصحح الداخلي (Compensator) بضبط أفقية خط النظر تلقائياً بمجرد ضبط الفقاعة الدائرية.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يحتوي ميزان القامة الأوتوماتيكي على منشور معلق (Compensator) يحافظ على أفقية خط النظر بدقة بمجرد توسط الفقاعة الدائرية."
+      },
+      {
+        "id": "q-ib-3",
+        "type": "mcq",
+        "q": "كيف يمكن حساب المسافة الأفقية تقريبياً باستخدام قراءتي شعرتي الاستاديا العليا والسفلى في ميزان القامة؟",
+        "options": [
+          "المسافة = (قراءة الشعرة العليا - قراءة الشعرة السفلى) × 100",
+          "المسافة = (قراءة الشعرة العليا + قراءة الشعرة السفلى) ÷ 2",
+          "المسافة = قراءة الشعرة الوسطى × 10",
+          "المسافة = مربع قراءة الشعرة العليا"
+        ],
+        "correct": 0,
+        "explanation": "ثابت الضرب التلسكوبي لمعظم أجهزة الميزان هو 100، لذا فإن الفرق بين الشعرة العليا والسفلى مضروباً في 100 يعطي المسافة بالأمتار، بينما متوسطهما يساوي قراءة الشعرة الوسطى."
+      },
+      {
+        "id": "q-ib-4",
+        "type": "mcq",
+        "q": "ما هي وظيفة مسمار التوضيح البصري (Focusing Screw) في تلسكوب الميزان أو التوتال ستيشن؟",
+        "options": [
+          "توضيح صورة الهدف أو القامة وإزالة ازدواج الرؤية (Parallax) مع حامل الشعيرات",
+          "قفل الحركة الأفقية للجهاز",
+          "تغيير ارتفاع الحامل الثلاثي",
+          "تشغيل البلوتوث"
+        ],
+        "correct": 0,
+        "explanation": "يُضبط أولاً مسمار توضيح الشعيرات على عين الراصد ثم مسمار توضيح الرؤية (Focusing) لتنطبق صورة القامة بوضوح تام على مستوى حامل الشعيرات."
+      },
+      {
+        "id": "q-ib-5",
+        "type": "tf",
+        "q": "صح أم خطأ: يتيح التوتال ستيشن الحديث القياس بدون عاكس (Reflectorless / Non-Prism) باستخدام شعاع الليزر لرصد الواجهات والنقاط التي يصعب الوصول إليها.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ وضع اللاعاكس (Non-Prism) مفيد جداً في رفع واجهات المباني والأسقف والمناطق الخطرة."
+      }
+    ]
+  },
+  {
+    "id": "exam-inst-int",
+    "title": "اختبار الأجهزة المساحية — المستوى المتوسط",
+    "specialty": "instruments",
+    "specialtyLabel": "الأجهزة المساحية",
+    "level": "متوسط",
+    "durationMinutes": 10,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يتناول طرق ربط التوتال ستيشن (Backsight & Resection)، التوقيع المساحي (Stakeout)، وثابت العاكس.",
+    "questions": [
+      {
+        "id": "q-ii-1",
+        "type": "mcq",
+        "q": "متى يلجأ مهندس المساحة إلى استخدام برنامج التقاطع العكسي (Resection) في جهاز التوتال ستيشن؟",
+        "options": [
+          "عند احتلال نقطة حرة غير معلومة الإحداثيات تكشف الموقع جيداً ورصد نقطتين أو أكثر من نقاط الثوابت المعلومة لحساب إحداثيات المحتلة",
+          "عند الرغبة في مسح الملفات من الفلاشة",
+          "عند قياس درجة حرارة الجو فقط",
+          "عند عدم وجود أي نقاط ثوابت في المشروع نهائياً"
+        ],
+        "correct": 0,
+        "explanation": "طريقة Resection تمنح المساح مرونة عالية لنصب الجهاز في أفضل موقع كاشف للمشروع وحساب إحداثيات النقطة المحتلة بدقة من رصد الثوابت المحيطة."
+      },
+      {
+        "id": "q-ii-2",
+        "type": "mcq",
+        "q": "ماذا يحدث للقياس إذا كان ثابت العاكس الحقيقي (Prism Constant) هو (-30 مم) ولكن تم إدخاله بالخطأ في إعدادات التوتال ستيشن (0 مم)؟",
+        "options": [
+          "يحدث خطأ منتظم مقداره 3 سم في جميع المسافات والإحداثيات المرصودة",
+          "لا تتأثر المسافات إطلاقاً",
+          "يتوقف الجهاز عن العمل",
+          "تتغير زاوية الشمال فقط بمقدار 90 درجة"
+        ],
+        "correct": 0,
+        "explanation": "ثابت العاكس (Prism Constant) يعوض انكسار وتأخر الشعاع داخل زجاج المنشور؛ وأي اختلاف بين قيمة العاكس وإعداد الجهاز يسبب خطأً ثابتاً في كل رصدة."
+      },
+      {
+        "id": "q-ii-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند استخدام التوتال ستيشن لرفع أو توقيع المناسيب (Z)، يجب إدخال ارتفاع الجهاز (HI) وارتفاع العاكس (HR) بدقة مع كل تغير في طول شاخص العاكس.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ إهمال تعديل ارتفاع العاكس (HR) في الجهاز عند رفعه أو خفضه في الموقع يؤدي مباشرة إلى خطأ بنفس القيمة في منسوب النقطة (Z)."
+      },
+      {
+        "id": "q-ii-4",
+        "type": "mcq",
+        "q": "في شاشة التوقيع المساحي (Stakeout / S-O) بالتوتال ستيشن، إذا ظهرت قيمة (dHA = 0° 00' 00\") وقيمة (dHD = -1.250 m)، فماذا يجب أن يفعل حامل العاكس؟",
+        "options": [
+          "يتحرك على نفس خط نظر الجهاز مقترباً نحو الجهاز مسافة 1.25 متر",
+          "يتحرك يميناً مسافة 5 أمتار",
+          "يغير مكان التوتال ستيشن",
+          "يرفع العاكس لأعلى فقط"
+        ],
+        "correct": 0,
+        "explanation": "قيمة dHA = 0 تعني أن العاكس على الاتجاه الزاوي الصحيح تماماً، ويتبقى فقط تعديل المسافة الأفقية (dHD) بالاقتراب أو الابتعاد على نفس الخط."
+      },
+      {
+        "id": "q-ii-5",
+        "type": "tf",
+        "q": "صح أم خطأ: يُفضل في عملية التقاطع العكسي (Resection) ألا تقل الزاوية الأفقية المحصورة بين نقطتي الثوابت عن 30° ولا تزيد عن 150° لضمان قوة الشكل الهندسي.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ الزوايا الحادة جداً أو القريبة من 180° تضعف دقة التقاطع الهندسي وتزيد الخطأ المتبقي (Residuals)."
+      }
+    ]
+  },
+  {
+    "id": "exam-inst-adv",
+    "title": "اختبار الأجهزة المساحية وGNSS — المستوى المتقدم",
+    "specialty": "instruments",
+    "specialtyLabel": "الأجهزة المساحية",
+    "level": "متقدم",
+    "durationMinutes": 12,
+    "passingPercent": 60,
+    "isTrackFinal": false,
+    "trackId": null,
+    "description": "يركز على أجهزة GNSS/GPS (RTK & Static)، حل غموض الموجة (Fixed vs Float)، معامل PDOP، وشبكات CORS.",
+    "questions": [
+      {
+        "id": "q-ia-1",
+        "type": "mcq",
+        "q": "أثناء العمل بجهاز GNSS RTK في الموقع، ما هي حالة الحل (Solution Status) التي يجب الانتظار حتى ظهورها على الكنترولر قبل البدء برفع أو توقيع النقاط الهندسية الدقيقة؟",
+        "options": [
+          "حالة الحل الثابت (Fixed Solution) حيث تكون الدقة الأفقية 1 إلى 2 سم",
+          "حالة الحل العائم (Float Solution) حيث يكون الخطأ عدة ديسيمترات",
+          "حالة الرصد المفرد (Autonomous / Single) بدقة 3 أمتار",
+          "حالة عدم وجود أقمار صناعية (No Fix)"
+        ],
+        "correct": 0,
+        "explanation": "حالة Fixed تعني نجاح الجهاز في حل غموض العدد الصحيح لأطوال الموجات الحاملة (Integer Ambiguity Resolution) وتحقيق دقة السنتيمتر."
+      },
+      {
+        "id": "q-ia-2",
+        "type": "mcq",
+        "q": "إلى ماذا يرمز مؤشر (PDOP - Position Dilution of Precision) في أجهزة GNSS، ومتى يكون الرصد في أفضل حالاته؟",
+        "options": [
+          "معامل جودة التوزيع الهندسي للأقمار الصناعية في السماء، وكلما كانت قيمته صغيرة (أقل من 3) كانت الدقة أفضل",
+          "نسبة شحن بطارية الروفر، وكلما اقتربت من 100 كانت أفضل",
+          "عدد نقاط الكنتور في اللوحة",
+          "سرعة الرياح في الموقع"
+        ],
+        "correct": 0,
+        "explanation": "يعبر PDOP عن قوة الشكل الهندسي لتوزيع الأقمار الصناعية؛ فعندما تكون الأقمار موزعة جيداً في السماء تنخفض قيمة PDOP (أقل من 3) وتزداد دقة الإحداثيات."
+      },
+      {
+        "id": "q-ia-3",
+        "type": "tf",
+        "q": "صح أم خطأ: صيغة (RINEX - Receiver Independent Exchange Format) هي الصيغة القياسية العالمية لتبادل ومعالجة بيانات الرصد الثابت (Static) بين مختلف ماركات أجهزة GNSS.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تتيح صيغة RINEX معالجة أرصاد أجهزة مختلفة (مثل Trimble وLeica وTopcon وSokkia) معاً في برامج المعالجة المكتبية."
+      },
+      {
+        "id": "q-ia-4",
+        "type": "mcq",
+        "q": "كيف يتم تحويل الارتفاع الإليبسويدي (Ellipsoidal Height - h) الذي يقيسه جهاز GPS إلى منسوب أورثومتري حقيقي فوق سطح البحر (Orthometric Height - H)؟",
+        "options": [
+          "بطرح قيمة حيود الجيوئيد (Geoid Undulation - N) وفق العلاقة: H = h - N",
+          "بضرب الإحداثي الشرقي في 100",
+          "بقسمة خط العرض على خط الطول",
+          "لا يوجد أي فرق بين الارتفاع الإليبسويدي ومنسوب سطح البحر"
+        ],
+        "correct": 0,
+        "explanation": "يقيس نظام GNSS الارتفاع عن سطح الإليبسويد الرياضي (h)، وللحصول على المنسوب الهندسي فوق الجيوئيد/سطح البحر (H) نستخدم نموذج الجيوئيد وفق المعادلة H = h - N."
+      },
+      {
+        "id": "q-ia-5",
+        "type": "tf",
+        "q": "صح أم خطأ: يتيح نظام المحطات المرجعية الدائمة (CORS / NTRIP) العمل بجهاز Rover واحد فقط متصل بالإنترنت لاستقبال التصحيحات اللحظية دون الحاجة لنصب جهاز Base خاص بك.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تبث محطات CORS تصحيحات RTK عبر الإنترنت (بروتوكول NTRIP) إلى جهاز الروفر مباشرة مما يوفر وقت وتكلفة تشغيل محطة Base."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-site-final",
+    "title": "الاختبار النهائي لمسار: مهندس مساحة موقع وتنفيذ",
+    "specialty": "land",
+    "specialtyLabel": "اختبار نهائي للمسار الأول",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-site",
+    "description": "الاختبار الشامل لاعتماد إتمام المسار الأول (مهندس مساحة موقع وتنفيذ): يختبر مهارات الميزانية، التوتال ستيشن، الـ GPS RTK، وتوقيع المحاور والمنشآت.",
+    "questions": [
+      {
+        "id": "q-tsf-1",
+        "type": "mcq",
+        "q": "عند استلام روبير المشروع (BM) بمنسوب 12.500 م، كانت قراءة المؤخرة عليه 1.400 م، وأردنا توقيع قاع حفر بمنسوب 11.200 م، فكم يجب أن تكون قراءة القامة على قاع الحفر؟",
+        "options": [
+          "2.700 متر",
+          "1.300 متر",
+          "13.900 متر",
+          "0.100 متر"
+        ],
+        "correct": 0,
+        "explanation": "منسوب سطح الميزان HI = 12.500 + 1.400 = 13.900 م. قراءة القامة المطلوبة = HI - المنسوب التصميمي = 13.900 - 11.200 = 2.700 متر."
+      },
+      {
+        "id": "q-tsf-2",
+        "type": "mcq",
+        "q": "ما هو الإجراء الميداني الإلزامي مباشرة بعد ربط جهاز التوتال ستيشن بطريقة (Backsight) أو (Resection) وقبل البدء في توقيع قواعد المبنى؟",
+        "options": [
+          "الرصد التحقيقي (Check Shot) على نقطة ثوابت ثالثة معلومة الإحداثيات والمنسوب للتأكد من سلامة الربط",
+          "إطفاء الجهاز وإعادة تشغيله",
+          "تغيير ارتفاع العاكس عشوائياً",
+          "توقيع القواعد فوراً دون أي مراجعة"
+        ],
+        "correct": 0,
+        "explanation": "الرصد على نقطة تحقيق ثالثة (Check Point) هو خط الدفاع الأول لمهندس الموقع لاكتشاف أي خطأ في إدخال إحداثيات الثوابت أو انحراف التوجيه قبل التنفيذ."
+      },
+      {
+        "id": "q-tsf-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند توقيع خنزيرة أو محاور الأعمدة، يفضل توقيع نقاط مساعدة (Offset Points) خارج حدود الحفر لضمان عدم ضياع النقاط أثناء أعمال الحفر والصب.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تثبيت نقاط Offset على مسافة معلومة من المحاور يحميها من معدات الحفر ويسهل إعادة شد الخيطان واستلام النجارة."
+      },
+      {
+        "id": "q-tsf-4",
+        "type": "mcq",
+        "q": "أثناء الرصد بجهاز GNSS RTK بجوار مبنى خرساني مرتفع وأشجار كثيفة، تحول الحل من Fixed إلى Float، ما السبب العلمي لذلك؟",
+        "options": [
+          "حجب إشارات الأقمار الصناعية وظاهرة تعدد المسارات (Multipath) نتيجة ارتداد الإشارات عن المباني والأشجار",
+          "زيادة سرعة دوران الأرض",
+          "انتهاء صلاحية ملفات الأوتوكاد",
+          "تغير لون شاخص الروفر"
+        ],
+        "correct": 0,
+        "explanation": "المباني العالية والأشجار تسبب تشتت وانعكاس إشارات الأقمار (Multipath)، وفي هذه الأماكن يفضل نقل نقطتين بـ RTK في منطقة مفتوحة ثم استكمال العمل بالتوتال ستيشن."
+      },
+      {
+        "id": "q-tsf-5",
+        "type": "tf",
+        "q": "صح أم خطأ: لتوقيع خط ميل مواسير الصرف الصحي بدقة عالية بين المطابق، يتم حساب منسوب الفرشة (Invert Level) عند كل مسافة بدلالة المنسوب الابتدائي ونسبة الميل الطولي.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ منسوب أي نقطة على الماسورة = منسوب البداية ± (الميل × المسافة الأفقية)."
+      },
+      {
+        "id": "q-tsf-6",
+        "type": "mcq",
+        "q": "في جهاز التوتال ستيشن، أي وظيفة تُستخدم لتوقيع نقاط تقع على مسافة عمودية (Offset) ومحطة طولية (Station/Line) من خط أساس يربط بين نقطتين؟",
+        "options": [
+          "برنامج خط الأساس (Reference Line / S-O Line / Baseline)",
+          "برنامج حساب المساحة (Area Calculation)",
+          "برنامج الرصد الثابت",
+          "برنامج التصنيف الطيفي"
+        ],
+        "correct": 0,
+        "explanation": "وظيفة S-O Line أو Reference Line تتيح تعريف خط بين نقطتين ثم توقيع أو رفع أي نقطة بدلالة بعدها الطولي (Line/Sta) وإزاحتها العمودية (Offset)."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-office-final",
+    "title": "الاختبار النهائي لمسار: مهندس مكتب فني مساحة وطرق (Civil 3D)",
+    "specialty": "cad",
+    "specialtyLabel": "اختبار نهائي للمسار الثاني",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-office",
+    "description": "الاختبار الشامل لاعتماد المسار الثاني: يغطي معالجة الأرصاد، الأوتوكاد المساحي، الأسطح والكميات وتصميم الطرق بـ Civil 3D، والمستخلصات.",
+    "questions": [
+      {
+        "id": "q-tof-1",
+        "type": "mcq",
+        "q": "عند إنشاء سطح الأرض الطبيعية (NGL) في Civil 3D، لاحظت وجود مثلثات طويلة جداً غير حقيقية على الأطراف الخارجية للمشروع، كيف تعالجها هندسياً؟",
+        "options": [
+          "بإضافة حدود خارجية للسطح (Outer Boundary) أو تحديد أقصى طول لضلع المثلث (Maximum Triangle Length) في خصائص السطح",
+          "بحذف نصف نقاط الرفع الداخلي عشوائياً",
+          "بتغيير لون خلفية البرنامج",
+          "بتحويل اللوحة إلى صورة نقطية"
+        ],
+        "correct": 0,
+        "explanation": "تهذيب مثلثات السطح عبر Outer Boundary أو تفعيل Maximum Triangle Length يمنع تكوين مثلثات وهمية خارج نطاق الرفع الفعلي مما يضمن دقة حساب الكميات."
+      },
+      {
+        "id": "q-tof-2",
+        "type": "mcq",
+        "q": "ما هو الفرق بين لوحات الـ (Shop Drawing) ولوحات الـ (As-Built) في المكتب الفني المساحي؟",
+        "options": [
+          "الـ Shop Drawing هي اللوحات التنفيذية المجهزة قبل التنفيذ للتوقيع بموجبها، بينما الـ As-Built هي لوحات الرفع الفعلي لما تم تنفيذه على الطبيعة بعد الانتهاء",
+          "كلاهما يُرسم قبل شراء أرض المشروع",
+          "الـ As-Built تُرسم بدون إحداثيات",
+          "لا علاقة للمساحة بلوحات الـ As-Built"
+        ],
+        "correct": 0,
+        "explanation": "يجهز مهندس المكتب الفني لوحات Shop Drawing لاستخراج داتا التوقيع، وبعد التنفيذ يرفع المنشأ الفعلي لإصدار لوحات As-Built واعتماد المستخلصات."
+      },
+      {
+        "id": "q-tof-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند مقارنة سطحين لحساب كميات الحفر والردم في Civil 3D، يجب أن يكون السطح الأساسي (Base Surface) هو سطح الرصد السابق أو الأرض الطبيعية، وسطح المقارنة (Comparison) هو الرصد الجديد أو التصميمي.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ عكس ترتيب السطحين يؤدي إلى انقلاب قيم الحفر (Cut) إلى ردم (Fill) والعكس."
+      },
+      {
+        "id": "q-tof-4",
+        "type": "mcq",
+        "q": "لإخراج إحداثيات نقاط مسار الطريق (Alignment) أو حواف الأسفلت من الـ Corridor كل 10 أمتار إلى ملف CSV لرفعه على التوتال ستيشن، نستخدم:",
+        "options": [
+          "إنشاء نقاط COGO من الـ Corridor أو Alignment ثم تصديرها عبر Export Points",
+          "كتابة الإحداثيات يدوياً بالآلة الحاسبة",
+          "أمر Hatch",
+          "أمر Mirror"
+        ],
+        "correct": 0,
+        "explanation": "يتيح Civil 3D توليد نقاط COGO آلياً على طول الـ Alignment أو خطوط الـ Feature Lines الخاصة بالـ Corridor ثم تصديرها بضغطة زر إلى ملف PENZD."
+      },
+      {
+        "id": "q-tof-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في العقود الهندسية والمستخلصات المساحية، تُقاس كميات الحفر والردم هندسياً من الفراغ الهندسي على المخططات (بدون معامل انتفاش التربة ما لم ينص العقد على خلاف ذلك).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ الحصر الهندسي في المستخلصات يعتمد على الحجم الهندسي الصافي بين السطحين (Bank/In-situ Volume)."
+      },
+      {
+        "id": "q-tof-6",
+        "type": "mcq",
+        "q": "في تصميم القطاع الطولي للطريق (Profile) ببرنامج Civil 3D، أي نوع من المنحنيات الرأسية يُستخدم عند الانتقال من ميل صاعد (+2%) إلى ميل هابط (-1.5%)؟",
+        "options": [
+          "منحنى رأسي محدب (Crest Vertical Curve)",
+          "منحنى رأسي مقعر (Sag Vertical Curve)",
+          "منحنى أفقي حلزوني",
+          "خط منكسر بدون منحنى"
+        ],
+        "correct": 0,
+        "explanation": "الانتقال من ميل موجب إلى ميل سالب يشكل قمة تسمى منحنى رأسياً محدباً (Crest Curve)، بينما الانتقال من سالب إلى موجب يشكل قاعاً يسمى (Sag Curve)."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-gis-final",
+    "title": "الاختبار النهائي لمسار: أخصائي ومحلل نظم المعلومات الجغرافية GIS",
+    "specialty": "gis",
+    "specialtyLabel": "اختبار نهائي للمسار الثالث",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-gis",
+    "description": "الاختبار الشامل لاعتماد المسار الثالث: يختبر تصميم قواعد البيانات الجغرافية، الطوبولوجي، التحليل المكاني والشبكي، وArcGIS Pro وQGIS.",
+    "questions": [
+      {
+        "id": "q-tgf-1",
+        "type": "mcq",
+        "q": "لماذا يشترط وضع الطبقات المراد بناء شبكة طوبولوجية (Topology) أو شبكة طرق (Network Dataset) لها داخل حافظة معالم واحدة (Feature Dataset) في الـ Geodatabase؟",
+        "options": [
+          "لأن الـ Feature Dataset تُلزم جميع الطبقات بداخلها بالاشتراك في نفس نظام الإحداثيات والمسقط الجغرافي تماماً",
+          "لأنها تلون جميع الطبقات باللون الأزرق",
+          "لأنها تمنع فتح الطبقات في ArcGIS Pro",
+          "لأنها تحول الطبقات إلى صور JPEG"
+        ],
+        "correct": 0,
+        "explanation": "العلاقات الطوبولوجية والشبكية تتطلب تطابقاً تاماً في المرجع المكاني (Spatial Reference)، وهو ما تضمنه الـ Feature Dataset."
+      },
+      {
+        "id": "q-tgf-2",
+        "type": "mcq",
+        "q": "أي صيغة قواعد بيانات مكانية حديثة ومفتوحة المصدر تعتمد على SQLite وتُعد البديل القياسي الافتراضي للـ Shapefile في برنامج QGIS وتدعمها أيضاً بيئة ArcGIS Pro؟",
+        "options": [
+          "GeoPackage (.gpkg)",
+          "Shapefile (.shp)",
+          "Plain Text (.txt)",
+          "Bitmap (.bmp)"
+        ],
+        "correct": 0,
+        "explanation": "صيغة OGC GeoPackage (.gpkg) تجمع طبقات Vector وRaster والجداول في ملف واحد بدون حد 2 جيجابايت أو قيد 10 أحرف لأسماء الحقول."
+      },
+      {
+        "id": "q-tgf-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند إجراء تحليل لاختيار مواقع المدارس الجديدة بحيث تبعد مسافة لا تقل عن 500م عن الطرق السريعة وتقع داخل الأراضي الفضاء، نجمع بين أدوات Buffer وIntersect/Erase.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ ننشئ Buffer 500م حول الطرق السريعة ثم نستخدم Erase لاستبعاد هذا النطاق من طبقة الأراضي الفضاء الصالحة."
+      },
+      {
+        "id": "q-tgf-4",
+        "type": "mcq",
+        "q": "ما هو معيار القياس الذي يُظهر مقدار الخطأ الكلي المتبقي عند إجراء الإرجاع الجغرافي (Georeferencing) لخريطة باستخدام نقاط التحكم؟",
+        "options": [
+          "جذر متوسط مربع الخطأ (RMS Error - Root Mean Square Error)",
+          "معامل كابا (Kappa)",
+          "مؤشر NDVI",
+          "ثابت العاكس"
+        ],
+        "correct": 0,
+        "explanation": "قيمة RMS Error تقيس مدى تطابق نقاط التحكم بعد التحويل الرياضي، وكلما كانت القيمة صغيرة (أقل من نصف حجم البكسل) كان الإرجاع الجغرافي دقيقاً."
+      },
+      {
+        "id": "q-tgf-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في الخرائط الموضوعية، يُستخدم ترميز التدرج اللوني (Graduated Colors / Choropleth) لتمثيل الظواهر الكمية النسبية مثل الكثافة السكانية في المحافظات.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يمثل التدرج اللوني الفئات الرقمية المرتبة (مثلاً بطريقة Jenks Natural Breaks) لإبراز التباين المكاني بوضوح."
+      },
+      {
+        "id": "q-tgf-6",
+        "type": "mcq",
+        "q": "في برنامج QGIS، أي إضافة (Plugin) شهيرة تتيح إضافة خرائط الأساس العالمية (Google Satellite, OpenStreetMap, Esri Imagery) بضغطة زر؟",
+        "options": [
+          "إضافة QuickMapServices (أو HCMGIS)",
+          "إضافة AutoCAD Import",
+          "إضافة Audio Player",
+          "إضافة Word Processor"
+        ],
+        "correct": 0,
+        "explanation": "تعد إضافة QuickMapServices من أشهر إضافات QGIS لتحميل خرائط الأساس والصور الفضائية المرجعية فوراً."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-rs-final",
+    "title": "الاختبار النهائي لمسار: أخصائي الاستشعار عن بعد والمسح الجوي",
+    "specialty": "rs",
+    "specialtyLabel": "اختبار نهائي للمسار الرابع",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-rs",
+    "description": "الاختبار الشامل لاعتماد المسار الرابع: يختبر تحليل المرئيات الفضائية، التصنيف، معالجة صور الدرون بـ Metashape وPix4D، وGlobal Mapper.",
+    "questions": [
+      {
+        "id": "q-trsf-1",
+        "type": "mcq",
+        "q": "عند معالجة صور طائرة الدرون في برنامج Agisoft Metashape، ما هو الترتيب القياسي الصحيح لخطوات العمل (Workflow)؟",
+        "options": [
+          "Align Photos ➔ إدخال وضبط نقاط GCPs ➔ Build Dense Cloud / Point Cloud ➔ Build DEM ➔ Build Orthomosaic",
+          "Build Orthomosaic ➔ Align Photos ➔ حذف الصور",
+          "Build DEM ➔ تصوير الموقع ➔ وضع نقاط GCPs",
+          "Layer Stacking ➔ Buffer ➔ Dissolve"
+        ],
+        "correct": 0,
+        "explanation": "تبدأ المعالجة بمحاذاة الصور (Align Photos)، ثم ربط نقاط التحكم الأرضية (GCPs) وعمل Optimize Cameras، ثم بناء السحابة الكثيفة، ثم نموذج الارتفاعات DEM، وأخيراً الـ Orthomosaic."
+      },
+      {
+        "id": "q-trsf-2",
+        "type": "mcq",
+        "q": "ما هي الميزة الأبرز لمرئيات القمر الصناعي الأوروبي (Sentinel-2) مقارنة بمرئيات (Landsat 8/9) في الدراسات الزراعية والعمرانية؟",
+        "options": [
+          "دقة مكانية أعلى (10 أمتار في النطاقات المرئية وNIR مقابل 30م للاندسات) ودقة زمنية أعلى (كل 5 أيام)",
+          "أنها صور مرسومة باليد",
+          "أنها لا تحتوي على نطاق الأشعة تحت الحمراء",
+          "أن دقتها المكانية 5 كيلومترات"
+        ],
+        "correct": 0,
+        "explanation": "يوفر Sentinel-2 دقة مكانية 10م في 4 نطاقات أساسية وتغطية زمنية كل 5 أيام مجاناً، بينما يتفوق Landsat في وجود النطاق الحراري وأرشيف تاريخي منذ 1972."
+      },
+      {
+        "id": "q-trsf-3",
+        "type": "tf",
+        "q": "صح أم خطأ: في برنامج Global Mapper، يمكن تصنيف سحابة النقاط (LiDAR / Point Cloud) لفصل نقاط سطح الأرض (Ground Points) عن المباني والأشجار وتوليد خطوط كنتور دقيقة.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يمتلك Global Mapper وحدة LiDAR قوية جداً لفلترة النقاط الأرضية وتوليد DTM وخطوط الكنتور وتصديرها بصيغة DWG."
+      },
+      {
+        "id": "q-trsf-4",
+        "type": "mcq",
+        "q": "لتقدير درجة حرارة سطح الأرض (Land Surface Temperature - LST) من القمر الصناعي Landsat 8/9، نعتمد بشكل أساسي على:",
+        "options": [
+          "نطاقات الأشعة تحت الحمراء الحرارية (Thermal Infrared TIRS - Band 10) مع معامل الانبعاثية (Emissivity) المحسوب من NDVI",
+          "النطاق الأزرق فقط (Band 2)",
+          "نطاق الصوت",
+          "صور Google Earth العادية"
+        ],
+        "correct": 0,
+        "explanation": "يُحول الإشعاع الحراري في Band 10 إلى درجة حرارة سطوع ثم يُصحح بمعامل انبعاثية السطح (Land Surface Emissivity) لحساب حرارة السطح بالدرجة المئوية."
+      },
+      {
+        "id": "q-trsf-5",
+        "type": "tf",
+        "q": "صح أم خطأ: في المسح الجوي بالدرون، تُترك بعض النقاط المرصودة أرضياً كـ «نقاط تحقق مستقلة» (Check Points) لا تدخل في حسابات التوجيه، وذلك لقياس الخطأ الحقيقي للنموذج.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ التفرقة بين Control Points (للضبط) وCheck Points (للتحقق المستقل) هي الطريقة العلمية الوحيدة لإثبات دقة الخريطة المنتجة."
+      },
+      {
+        "id": "q-trsf-6",
+        "type": "mcq",
+        "q": "أي تركيبة نطاقات طيفية (Band Combination) في مرئية Landsat 8/9 تُعرف بـ «اللون الزائف للنباتات» (Color Infrared) وتُظهر الغطاء النباتي باللون الأحمر الساطع؟",
+        "options": [
+          "النطاقات (5 - 4 - 3) أي (NIR - Red - Green)",
+          "النطاقات (4 - 3 - 2) الألوان الطبيعية",
+          "النطاق (1 - 1 - 1)",
+          "النطاق الحراري فقط"
+        ],
+        "correct": 0,
+        "explanation": "وضع نطاق الأشعة تحت الحمراء القريبة (Band 5 في لاندسات 8) في قناة العرض الحمراء (R) يجعل النباتات السليمة تظهر باللون الأحمر الزاهي."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-dev-final",
+    "title": "الاختبار النهائي لمسار: مطور نظم معلومات جغرافية وWeb GIS",
+    "specialty": "gis",
+    "specialtyLabel": "اختبار نهائي للمسار الخامس",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-dev",
+    "description": "الاختبار الشامل لاعتماد المسار الخامس: يغطي البرمجة بلغة Python (ArcPy & GeoPandas)، قواعد بيانات PostGIS، Google Earth Engine، وArcGIS Online.",
+    "questions": [
+      {
+        "id": "q-tdf-1",
+        "type": "mcq",
+        "q": "في لغة Python، أي مكتبة مفتوحة المصدر تبني فوق مكتبة Pandas وتتيح التعامل مع البيانات المكانية كجدول يحتوي على عمود هندسي (GeoDataFrame)؟",
+        "options": [
+          "مكتبة GeoPandas",
+          "مكتبة Pygame",
+          "مكتبة Tkinter",
+          "مكتبة BeautifulSoup"
+        ],
+        "correct": 0,
+        "explanation": "مكتبة GeoPandas تدمج قدرات Pandas التحليلية مع مكتبات Shapely وFiona وPyProj لإجراء التحليلات المكانية وإعادة الإسقاط بأسطر برمجية قليلة."
+      },
+      {
+        "id": "q-tdf-2",
+        "type": "mcq",
+        "q": "في قاعدة البيانات المكانية (PostgreSQL / PostGIS)، ما هي الدالة المكانية بـ SQL المستخدمة لاختبار ما إذا كانت النقطة A تقع داخل المضلع B؟",
+        "options": [
+          "ST_Intersects(B.geom, A.geom) أو ST_Contains(B.geom, A.geom)",
+          "SELECT_COLOR()",
+          "PRINT_MAP()",
+          "DELETE_ALL()"
+        ],
+        "correct": 0,
+        "explanation": "يوفر امتداد PostGIS مئات الدوال المكانية التي تبدأ بـ ST_ مثل ST_Contains وST_Intersects وST_Buffer وST_Area."
+      },
+      {
+        "id": "q-tdf-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند جمع البيانات الميدانية بواسطة تطبيق (ArcGIS Field Maps) أو (Survey123)، يتم تحديث الطبقة السحابية (Hosted Feature Layer) ولوحة المؤشرات (ArcGIS Dashboard) لحظياً.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ ترتبط تطبيقات الجمع الميداني ولوحات المتابعة بنفس خدمة المعالم السحابية (Feature Service)، كما تدعم العمل دون إنترنت ثم المزامنة."
+      },
+      {
+        "id": "q-tdf-4",
+        "type": "mcq",
+        "q": "في منصة Google Earth Engine، أي دالة تُستخدم لحساب مؤشر طيفي مثل (NDVI) بين نطاقين (مثلاً B8 وB4 في Sentinel-2) بطريقة مختصرة ومباشرة؟",
+        "options": [
+          "image.normalizedDifference(['B8', 'B4'])",
+          "image.deleteBands()",
+          "image.toText()",
+          "image.rotate(90)"
+        ],
+        "correct": 0,
+        "explanation": "الدالة normalizedDifference(['BandA', 'BandB']) تحسب تلقائياً المعادلة (BandA - BandB) / (BandA + BandB) لكل بكسل."
+      },
+      {
+        "id": "q-tdf-5",
+        "type": "tf",
+        "q": "صح أم خطأ: صيغة (GeoJSON) هي صيغة نصية خفيفة مبنية على JavaScript Object Notation وتُعد الصيغة الأكثر شيوعاً لتبادل المعالم الجغرافية في تطبيقات ومكتبات خرائط الويب مثل Leaflet وMapbox.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ تدعم جميع مكتبات خرائط الويب الحديثة قراءة وعرض ملفات واستجابات GeoJSON مباشرة."
+      },
+      {
+        "id": "q-tdf-6",
+        "type": "mcq",
+        "q": "عند تحويل سكربت Python (ArcPy) إلى أداة واجهة رسومية (Script Tool) داخل صندوق أدوات ArcGIS Pro، كيف يستقبل السكربت المدخلات التي يختارها المستخدم من نافذة الأداة؟",
+        "options": [
+          "عبر الدالة arcpy.GetParameterAsText(index) أو arcpy.GetParameter(index)",
+          "عبر قراءة شاشة الكاميرا",
+          "لا يمكن تمرير متغيرات لسكربت بايثون",
+          "عبر إعادة تثبيت البرنامج"
+        ],
+        "correct": 0,
+        "explanation": "تُقرأ معاملات أداة الـ Script Tool بالترتيب (0, 1, 2...) بواسطة arcpy.GetParameterAsText() مما يحول الكود البرمجي إلى أداة تفاعلية سهلة لأي مستخدم."
+      }
+    ]
+  },
+  {
+    "id": "exam-track-career-final",
+    "title": "الاختبار النهائي لمسار: التأهيل الوظيفي ومقابلات العمل الهندسية",
+    "specialty": "land",
+    "specialtyLabel": "اختبار نهائي للمسار السادس",
+    "level": "متقدم",
+    "durationMinutes": 15,
+    "passingPercent": 65,
+    "isTrackFinal": true,
+    "trackId": "track-career",
+    "description": "الاختبار الشامل لاعتماد المسار السادس: يجمع أهم أسئلة المقابلات الفنية في شركات المقاولات والمكاتب الاستشارية وهيئات المساحة وGIS.",
+    "questions": [
+      {
+        "id": "q-tcf-1",
+        "type": "mcq",
+        "q": "سؤال إنترفيو شهير: في أي نطاقين من مسقط UTM يقع معظم وادي النيل والدلتا والصحراء الغربية في جمهورية مصر العربية؟",
+        "options": [
+          "النطاق 35N (الصحراء الغربية من 24° إلى 30° شرقاً) والنطاق 36N (الوادي والدلتا وسيناء من 30° إلى 36° شرقاً)",
+          "النطاق 10S والنطاق 12S",
+          "النطاق 50N والنطاق 51N",
+          "النطاق 1N فقط"
+        ],
+        "correct": 0,
+        "explanation": "تقع مصر بين خطي طول 25° و37° شرقاً تقريباً، لذا تقع الصحراء الغربية في UTM Zone 35N، ويقع الوادي والدلتا والقاهرة في UTM Zone 36N (EPSG:32636)، وأقصى جنوب شرق البحر الأحمر في 37N."
+      },
+      {
+        "id": "q-tcf-2",
+        "type": "mcq",
+        "q": "سؤال فني في مقابلة مكتب فني: طلب منك المدير دمج بيانات رفع مساحي من التوتال ستيشن مع خريطة GIS على مسقط UTM، ولاحظت إزاحة طفيفة في المسافات الطويلة، ما السبب الهندسي المحتمل؟",
+        "options": [
+          "الفرق بين المسافة الأرضية المقاسة بالتوتال ستيشن (Ground Distance) والمسافة المسقطة على الشبكة (Grid Distance) بسبب معامل المقياس (Combined Scale Factor)",
+          "نوع الفلاشة المستخدمة لنقل الملفات",
+          "لون طبقة الأوتوكاد",
+          "سرعة الماوس"
+        ],
+        "correct": 0,
+        "explanation": "يقيس التوتال ستيشن المسافة الأفقية الفعلية على منسوب الموقع (Ground)، بينما يعتمد نظام UTM على مسافة الشبكة (Grid Distance = Ground × Combined Scale Factor)."
+      },
+      {
+        "id": "q-tcf-3",
+        "type": "tf",
+        "q": "صح أم خطأ: عند تقديم سابقة أعمالك (GIS & Surveying Portfolio) للشركات، يفضل عرض مشاريع حقيقية توضح المشكلة الهندسية، خطوات المعالجة، والمخرج النهائي (خريطة قياسية أو لوحة كميات أو Dashboard).",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ يبحث مديرو التوظيف عن القدرة التطبيقية على حل المشكلات وإخراج لوحات وخرائط دقيقة ومطابقة للمعايير."
+      },
+      {
+        "id": "q-tcf-4",
+        "type": "mcq",
+        "q": "إذا كانت قراءات دفتر ميزانية مغلقة كالتالي: مجموع المؤخرات (∑BS = 8.450 م) ومجموع المقدمات (∑FS = 6.200 م) وكان منسوب أول نقطة 10.000 م، فكم يجب أن يكون منسوب آخر نقطة للتحقيق الحسابي؟",
+        "options": [
+          "12.250 متر",
+          "7.750 متر",
+          "10.000 متر",
+          "14.650 متر"
+        ],
+        "correct": 0,
+        "explanation": "وفق معادلة التحقيق الحسابي: ∑BS - ∑FS = آخر منسوب - أول منسوب. إذن 8.450 - 6.200 = +2.250 م، وبالتالي آخر منسوب = 10.000 + 2.250 = 12.250 م."
+      },
+      {
+        "id": "q-tcf-5",
+        "type": "tf",
+        "q": "صح أم خطأ: لتقليل الأخطاء الآلية في الرصد الزاوي الدقيق بالتوتال ستيشن أو التيودوليت، يتم الرصد في الوضعين المتيامن والمتياسر (Face Left & Face Right) وأخذ المتوسط.",
+        "options": [
+          "صح",
+          "خطأ"
+        ],
+        "correct": 0,
+        "explanation": "عبارة صحيحة؛ الرصد المتيامن والمتياسر يلغي أخطاء عدم تعامد محور الدوران الأفقي ومحور التسديد."
+      },
+      {
+        "id": "q-tcf-6",
+        "type": "mcq",
+        "q": "أي مجموعة ملفات تمثل المخرجات القياسية المتكاملة لمشروع مسح جوي بالدرون لموقع إنشائي؟",
+        "options": [
+          "صورة مصححة (Orthomosaic .tif) + نموذج تضاريس رقمي (DTM .tif) + سحابة نقاط (.las/.laz) + لوحة كنتور (.dwg)",
+          "ملف صوتي فقط (.mp3)",
+          "صورة شخصية بدون إحداثيات",
+          "ملف خطوط (.ttf)"
+        ],
+        "correct": 0,
+        "explanation": "يسلم مهندس المساحة الجوية حزمة تشمل الـ Orthomosaic للرسم، والـ DTM لحساب الكميات، وسحابة النقاط الكثيفة (.las)، ولوحة الكنتور لبرنامج Civil 3D."
+      }
+    ]
+  }
+];
+
+    let examFilterState = {
+      specialty: 'all',
+      level: 'all',
+      timerEnabled: true
+    };
+
+    let activeExamSession = {
+      exam: null,
+      currentIndex: 0,
+      selectedAnswers: {}, // { [questionIndex]: optionIndex }
+      isSubmitted: false,    // Lock flag to prevent duplicate submissions
+      timerInterval: null,
+      remainingSeconds: 0,
+      startedAt: null
+    };
+
+    function clearActiveExamTimer() {
+      if (activeExamSession.timerInterval) {
+        clearInterval(activeExamSession.timerInterval);
+        activeExamSession.timerInterval = null;
+      }
+    }
+
+    function getBestExamAttempt(examId) {
+      if (!Array.isArray(appState.examHistory)) return null;
+      const matches = appState.examHistory.filter(a => a.examId === examId);
+      if (matches.length === 0) return null;
+      return matches.reduce((best, cur) => (cur.percent > best.percent ? cur : best), matches[0]);
+    }
+
+    function showExamSubView(subViewName) {
+      const views = {
+        catalog: document.getElementById('examCatalogSubView'),
+        runner: document.getElementById('examRunnerSubView'),
+        result: document.getElementById('examResultSubView'),
+        history: document.getElementById('examHistorySubView')
+      };
+      Object.values(views).forEach(v => { if (v) v.classList.add('hidden'); });
+      if (views[subViewName]) views[subViewName].classList.remove('hidden');
+
+      const catBtn = document.getElementById('examSubTabCatalogBtn');
+      const histBtn = document.getElementById('examSubTabHistoryBtn');
+      if (catBtn && histBtn) {
+        if (subViewName === 'history') {
+          histBtn.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition flex items-center justify-center gap-1.5';
+          catBtn.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5';
+        } else {
+          catBtn.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition flex items-center justify-center gap-1.5';
+          histBtn.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-extrabold text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5';
+        }
+      }
+    }
+
+    function renderExamsSectionUI() {
+      if (!Array.isArray(appState.examHistory)) appState.examHistory = [];
+      const history = appState.examHistory;
+
+      // Update KPIs
+      const totalTaken = history.length;
+      const passedCount = history.filter(h => h.passed).length;
+      const avgScore = totalTaken > 0
+        ? Math.round(history.reduce((acc, h) => acc + h.percent, 0) / totalTaken)
+        : 0;
+
+      const elTaken = document.getElementById('examKpiTotalTaken');
+      const elPassed = document.getElementById('examKpiPassedCount');
+      const elAvg = document.getElementById('examKpiAverageScore');
+      const elStatus = document.getElementById('examKpiStudentStatus');
+      const elHistBadge = document.getElementById('examHistoryCountBadge');
+
+      if (elTaken) elTaken.textContent = String(totalTaken);
+      if (elPassed) elPassed.textContent = String(passedCount);
+      if (elAvg) elAvg.textContent = `${avgScore}%`;
+      if (elHistBadge) elHistBadge.textContent = String(totalTaken);
+      if (elStatus) {
+        if (totalTaken === 0) elStatus.textContent = 'ابدأ أول اختبار الآن';
+        else if (avgScore >= 85) elStatus.textContent = '🌟 مستوى هندسي متميز جداً';
+        else if (avgScore >= 65) elStatus.textContent = '✅ مستوى جيد جداً ومؤهل';
+        else elStatus.textContent = '💪 واصل التدريب لرفع معدلك';
+      }
+
+      // Render Catalog Grid
+      const grid = document.getElementById('examsCatalogGrid');
+      const countLbl = document.getElementById('examFilteredCountLabel');
+      if (grid) {
+        const filtered = EXAMS_DATA.filter(ex => {
+          if (examFilterState.specialty === 'track-finals') {
+            if (!ex.isTrackFinal) return false;
+          } else if (examFilterState.specialty !== 'all') {
+            if (ex.specialty !== examFilterState.specialty || ex.isTrackFinal) return false;
+          }
+          if (examFilterState.level !== 'all' && ex.level !== examFilterState.level) return false;
+          return true;
+        });
+
+        if (countLbl) countLbl.textContent = `${filtered.length} اختبار متاح`;
+
+        grid.innerHTML = filtered.map(ex => {
+          const best = getBestExamAttempt(ex.id);
+          const lvlColor = ex.level === 'مبتدئ'
+            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+            : ex.level === 'متوسط'
+            ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+            : 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+
+          return `
+            <div class="bg-slate-900/90 border ${best && best.passed ? 'border-emerald-500/50' : ex.isTrackFinal ? 'border-amber-500/40' : 'border-slate-800'} hover:border-slate-700 rounded-3xl p-5 flex flex-col justify-between gap-4 shadow-lg transition">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${ex.isTrackFinal ? 'bg-amber-500 text-slate-950' : 'bg-sky-500/15 text-sky-300 border border-sky-500/30'}">
+                    ${ex.isTrackFinal ? '🏆 ' + ex.specialtyLabel : ex.specialtyLabel}
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${lvlColor}">
+                    مستوى ${ex.level}
+                  </span>
+                </div>
+
+                <div>
+                  <h3 class="text-base font-extrabold text-white leading-snug">${ex.title}</h3>
+                  <p class="text-xs text-slate-400 mt-1 leading-relaxed">${ex.description}</p>
+                </div>
+
+                <div class="bg-slate-950/90 border border-slate-800/80 rounded-2xl p-3 grid grid-cols-3 gap-2 text-center text-[11px]">
+                  <div>
+                    <div class="text-slate-400">عدد الأسئلة</div>
+                    <div class="font-extrabold text-white mt-0.5">${ex.questions.length} أسئلة</div>
+                  </div>
+                  <div>
+                    <div class="text-slate-400">الزمن المقترح</div>
+                    <div class="font-extrabold text-amber-400 mt-0.5">${ex.durationMinutes} دقائق</div>
+                  </div>
+                  <div>
+                    <div class="text-slate-400">درجة النجاح</div>
+                    <div class="font-extrabold text-emerald-400 mt-0.5 ltr-num">${ex.passingPercent}%</div>
+                  </div>
+                </div>
+
+                ${best ? `
+                  <div class="flex items-center justify-between px-3 py-2 rounded-xl ${best.passed ? 'bg-emerald-950/50 border border-emerald-500/30 text-emerald-300' : 'bg-rose-950/50 border border-rose-500/30 text-rose-300'} text-xs font-bold">
+                    <span>${best.passed ? '✅ اجتزت هذا الاختبار' : '⚠️ لم تجتز بعد'}</span>
+                    <span class="ltr-num">أعلى درجة: ${best.score}/${best.total} (${best.percent}%)</span>
+                  </div>
+                ` : ''}
+              </div>
+
+              <button type="button" data-start-exam-id="${ex.id}" class="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs sm:text-sm transition flex items-center justify-center gap-2 ${
+                best && best.passed
+                  ? 'bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/40'
+                  : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-950/50'
+              }">
+                <span>${best ? '🔄 إعادة الاختبار الآن' : '📝 ابدأ الاختبار الآن'}</span>
+                <span>←</span>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        grid.querySelectorAll('[data-start-exam-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            startInteractiveExam(btn.getAttribute('data-start-exam-id'));
+          });
+        });
+      }
+
+      renderExamHistoryViews();
+    }
+
+    function renderExamHistoryViews() {
+      const history = Array.isArray(appState.examHistory) ? appState.examHistory : [];
+      const mainHistContainer = document.getElementById('examHistoryListContainer');
+      const profPreviewContainer = document.getElementById('stuProfileExamHistoryPreview');
+
+      if (mainHistContainer) {
+        if (history.length === 0) {
+          mainHistContainer.innerHTML = `
+            <div class="bg-slate-950/80 border border-dashed border-slate-800 rounded-2xl p-8 text-center space-y-2">
+              <div class="text-3xl">📝</div>
+              <div class="text-sm font-bold text-white">لا توجد اختبارات سابقة في سجلك حتى الآن</div>
+              <p class="text-xs text-slate-400">اختر أي اختبار من بنك الاختبارات وأكمله ليتم حفظ نتيجتك وتفاصيل إجاباتك هنا تلقائياً.</p>
+            </div>
+          `;
+        } else {
+          mainHistContainer.innerHTML = history.slice().reverse().map(item => {
+            const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+            return `
+              <div class="bg-slate-950 border ${item.passed ? 'border-emerald-500/40' : 'border-rose-500/40'} rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${item.passed ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+                      ${item.passed ? '✅ ناجح ومجتاز' : '❌ يحتاج للمراجعة'}
+                    </span>
+                    <span class="text-xs font-bold text-amber-400">${item.specialtyLabel} • ${item.level}</span>
+                    <span class="text-[11px] text-slate-500">${dateStr}</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-extrabold text-white">${item.examTitle}</h4>
+                  <p class="text-xs text-slate-400">${item.encouragement || ''}</p>
+                </div>
+
+                <div class="flex items-center gap-3 self-end sm:self-center shrink-0">
+                  <div class="text-left sm:text-right bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <div class="text-sm font-extrabold ${item.passed ? 'text-emerald-400' : 'text-rose-400'} ltr-num">${item.percent}% (${item.score}/${item.total})</div>
+                    <div class="text-[10px] text-slate-400">الدرجة النهائية</div>
+                  </div>
+                  <button type="button" data-retake-hist-id="${item.examId}" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 text-xs font-bold transition">
+                    إعادة الاختبار
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          mainHistContainer.querySelectorAll('[data-retake-hist-id]').forEach(btn => {
+            btn.addEventListener('click', () => startInteractiveExam(btn.getAttribute('data-retake-hist-id')));
+          });
+        }
+      }
+
+      if (profPreviewContainer) {
+        if (history.length === 0) {
+          profPreviewContainer.innerHTML = `<div class="col-span-full bg-slate-950/70 border border-dashed border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-400">لم تقم بإجراء أي اختبار بعد. انتقل إلى قسم «الاختبارات التفاعلية» لتقييم مستواك وحفظ نتائجك.</div>`;
+        } else {
+          profPreviewContainer.innerHTML = history.slice(-6).reverse().map(item => `
+            <div class="bg-slate-950 border ${item.passed ? 'border-emerald-500/40' : 'border-rose-500/40'} rounded-2xl p-3.5 flex flex-col justify-between gap-2">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="font-bold ${item.passed ? 'text-emerald-400' : 'text-rose-400'}">${item.passed ? '✅ ناجح' : '⚠️ غير مجتاز'}</span>
+                <span class="font-extrabold text-white ltr-num">${item.percent}% (${item.score}/${item.total})</span>
+              </div>
+              <div class="text-xs font-extrabold text-white line-clamp-1">${item.examTitle}</div>
+              <div class="text-[10px] text-slate-400">${item.specialtyLabel} • مستوى ${item.level}</div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function startInteractiveExam(examId) {
+      const exam = EXAMS_DATA.find(x => x.id === examId);
+      if (!exam) return;
+
+      clearActiveExamTimer();
+      const toggleEl = document.getElementById('examEnableTimerToggle');
+      examFilterState.timerEnabled = toggleEl ? toggleEl.checked : true;
+
+      activeExamSession = {
+        exam,
+        currentIndex: 0,
+        selectedAnswers: {},
+        isSubmitted: false,
+        timerInterval: null,
+        remainingSeconds: exam.durationMinutes * 60,
+        startedAt: new Date().toISOString()
+      };
+
+      const submitBtn = document.getElementById('runnerSubmitExamBtn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✅ تسليم الاختبار والتصحيح الفوري';
+      }
+
+      document.getElementById('runnerExamSpecialtyBadge').textContent = exam.specialtyLabel;
+      document.getElementById('runnerExamLevelBadge').textContent = `مستوى ${exam.level}`;
+      document.getElementById('runnerExamTitle').textContent = exam.title;
+
+      const timerBox = document.getElementById('runnerTimerBox');
+      if (examFilterState.timerEnabled) {
+        timerBox.classList.remove('hidden');
+        updateRunnerTimerDisplay();
+        activeExamSession.timerInterval = setInterval(() => {
+          if (activeExamSession.isSubmitted) {
+            clearActiveExamTimer();
+            return;
+          }
+          activeExamSession.remainingSeconds--;
+          updateRunnerTimerDisplay();
+          if (activeExamSession.remainingSeconds <= 0) {
+            clearActiveExamTimer();
+            showToast('⏰ انتهى وقت الاختبار! تم تسليم إجاباتك وتصحيحها تلقائياً.', 'info');
+            submitActiveExam();
+          }
+        }, 1000);
+      } else {
+        timerBox.classList.add('hidden');
+      }
+
+      showExamSubView('runner');
+      renderActiveQuestion();
+    }
+
+    function updateRunnerTimerDisplay() {
+      const disp = document.getElementById('runnerTimerDisplay');
+      if (!disp) return;
+      const secs = Math.max(0, activeExamSession.remainingSeconds);
+      const m = String(Math.floor(secs / 60)).padStart(2, '0');
+      const s = String(secs % 60).padStart(2, '0');
+      disp.textContent = `${m}:${s}`;
+      if (secs <= 60) {
+        disp.className = 'text-base sm:text-lg font-extrabold text-rose-400 animate-pulse ltr-num';
+      } else {
+        disp.className = 'text-base sm:text-lg font-extrabold text-amber-400 ltr-num';
+      }
+    }
+
+    function renderActiveQuestion() {
+      const session = activeExamSession;
+      if (!session.exam) return;
+      const questions = session.exam.questions;
+      const total = questions.length;
+      const idx = session.currentIndex;
+      const qObj = questions[idx];
+
+      const answeredCount = Object.keys(session.selectedAnswers).length;
+      document.getElementById('runnerQuestionCounterText').textContent = `السؤال ${idx + 1} من ${total}`;
+      document.getElementById('runnerAnsweredCounterText').textContent = `تمت الإجابة على ${answeredCount} من ${total}`;
+      document.getElementById('runnerProgressBar').style.width = `${Math.round(((idx + 1) / total) * 100)}%`;
+
+      // Render Question Number Dots for direct jumping
+      const dotsEl = document.getElementById('runnerQuestionDots');
+      dotsEl.innerHTML = questions.map((_, i) => {
+        const isCurrent = i === idx;
+        const isAnswered = typeof session.selectedAnswers[i] === 'number';
+        return `
+          <button type="button" data-jump-q-idx="${i}" class="w-8 h-8 rounded-xl text-xs font-extrabold border transition ${
+            isCurrent
+              ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md'
+              : isAnswered
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+              : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-600'
+          }">
+            ${i + 1}
+          </button>
+        `;
+      }).join('');
+
+      dotsEl.querySelectorAll('[data-jump-q-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeExamSession.currentIndex = parseInt(btn.getAttribute('data-jump-q-idx'), 10);
+          renderActiveQuestion();
+        });
+      });
+
+      document.getElementById('runnerQuestionTypeBadge').textContent = qObj.type === 'tf' ? 'سؤال صح أم خطأ (True / False)' : 'سؤال اختيار من متعدد (Multiple Choice)';
+      document.getElementById('runnerQuestionText').textContent = qObj.q;
+
+      const selectedOpt = session.selectedAnswers[idx];
+      const optsContainer = document.getElementById('runnerOptionsContainer');
+      optsContainer.innerHTML = qObj.options.map((optText, optIdx) => {
+        const isChosen = selectedOpt === optIdx;
+        const letters = ['أ', 'ب', 'ج', 'د'];
+        return `
+          <button type="button" data-select-opt-idx="${optIdx}" class="w-full p-4 rounded-2xl border text-right transition flex items-center justify-between gap-3 ${
+            isChosen
+              ? 'bg-emerald-500/20 border-emerald-400 text-white shadow-md'
+              : 'bg-slate-900/90 hover:bg-slate-800/90 border-slate-800 text-slate-200'
+          }">
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold ${
+                isChosen ? 'bg-emerald-500 text-slate-950' : 'bg-slate-950 text-slate-400 border border-slate-700'
+              }">${letters[optIdx] || (optIdx + 1)}</span>
+              <span class="text-xs sm:text-sm font-bold leading-relaxed">${optText}</span>
+            </div>
+            <span class="w-5 h-5 rounded-full border flex items-center justify-center ${
+              isChosen ? 'border-emerald-400 bg-emerald-500 text-slate-950 text-xs font-extrabold' : 'border-slate-600'
+            }">${isChosen ? '✓' : ''}</span>
+          </button>
+        `;
+      }).join('');
+
+      optsContainer.querySelectorAll('[data-select-opt-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (activeExamSession.isSubmitted) return;
+          const chosen = parseInt(btn.getAttribute('data-select-opt-idx'), 10);
+          activeExamSession.selectedAnswers[idx] = chosen;
+          renderActiveQuestion();
+        });
+      });
+
+      const prevBtn = document.getElementById('runnerPrevQuestionBtn');
+      const nextBtn = document.getElementById('runnerNextQuestionBtn');
+      if (prevBtn) prevBtn.disabled = idx === 0;
+      if (nextBtn) {
+        if (idx === total - 1) {
+          nextBtn.classList.add('hidden');
+        } else {
+          nextBtn.classList.remove('hidden');
+        }
+      }
+    }
+
+    async function submitActiveExam() {
+      // Guard against duplicate submission clicks
+      if (!activeExamSession.exam || activeExamSession.isSubmitted) return;
+      activeExamSession.isSubmitted = true;
+      clearActiveExamTimer();
+
+      const submitBtn = document.getElementById('runnerSubmitExamBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'تم التسليم والتصحيح ✓';
+      }
+
+      const exam = activeExamSession.exam;
+      const questions = exam.questions;
+      const total = questions.length;
+      let correctCount = 0;
+
+      questions.forEach((q, idx) => {
+        if (activeExamSession.selectedAnswers[idx] === q.correct) {
+          correctCount++;
+        }
+      });
+
+      const percent = Math.round((correctCount / total) * 100);
+      const passed = percent >= (exam.passingPercent || 60);
+
+      let encouragement = '';
+      if (percent === 100) {
+        encouragement = '🌟 أداء استثنائي ومثالي! أجبت على جميع الأسئلة بشكل صحيح تماماً، أنت متمكن بجدارة من هذا التخصص.';
+      } else if (percent >= 80) {
+        encouragement = '🎉 ممتاز جداً! اجتزت الاختباربتفوق واضح، استمر على هذا المستوى الاحترافي.';
+      } else if (passed) {
+        encouragement = '✅ أحسنت! لقد اجتزت الاختبار بنجاح. راجع شرح الأسئلة بالأسفل لتعزيز نقاط قوتك.';
+      } else {
+        encouragement = '💪 محاولة جيدة! لم تصل لنسبة النجاح المطلوبة بعد، اقرأ الشرح المبسط للإجابات بالأسفل ثم أعد الاختبار بثقة.';
+      }
+
+      const attemptRecord = {
+        attemptId: 'att_' + Date.now(),
+        examId: exam.id,
+        examTitle: exam.title,
+        specialty: exam.specialty,
+        specialtyLabel: exam.specialtyLabel,
+        level: exam.level,
+        score: correctCount,
+        total,
+        percent,
+        passed,
+        encouragement,
+        timestamp: new Date().toISOString()
+      };
+
+      if (!Array.isArray(appState.examHistory)) appState.examHistory = [];
+      appState.examHistory.push(attemptRecord);
+      await saveState();
+      renderRoadmaps();
+
+      // Populate Result View
+      const statusBadge = document.getElementById('resultStatusBadge');
+      if (passed) {
+        statusBadge.textContent = '✅ ناجح ومجتاز للاختبار';
+        statusBadge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      } else {
+        statusBadge.textContent = '⚠️ لم تجتز درجة النجاح — راجع الشرح وأعد المحاولة';
+        statusBadge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+      }
+
+      document.getElementById('resultExamTitle').textContent = exam.title;
+      document.getElementById('resultEncouragementMsg').textContent = encouragement;
+      document.getElementById('resultScorePercent').textContent = `${percent}%`;
+      document.getElementById('resultScorePercent').className = `text-3xl sm:text-4xl font-extrabold mt-1 ltr-num ${passed ? 'text-emerald-400' : 'text-rose-400'}`;
+      document.getElementById('resultScoreFraction').textContent = `${correctCount} من ${total} إجابات صحيحة`;
+      document.getElementById('resultPassingNote').textContent = `نسبة النجاح المطلوبة: ${exam.passingPercent || 60}%`;
+
+      const reviewList = document.getElementById('resultQuestionsReviewList');
+      reviewList.innerHTML = questions.map((q, idx) => {
+        const userChoice = activeExamSession.selectedAnswers[idx];
+        const isCorrect = userChoice === q.correct;
+        const userChoiceText = typeof userChoice === 'number' ? q.options[userChoice] : 'لم يتم اختيار إجابة';
+        const correctChoiceText = q.options[q.correct];
+
+        return `
+          <div class="bg-slate-950 border ${isCorrect ? 'border-emerald-500/40' : 'border-rose-500/40'} rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <h5 class="text-xs sm:text-sm font-extrabold text-white leading-relaxed">س${idx + 1}: ${q.q}</h5>
+              <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold shrink-0 ${isCorrect ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+                ${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-200' : 'bg-rose-950/40 border border-rose-500/30 text-rose-200'}">
+                <div class="text-[10px] opacity-80 font-bold mb-0.5">إجابتك المختارة:</div>
+                <div class="font-bold">${userChoiceText}</div>
+              </div>
+              <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-200">
+                <div class="text-[10px] text-emerald-400 font-bold mb-0.5">الإجابة الصحيحة المعتمدة:</div>
+                <div class="font-bold">${correctChoiceText}</div>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 leading-relaxed">
+              <span class="font-extrabold text-amber-400">💡 الشرح العلمي المبسط: </span>
+              <span>${q.explanation}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      showExamSubView('result');
+      showToast(passed ? `🎉 مبروك! حصلت على ${percent}% واجتزت الاختبار بنجاح` : `تم تصحيح الاختبار (${percent}%) — راجع الشرح العلمي للأسئلة`, passed ? 'success' : 'info');
     }
 
     // ==========================================
@@ -3601,6 +6265,7 @@
         appState.completedSteps = {};
         appState.courseLessonsProgress = {};
         appState.lastLessonReached = null;
+        appState.examHistory = [];
         saveState();
         showToast('تمت إعادة ضبط سجل التقدم', 'info');
         renderRoadmaps();
@@ -3716,7 +6381,8 @@
             bookmarkedCourses: appState.bookmarkedCourses || {},
             completedSteps: appState.completedSteps || {},
             courseLessonsProgress: appState.courseLessonsProgress || {},
-            lastLessonReached: appState.lastLessonReached || null
+            lastLessonReached: appState.lastLessonReached || null,
+            examHistory: appState.examHistory || []
           }
         };
 
@@ -3931,6 +6597,79 @@
         }
       });
 
+      // Phase 2 Interactive Exams Event Listeners
+      document.getElementById('examSubTabCatalogBtn').addEventListener('click', () => {
+        clearActiveExamTimer();
+        showExamSubView('catalog');
+      });
+      document.getElementById('examSubTabHistoryBtn').addEventListener('click', () => {
+        clearActiveExamTimer();
+        renderExamHistoryViews();
+        showExamSubView('history');
+      });
+      document.getElementById('historyBackToCatalogBtn').addEventListener('click', () => showExamSubView('catalog'));
+
+      document.querySelectorAll('#examSpecialtyPills .exam-spec-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          examFilterState.specialty = btn.getAttribute('data-exam-spec');
+          document.querySelectorAll('#examSpecialtyPills .exam-spec-btn').forEach(b => {
+            if (b.getAttribute('data-exam-spec') === examFilterState.specialty) {
+              b.className = 'exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition';
+            } else {
+              b.className = 'exam-spec-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-emerald-500/40 transition';
+            }
+          });
+          renderExamsSectionUI();
+        });
+      });
+
+      document.querySelectorAll('#examLevelPills .exam-lvl-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          examFilterState.level = btn.getAttribute('data-exam-lvl');
+          document.querySelectorAll('#examLevelPills .exam-lvl-btn').forEach(b => {
+            if (b.getAttribute('data-exam-lvl') === examFilterState.level) {
+              b.className = 'exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition';
+            } else {
+              b.className = 'exam-lvl-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:border-amber-400 transition';
+            }
+          });
+          renderExamsSectionUI();
+        });
+      });
+
+      document.getElementById('runnerPrevQuestionBtn').addEventListener('click', () => {
+        if (activeExamSession.currentIndex > 0) {
+          activeExamSession.currentIndex--;
+          renderActiveQuestion();
+        }
+      });
+
+      document.getElementById('runnerNextQuestionBtn').addEventListener('click', () => {
+        if (activeExamSession.exam && activeExamSession.currentIndex < activeExamSession.exam.questions.length - 1) {
+          activeExamSession.currentIndex++;
+          renderActiveQuestion();
+        }
+      });
+
+      document.getElementById('runnerSubmitExamBtn').addEventListener('click', submitActiveExam);
+
+      document.getElementById('runnerExitExamBtn').addEventListener('click', () => {
+        clearActiveExamTimer();
+        showExamSubView('catalog');
+      });
+
+      document.getElementById('resultRetakeExamBtn').addEventListener('click', () => {
+        if (activeExamSession.exam) {
+          startInteractiveExam(activeExamSession.exam.id);
+        }
+      });
+
+      document.getElementById('resultBackToCatalogBtn').addEventListener('click', () => showExamSubView('catalog'));
+      document.getElementById('resultGoToHistoryBtn').addEventListener('click', () => {
+        renderExamHistoryViews();
+        showExamSubView('history');
+      });
+
       // Initial Render
       updateGlobalProgressUI();
       renderRoadmaps();
@@ -3938,6 +6677,7 @@
       renderSoftwareDirectory();
       renderInterviewQA();
       renderStudentProfileDashboard();
+      renderExamsSectionUI();
     });
   </script>
 </body>
