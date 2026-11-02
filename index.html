@@ -82,7 +82,7 @@
           <div class="flex items-center gap-2">
             <h1 id="brandMainTitle" class="text-lg sm:text-xl font-extrabold tracking-tight text-white">أكاديمية جيو مساحة</h1>
             <span id="brandBadgeText" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">GeoMasaha Pro</span>
-            <button id="headerEditPlatformNameBtn" type="button" title="تخصيص اسم وهوية المنصة" class="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-bold transition">✏️</button>
+            <button id="headerEditPlatformNameBtn" type="button" title="تخصيص اسم وهوية المنصة (للمدير فقط)" class="hidden px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-[10px] font-bold transition">✏️ تعديل الاسم</button>
           </div>
           <p id="brandSubTitle" class="text-xs text-slate-400">المنصة المتكاملة لخريجي ومهندسي المساحة والخرائط ونظم المعلومات الجغرافية GIS</p>
         </div>
@@ -643,22 +643,22 @@
     <!-- SECTION: PRO SUBSCRIPTION & ACTIVATION SYSTEM (نظام الاشتراك وتفعيل العضوية) -->
     <!-- =================================================================== -->
     <section id="view-subscription" class="tab-view hidden space-y-6">
-      <div class="bg-gradient-to-l from-amber-950/60 via-slate-900 to-slate-900 border border-amber-500/40 rounded-3xl p-5 sm:p-7 space-y-6 shadow-2xl">
+      <div class="bg-gradient-to-l from-emerald-950/60 via-slate-900 to-slate-900 border-2 border-emerald-500/40 rounded-3xl p-5 sm:p-7 space-y-6 shadow-2xl">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 border-b border-slate-800 pb-5">
           <div class="space-y-2">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-extrabold">
-              <span>💎 نظام اشتراكات أكاديمية جيو مساحة • GeoMasaha Pro Membership</span>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold">
+              <span>💎 قائمة الاشتراك في المنصة • GeoMasaha Pro</span>
             </div>
-            <h2 class="text-xl sm:text-3xl font-extrabold text-white">اشترك الآن وافتح جميع الكورسات والمشاريع والملفات والاختبارات</h2>
+            <h2 class="text-xl sm:text-3xl font-extrabold text-white">قائمة باقات الاشتراك وتفعيل العضوية</h2>
             <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              يتيح لك الاشتراك في منصة <strong>GeoMasaha Pro</strong> الوصول الكامل لجميع مسارات التعلم، متابعة الكورسات، تحميل ملفات التدريب المساحية وGIS، تطبيق المشاريع العملية، خوض الاختبارات وإصدار الشهادات المعتمدة.
+              اختر الباقة المناسبة لك وحوّل قيمة الاشتراك عبر <strong>فودافون كاش (<span class="text-amber-300 ltr-num">01065009853</span>)</strong> ثم اضغط على زر التواصل عبر الواتساب مع <strong>م. معاذ العكلي (<span class="text-emerald-400 ltr-num">@moaz elokly</span>)</strong> لتفعيل اشتراكك فوراً.
             </p>
           </div>
           <!-- Active Subscription Status Card -->
-          <div class="bg-slate-950 border-2 border-amber-500/40 rounded-2xl p-4 w-full lg:w-80 space-y-2 text-xs shrink-0">
-            <div class="text-slate-400 font-bold">حالة عضويتك واشتراكك الحالي:</div>
-            <div id="subPageUserStatusBadge" class="text-sm font-extrabold text-amber-300">غير مشترك — فعل اشتراكك الآن</div>
-            <div id="subPageUserPlanDetails" class="text-[11px] text-slate-400">أدخل كود التفعيل الفوري أو أرسل طلب اشتراك للمدير لتفعيل حسابك.</div>
+          <div class="bg-slate-950 border-2 border-emerald-500/40 rounded-2xl p-4 w-full lg:w-80 space-y-2 text-xs shrink-0">
+            <div class="text-slate-400 font-bold">حالة الاشتراك الحالية:</div>
+            <div id="subPageUserStatusBadge" class="text-sm font-extrabold text-amber-300">غير مشترك — تواصل عبر واتساب للاشتراك</div>
+            <div id="subPageUserPlanDetails" class="text-[11px] text-slate-400">فودافون كاش: 01065009853 • واتساب: @moaz elokly</div>
           </div>
         </div>
 
@@ -680,8 +680,8 @@
                 <li>المشاركة الكاملة في مجتمع المنصة والخرائط</li>
               </ul>
             </div>
-            <button type="button" data-select-sub-plan="الباقة الشهرية (150 ج.م)" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition">
-              اختيار الباقة الشهرية ←
+            <button type="button" data-select-sub-plan="الباقة الشهرية (150 ج.م)" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>💬</span><span>اشترك في الباقة الشهرية عبر واتساب</span>
             </button>
           </div>
 
@@ -704,8 +704,8 @@
                 <li>أولوية الرد على الاستفسارات الفنية في المجتمع</li>
               </ul>
             </div>
-            <button type="button" data-select-sub-plan="باقة 6 أشهر (600 ج.م)" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition shadow-lg">
-              اختيار باقة الـ 6 أشهر ←
+            <button type="button" data-select-sub-plan="باقة 6 أشهر (600 ج.م)" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition shadow-lg flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>💬</span><span>اشترك في باقة 6 أشهر عبر واتساب</span>
             </button>
           </div>
 
@@ -725,84 +725,35 @@
                 <li>شهادات معتمدة لجميع المسارات والاختبارات</li>
               </ul>
             </div>
-            <button type="button" data-select-sub-plan="الباقة السنوية الشاملة (1000 ج.م)" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs transition">
-              اختيار الباقة السنوية ←
+            <button type="button" data-select-sub-plan="الباقة السنوية الشاملة (1000 ج.م)" class="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>💬</span><span>اشترك في الباقة السنوية عبر واتساب</span>
             </button>
           </div>
         </div>
 
-        <!-- Two Activation Methods: (1) Instant Code + (2) Payment Request -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-          <!-- Method 1: Instant Activation Code -->
-          <div class="bg-slate-950 border border-emerald-500/40 rounded-3xl p-5 space-y-4">
-            <div class="space-y-1 border-b border-slate-800 pb-3">
-              <span class="text-[11px] font-extrabold text-emerald-400">⚡ الطريقة الأولى: تفعيل فوري في ثانية واحدة</span>
-              <h3 class="text-base sm:text-lg font-extrabold text-white">لديك كود تفعيل من إدارة المنصة؟</h3>
-              <p class="text-xs text-slate-400">أدخل كود الاشتراك الذي استلمته من م. معاذ العكلي ليتم تفعيل حسابك وفتح جميع أقسام المنصة فوراً:</p>
-            </div>
-            <form id="subInstantCodeForm" class="space-y-3 text-xs">
-              <div>
-                <label class="block text-slate-300 font-bold mb-1.5">كود تفعيل الاشتراك *</label>
-                <input id="subActivationCodeInput" type="text" required placeholder="أدخل كود التفعيل هنا مثل: GEO-PRO-2026" class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl px-4 py-3 text-white font-extrabold ltr-num text-center text-sm outline-none">
-              </div>
-              <button type="submit" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition shadow-lg">
-                ⚡ تفعيل الاشتراك فوراً بالكود
-              </button>
-            </form>
+        <!-- Clean Direct Vodafone Cash (01065009853) + WhatsApp (@moaz elokly) Box (No Extra Data Forms or Activation Code Box) -->
+        <div class="bg-slate-950 border-2 border-emerald-500/60 rounded-3xl p-6 text-center space-y-4 shadow-xl max-w-2xl mx-auto">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold">
+            <span>💬 التواصل المباشر للاشتراك وتفعيل الحساب</span>
           </div>
-
-          <!-- Method 2: Direct WhatsApp Subscription with @moaz elokly + Payment Request -->
-          <div class="bg-slate-950 border-2 border-emerald-500/60 rounded-3xl p-5 space-y-4 shadow-xl">
-            <div class="space-y-2 border-b border-slate-800 pb-3">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="text-[11px] font-extrabold text-emerald-400">💬 الطريقة الأسرع: التواصل المباشر عبر واتساب لتفعيل الاشتراك</span>
-                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold ltr-num">@moaz elokly</span>
-              </div>
-              <h3 class="text-base sm:text-lg font-extrabold text-white">تواصل مباشرة على واتساب مع م. معاذ العكلي (<span class="text-emerald-400 ltr-num">@moaz elokly</span>)</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                للاشتراك أو تفعيل اشتراكك واستلام كود التفعيل الفوري، تواصل الآن عبر الواتساب مع حساب الإدارة الرسمي
-                <strong class="text-emerald-400 ltr-num">@moaz elokly</strong> أو حول قيمة الباقة على رقم المحفظة / إنستا باي:
-                <span id="subPaymentWalletDisplay" class="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-extrabold ltr-num mr-1">01000000000</span>
-              </p>
-              <button type="button" id="subHeroDirectWhatsappBtn" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
-                <span>💬</span>
-                <span>اضغط هنا للتواصل عبر واتساب الآن والاشتراك (@moaz elokly)</span>
-              </button>
+          <h3 class="text-lg sm:text-2xl font-extrabold text-white">
+            تواصل الآن على الواتساب مع م. معاذ العكلي (<span class="text-emerald-400 ltr-num">@moaz elokly</span>)
+          </h3>
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+            <div class="px-4 py-2.5 rounded-2xl bg-slate-900 border border-amber-500/40 text-xs sm:text-sm font-extrabold text-white flex items-center gap-2">
+              <span class="text-amber-400">💳 رقم فودافون كاش:</span>
+              <span id="subPaymentWalletDisplay" class="text-amber-300 text-base font-extrabold ltr-num">01065009853</span>
             </div>
-            <form id="subPaymentRequestForm" class="space-y-3 text-xs">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-slate-300 font-bold mb-1">اسم الطالب *</label>
-                  <input id="subReqStudentName" type="text" required placeholder="الاسم الثلاثي" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none">
-                </div>
-                <div>
-                  <label class="block text-slate-300 font-bold mb-1">رقم الهاتف / الواتساب *</label>
-                  <input id="subReqStudentPhone" type="text" required placeholder="010xxxxxxxx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
-                </div>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-slate-300 font-bold mb-1">الباقة المطلوبة *</label>
-                  <select id="subReqPlanSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none">
-                    <option value="الباقة الشهرية (150 ج.م)">الباقة الشهرية (150 ج.م)</option>
-                    <option value="باقة 6 أشهر (600 ج.م)" selected>باقة 6 أشهر (600 ج.م)</option>
-                    <option value="الباقة السنوية الشاملة (1000 ج.م)">الباقة السنوية الشاملة (1000 ج.م)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-slate-300 font-bold mb-1">وسيلة التحويل ورقم العملية *</label>
-                  <input id="subReqTransferRef" type="text" required placeholder="مثال: فودافون كاش — رقم التحويل" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none">
-                </div>
-              </div>
-              <div class="flex flex-wrap items-center gap-2 pt-1">
-                <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition">
-                  📩 إرسال طلب تفعيل الاشتراك للمدير
-                </button>
-                <a id="subWhatsappDirectBtn" href="https://wa.me/moaz.elokly" target="_blank" rel="noopener noreferrer" class="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold transition flex items-center gap-1.5 shadow-md">
-                  <span>💬</span><span>محادثة واتساب (@moaz elokly)</span>
-                </a>
-              </div>
-            </form>
+            <div class="px-4 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-xs sm:text-sm font-extrabold text-white flex items-center gap-2">
+              <span class="text-emerald-400">💬 حساب الواتساب:</span>
+              <span class="text-emerald-300 text-base font-extrabold ltr-num">@moaz elokly</span>
+            </div>
+          </div>
+          <div class="pt-2">
+            <button type="button" id="subHeroDirectWhatsappBtn" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-extrabold text-sm sm:text-base shadow-xl transition flex items-center justify-center gap-2.5 cursor-pointer">
+              <span class="text-lg">💬</span>
+              <span>التواصل معي على الواتساب للاشتراك الآن (@moaz elokly)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2911,11 +2862,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-slate-300 font-bold mb-1">رقم المحفظة / إنستا باي للتحويل</label>
-                <input id="adminCfgWalletNumber" type="text" value="01000000000" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
+                <input id="adminCfgWalletNumber" type="text" value="01065009853" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
               </div>
               <div>
                 <label class="block text-slate-300 font-bold mb-1">حساب أو رقم واتساب المدير للاشتراك</label>
-                <input id="adminCfgWhatsappNumber" type="text" value="@moaz elokly" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
+                <input id="adminCfgWhatsappNumber" type="text" value="01065009853" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
               </div>
             </div>
             <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition">
@@ -4415,66 +4366,62 @@
         </svg>
       </div>
 
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <span id="waPromptFeatureTag" class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold">
-          💬 الاشتراك وتفعيل العضوية في GeoMasaha Pro
+          💎 قائمة الاشتراك في المنصة
         </span>
         <h3 class="text-lg sm:text-xl font-extrabold text-white">
-          تواصل الآن معي على الواتساب للاشتراك وتفعيل حسابك
+          اشترك الآن وتواصل معي على الواتساب
         </h3>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-          للاشتراك في منصة <strong>GeoMasaha Pro</strong> أو تفعيل اشتراكك واستلام كود التفعيل الفوري، تواصل مباشرة على الواتساب مع مدير المنصة <strong>م. معاذ العكلي (<span class="text-emerald-400 font-extrabold ltr-num">@moaz elokly</span>)</strong>.
-        </p>
       </div>
 
-      <!-- Official WhatsApp Account Card -->
-      <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/40 text-xs text-slate-200 space-y-2">
-        <div class="flex items-center justify-between gap-2">
-          <span class="text-slate-400 font-bold">👤 حساب الواتساب الرسمي:</span>
-          <div class="flex items-center gap-1.5">
-            <span id="waPromptAccountDisplay" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-extrabold ltr-num text-sm">@moaz elokly</span>
-            <button type="button" id="copyWaAccountHandleBtn" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition" title="نسخ حساب الواتساب">📋 نسخ</button>
+      <!-- Subscription Menu List inside Modal -->
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-200 space-y-2.5 text-right">
+        <div class="font-extrabold text-emerald-400 text-xs mb-1">📋 باقات الاشتراك المتاحة:</div>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="radio" name="waModalPlanRadio" value="الباقة الشهرية (150 ج.م)" class="accent-emerald-500">
+            <span class="font-bold text-white">الباقة الشهرية</span>
+          </div>
+          <span class="font-extrabold text-emerald-400 ltr-num">150 ج.م</span>
+        </label>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border-2 border-amber-500/60 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="radio" name="waModalPlanRadio" value="باقة 6 أشهر (600 ج.م)" checked class="accent-amber-500">
+            <span class="font-extrabold text-white">باقة الترم (6 أشهر)</span>
+          </div>
+          <span class="font-extrabold text-amber-400 ltr-num">600 ج.م</span>
+        </label>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
+          <div class="flex items-center gap-2">
+            <input type="radio" name="waModalPlanRadio" value="الباقة السنوية الشاملة (1000 ج.م)" class="accent-sky-500">
+            <span class="font-bold text-white">الباقة السنوية الشاملة</span>
+          </div>
+          <span class="font-extrabold text-sky-400 ltr-num">1000 ج.م</span>
+        </label>
+
+        <!-- Vodafone Cash & WhatsApp Info -->
+        <div class="pt-2 border-t border-slate-800 space-y-1.5">
+          <div class="flex items-center justify-between bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2">
+            <span class="text-amber-300 font-bold">💳 فودافون كاش:</span>
+            <span id="waModalWalletNumberText" class="text-amber-300 font-extrabold text-sm ltr-num">01065009853</span>
+          </div>
+          <div class="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-3 py-2">
+            <span class="text-emerald-300 font-bold">💬 حساب الواتساب:</span>
+            <span id="waPromptAccountDisplay" class="text-emerald-300 font-extrabold text-sm ltr-num">@moaz elokly</span>
           </div>
         </div>
-        <div class="text-right pt-1 border-t border-slate-800">
-          <label class="block text-[11px] text-slate-400 font-bold mb-1">اختر الباقة المطلوبة قبل الانتقال للمحادثة:</label>
-          <select id="waPromptPlanSelect" class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-white text-xs font-bold outline-none">
-            <option value="الباقة الشهرية (150 ج.م)">الباقة الشهرية — 150 ج.م / شهرياً</option>
-            <option value="باقة 6 أشهر (600 ج.م)" selected>باقة الترم الدراسي (6 أشهر) — 600 ج.م</option>
-            <option value="الباقة السنوية الشاملة (1000 ج.م)">الباقة السنوية الشاملة (سنة كاملة) — 1000 ج.م</option>
-          </select>
-        </div>
-        <div id="waPromptStudentSummary" class="text-[11px] text-emerald-300/90 font-semibold pt-1">
-          سيتم نقلك إلى محادثة الواتساب مباشرة مع إرسال بياناتك لتسريع تفعيل الاشتراك.
-        </div>
       </div>
 
-      <!-- Primary Direct WhatsApp Action Button -->
-      <div class="flex flex-col gap-2.5">
+      <!-- Direct WhatsApp Button -->
+      <div class="flex flex-col gap-2">
         <button type="button" id="btnWaPromptGoChat" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 text-xs sm:text-sm font-extrabold shadow-xl shadow-emerald-950/60 transition flex items-center justify-center gap-2 cursor-pointer">
           <span>💬</span>
-          <span>انتقل لمحادثة الواتساب الآن للاشتراك (@moaz elokly)</span>
+          <span>تواصل معي على الواتساب للاشتراك الآن</span>
         </button>
-
-        <!-- Instant Code Quick Entry inside Modal -->
-        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-3 space-y-2 text-right">
-          <div class="text-[11px] font-bold text-amber-300">🔑 هل تواصلت على الواتساب واستلمت كود التفعيل؟ أدخله هنا فوراً:</div>
-          <div class="flex items-center gap-2">
-            <input id="waModalQuickCodeInput" type="text" placeholder="أدخل كود التفعيل مثل: GEO-PRO-2026" class="flex-1 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-white text-xs font-extrabold ltr-num text-center outline-none">
-            <button type="button" id="waModalQuickActivateBtn" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold shrink-0 transition">
-              ⚡ تفعيل
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" id="btnWaPromptViewPlansPage" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-extrabold transition">
-            💎 صفحة الباقات
-          </button>
-          <button type="button" id="btnWaPromptClose" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-extrabold transition">
-            إغلاق
-          </button>
-        </div>
+        <button type="button" id="btnWaPromptClose" class="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-extrabold transition">
+          إغلاق
+        </button>
       </div>
     </div>
   </div>
@@ -6515,6 +6462,10 @@
     }
 
     function openPlatformBrandingModal() {
+      if (!isCurrentUserAdmin()) {
+        showToast('🔒 تغيير اسم المنصة متاح للمدير العام فقط (م. معاذ العكلي)', 'error');
+        return;
+      }
       const b = getPlatformBranding();
       document.getElementById('brandNameInput').value = b.name;
       document.getElementById('brandBadgeInput').value = b.badge;
@@ -6532,6 +6483,10 @@
       const dashPill = document.getElementById('dashAuthStatusPill');
       const dashAuthBtn = document.getElementById('dashAuthQuickBtn');
 
+      const headerEditBrandBtn = document.getElementById('headerEditPlatformNameBtn');
+      if (headerEditBrandBtn) {
+        headerEditBrandBtn.classList.toggle('hidden', !isCurrentUserAdmin());
+      }
       const adminNavBtn = document.getElementById('adminNavTabBtn');
       const adminProfBtn = document.getElementById('openAdminPanelFromProfileBtn');
       const dbSyncProfBtn = document.getElementById('openDbSyncModalBtn');
@@ -15721,30 +15676,19 @@
       priceMonthly: 150,
       priceSemester: 600,
       priceAnnual: 1000,
-      walletNumber: '01000000000',
-      whatsappNumber: '@moaz elokly',
-      whatsappHandle: 'moaz.elokly'
+      walletNumber: '01065009853',
+      whatsappNumber: '201065009853',
+      whatsappHandle: '@moaz elokly'
     };
 
     function buildMoazWhatsAppSubscribeUrl(selectedPlan) {
-      const planText = selectedPlan || (document.getElementById('waPromptPlanSelect') ? document.getElementById('waPromptPlanSelect').value : 'باقة 6 أشهر (600 ج.م)');
-      const studentName = (currentUser && currentUser.name) ? currentUser.name : 'طالب جديد في المنصة';
-      const studentEmail = (currentUser && currentUser.email) ? currentUser.email : '';
-      const studentSpec = (currentUser && currentUser.specialty) ? currentUser.specialty : '';
-
-      let msg = `مرحباً م. معاذ العكلي (@moaz elokly)، أرغب في الاشتراك وتفعيل حسابي في منصة GeoMasaha Pro:\n`;
-      msg += `• الاسم: ${studentName}\n`;
-      if (studentEmail) msg += `• البريد الإلكتروني: ${studentEmail}\n`;
-      if (studentSpec) msg += `• التخصص: ${studentSpec}\n`;
-      msg += `• الباقة المطلوبة: ${planText}`;
-
-      const rawWa = String(SUBSCRIPTION_CONFIG.whatsappNumber || '@moaz elokly').trim();
-      const digitsOnly = rawWa.replace(/[^0-9]/g, '');
-      const targetPath = (digitsOnly.length >= 10 && digitsOnly !== '201000000000')
-        ? digitsOnly
-        : 'moaz.elokly';
-
-      return `https://wa.me/${targetPath}?text=${encodeURIComponent(msg)}`;
+      let chosenPlan = selectedPlan;
+      if (!chosenPlan) {
+        const checkedRadio = document.querySelector('input[name="waModalPlanRadio"]:checked');
+        chosenPlan = checkedRadio ? checkedRadio.value : 'باقة 6 أشهر (600 ج.م)';
+      }
+      const msg = `مرحباً م. معاذ العكلي (@moaz elokly)، أرغب في الاشتراك في منصة GeoMasaha Pro (${chosenPlan}).`;
+      return `https://wa.me/201065009853?text=${encodeURIComponent(msg)}`;
     }
 
     function openWhatsAppSubscribePromptModal(featureLabel, preselectedPlan) {
@@ -15754,30 +15698,19 @@
       const tagEl = document.getElementById('waPromptFeatureTag');
       if (tagEl) {
         tagEl.textContent = featureLabel
-          ? `🔒 تفعيل الاشتراك لفتح: ${featureLabel}`
-          : '💬 الاشتراك وتفعيل العضوية في GeoMasaha Pro';
+          ? `🔒 اشترك لفتح: ${featureLabel}`
+          : '💎 قائمة الاشتراك في المنصة';
       }
 
-      const planSel = document.getElementById('waPromptPlanSelect');
-      if (planSel && preselectedPlan) {
-        planSel.value = preselectedPlan;
+      if (preselectedPlan) {
+        document.querySelectorAll('input[name="waModalPlanRadio"]').forEach(r => {
+          r.checked = (r.value === preselectedPlan);
+        });
       }
 
-      const accDisplay = document.getElementById('waPromptAccountDisplay');
-      if (accDisplay) {
-        const waTxt = (SUBSCRIPTION_CONFIG.whatsappNumber && SUBSCRIPTION_CONFIG.whatsappNumber !== '201000000000')
-          ? SUBSCRIPTION_CONFIG.whatsappNumber
-          : '@moaz elokly';
-        accDisplay.textContent = waTxt;
-      }
-
-      const summaryEl = document.getElementById('waPromptStudentSummary');
-      if (summaryEl) {
-        if (currentUser && currentUser.name) {
-          summaryEl.textContent = `حسابك الحالي: ${currentUser.name} (${currentUser.email}) — اضغط بالأسفل لفتح محادثة الواتساب مباشرة مع م. معاذ العكلي (@moaz elokly).`;
-        } else {
-          summaryEl.textContent = 'اضغط بالأسفل للانتقال مباشرة إلى محادثة الواتساب مع م. معاذ العكلي (@moaz elokly) للاشتراك وتفعيل حسابك.';
-        }
+      const walletTxt = document.getElementById('waModalWalletNumberText');
+      if (walletTxt) {
+        walletTxt.textContent = SUBSCRIPTION_CONFIG.walletNumber || '01065009853';
       }
 
       modal.classList.remove('hidden');
@@ -15794,7 +15727,12 @@
     function loadSubscriptionStateFromStorage() {
       try {
         const cfg = localStorage.getItem('geomasaha_sub_config_v1');
-        if (cfg) SUBSCRIPTION_CONFIG = Object.assign({}, SUBSCRIPTION_CONFIG, JSON.parse(cfg));
+        if (cfg) {
+          const parsed = JSON.parse(cfg);
+          if (parsed.walletNumber === '01000000000') parsed.walletNumber = '01065009853';
+          if (parsed.whatsappNumber === '201000000000' || parsed.whatsappNumber === '@moaz elokly') parsed.whatsappNumber = '201065009853';
+          SUBSCRIPTION_CONFIG = Object.assign({}, SUBSCRIPTION_CONFIG, parsed);
+        }
       } catch (e) {}
       try {
         const codes = localStorage.getItem('geomasaha_activation_codes_v1');
@@ -15844,10 +15782,7 @@
       setTxt('subPriceAnnualText', SUBSCRIPTION_CONFIG.priceAnnual);
       setTxt('subPaymentWalletDisplay', SUBSCRIPTION_CONFIG.walletNumber);
 
-      const waBtn = document.getElementById('subWhatsappDirectBtn');
-      if (waBtn) {
-        waBtn.href = buildMoazWhatsAppSubscribeUrl();
-      }
+
 
       const statusBadge = document.getElementById('subPageUserStatusBadge');
       const planDetails = document.getElementById('subPageUserPlanDetails');
@@ -16623,6 +16558,10 @@
       });
       document.getElementById('platformBrandingForm').addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!isCurrentUserAdmin()) {
+          showToast('🔒 تغيير اسم المنصة متاح للمدير العام فقط', 'error');
+          return;
+        }
         const newBranding = {
           name: document.getElementById('brandNameInput').value.trim() || DEFAULT_PLATFORM_BRANDING.name,
           badge: document.getElementById('brandBadgeInput').value.trim() || DEFAULT_PLATFORM_BRANDING.badge,
@@ -16638,6 +16577,7 @@
         showToast(`✨ تم تغيير اسم المنصة إلى «${newBranding.name}» وحفظه بنجاح!`);
       });
       document.getElementById('resetDefaultBrandNameBtn').addEventListener('click', () => {
+        if (!isCurrentUserAdmin()) return;
         appState.platformBranding = Object.assign({}, DEFAULT_PLATFORM_BRANDING);
         try {
           localStorage.setItem('geomasaha_platform_branding_v1', JSON.stringify(DEFAULT_PLATFORM_BRANDING));
@@ -18315,82 +18255,9 @@
       document.querySelectorAll('[data-select-sub-plan]').forEach(btn => {
         btn.addEventListener('click', () => {
           const planName = btn.getAttribute('data-select-sub-plan');
-          const sel = document.getElementById('subReqPlanSelect');
-          if (sel) sel.value = planName;
           openWhatsAppSubscribePromptModal(null, planName);
         });
       });
-
-      // Method 1: Instant Activation Code Form
-      const subCodeForm = document.getElementById('subInstantCodeForm');
-      if (subCodeForm) {
-        subCodeForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const rawCode = (document.getElementById('subActivationCodeInput').value || '').trim().toUpperCase();
-          if (!rawCode) return;
-
-          const matchedCode = ACTIVATION_CODES_DATA.find(c => c.code.toUpperCase() === rawCode);
-          if (!matchedCode) {
-            showToast('❌ كود التفعيل غير صحيح. تأكد من كتابة الكود كما استلمته من إدارة المنصة', 'error');
-            return;
-          }
-          if (matchedCode.status === 'used' && matchedCode.usedBy && (!currentUser || matchedCode.usedBy !== currentUser.email)) {
-            showToast('⚠️ هذا الكود تم استخدامه مسبقاً لحساب آخر. تواصل مع المدير للحصول على كود جديد', 'error');
-            return;
-          }
-
-          const subRecord = {
-            status: 'active',
-            plan: matchedCode.plan,
-            codeUsed: matchedCode.code,
-            activatedAt: new Date().toISOString()
-          };
-
-          matchedCode.status = 'used';
-          matchedCode.usedBy = currentUser ? currentUser.email : 'طالب مفعل';
-
-          if (currentUser) {
-            currentUser.subscription = subRecord;
-            await dbSaveStudent(currentUser);
-          }
-          appState.deviceSubscriptionActive = true;
-          appState.deviceSubscriptionObj = subRecord;
-          saveSubscriptionStateToStorage();
-          await saveState();
-
-          document.getElementById('subActivationCodeInput').value = '';
-          renderSubscriptionUI();
-          showToast(`🎉 مبروك! تم تفعيل اشتراكك (${matchedCode.plan}) بنجاح وفتح جميع أقسام المنصة!`);
-        });
-      }
-
-      // Method 2: Subscription Payment Request Form
-      const subReqForm = document.getElementById('subPaymentRequestForm');
-      if (subReqForm) {
-        subReqForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const studentName = document.getElementById('subReqStudentName').value.trim();
-          const studentPhone = document.getElementById('subReqStudentPhone').value.trim();
-          const plan = document.getElementById('subReqPlanSelect').value;
-          const transferRef = document.getElementById('subReqTransferRef').value.trim();
-
-          const reqRecord = {
-            id: 'subreq-' + Date.now(),
-            studentName,
-            studentPhone,
-            studentEmail: currentUser ? currentUser.email : '',
-            plan,
-            transferRef,
-            status: 'pending',
-            createdAt: new Date().toISOString()
-          };
-          SUBSCRIPTION_REQUESTS_DATA.unshift(reqRecord);
-          saveSubscriptionStateToStorage();
-          subReqForm.reset();
-          renderSubscriptionUI();
-          showToast('📩 تم إرسال طلب تفعيل اشتراكك إلى المدير بنجاح! سيتم تفعيل حسابك فور المراجعة.');
-        });
-      }
 
       // Admin Subscription Manager Controls
       const gateToggle = document.getElementById('adminToggleSubscriptionGate');
@@ -18436,7 +18303,7 @@
           saveSubscriptionStateToStorage();
           recordAdminAuditLog('إضافة', `توليد أكواد تفعيل اشتراك جديدة (${plan})`);
           renderAdminSubscriptionsSection();
-          showToast('🔑 تم توليد وحفظ أكواد التفعيل الفورية بنجاح!');
+          showToast('🔑 تم حفظ إعدادات التفعيل بنجاح!');
         });
       }
 
@@ -18453,7 +18320,7 @@
           saveSubscriptionStateToStorage();
           recordAdminAuditLog('تعديل', 'تحديث أسعار باقات الاشتراك وأرقام التحويل والواتساب');
           renderSubscriptionUI();
-          showToast('💾 تم حفظ أسعار الباقات وبيانات الدفع بنجاح!');
+          showToast('💾 تم حفظ أسعار الباقات ورقم فودافون كاش بنجاح!');
         });
       }
 
@@ -18494,6 +18361,14 @@
       if (subHeroWaBtn) {
         subHeroWaBtn.addEventListener('click', (e) => {
           e.preventDefault();
+          const url = buildMoazWhatsAppSubscribeUrl();
+          window.open(url, '_blank', 'noopener,noreferrer');
+        });
+      }
+
+      const mainNavSubBtn = document.getElementById('mainNavSubscriptionTabBtn');
+      if (mainNavSubBtn) {
+        mainNavSubBtn.addEventListener('click', () => {
           openWhatsAppSubscribePromptModal();
         });
       }
@@ -18503,9 +18378,6 @@
       const closeWaPromptBtn = document.getElementById('btnWaPromptClose');
       const closeWaPromptXBtn = document.getElementById('closeWhatsappPromptXBtn');
       const goWaChatBtn = document.getElementById('btnWaPromptGoChat');
-      const viewPlansBtn = document.getElementById('btnWaPromptViewPlansPage');
-      const copyWaHandleBtn = document.getElementById('copyWaAccountHandleBtn');
-      const waQuickActBtn = document.getElementById('waModalQuickActivateBtn');
 
       if (closeWaPromptBtn && waModalEl) {
         closeWaPromptBtn.addEventListener('click', () => waModalEl.classList.add('hidden'));
@@ -18513,53 +18385,11 @@
       if (closeWaPromptXBtn && waModalEl) {
         closeWaPromptXBtn.addEventListener('click', () => waModalEl.classList.add('hidden'));
       }
-      const mainNavSubBtn = document.getElementById('mainNavSubscriptionTabBtn');
-      if (mainNavSubBtn) {
-        mainNavSubBtn.addEventListener('click', () => {
-          openWhatsAppSubscribePromptModal();
-        });
-      }
-      if (viewPlansBtn && waModalEl) {
-        viewPlansBtn.addEventListener('click', () => {
-          waModalEl.classList.add('hidden');
-          switchTab('subscription');
-        });
-      }
-      if (copyWaHandleBtn) {
-        copyWaHandleBtn.addEventListener('click', () => {
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText('@moaz elokly');
-          }
-          showToast('📋 تم نسخ حساب الواتساب الرسمي: @moaz elokly');
-        });
-      }
       if (goWaChatBtn) {
         goWaChatBtn.addEventListener('click', () => {
-          const planSel = document.getElementById('waPromptPlanSelect');
-          const chosenPlan = planSel ? planSel.value : 'باقة 6 أشهر (600 ج.م)';
-          const url = buildMoazWhatsAppSubscribeUrl(chosenPlan);
+          const url = buildMoazWhatsAppSubscribeUrl();
           if (waModalEl) waModalEl.classList.add('hidden');
           window.open(url, '_blank', 'noopener,noreferrer');
-        });
-      }
-      if (waQuickActBtn) {
-        waQuickActBtn.addEventListener('click', () => {
-          const codeInput = document.getElementById('waModalQuickCodeInput');
-          const mainCodeInput = document.getElementById('subActivationCodeInput');
-          const subCodeForm = document.getElementById('subInstantCodeForm');
-          if (codeInput && mainCodeInput && subCodeForm) {
-            const val = (codeInput.value || '').trim();
-            if (!val) {
-              showToast('⚠️ يرجى إدخال كود التفعيل الذي استلمته من @moaz elokly أولاً', 'error');
-              return;
-            }
-            mainCodeInput.value = val;
-            subCodeForm.dispatchEvent(new Event('submit', { cancelable: true }));
-            if (isCurrentUserSubscribed() && waModalEl) {
-              codeInput.value = '';
-              waModalEl.classList.add('hidden');
-            }
-          }
         });
       }
 
