@@ -121,8 +121,8 @@
         <button id="headerCloudSyncBtn" type="button" title="المزامنة السحابية وحفظ البيانات بين الهواتف" class="px-2.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-extrabold transition flex items-center gap-1 shrink-0">
           <span>☁️</span><span class="hidden sm:inline">السحابة</span>
         </button>
-        <button id="headerSubStatusBadge" type="button" title="نظام الاشتراك وتفعيل العضوية" class="px-2.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition shrink-0 shadow-md">
-          💎 الاشتراك
+        <button id="headerSubStatusBadge" type="button" title="اشترك أو فعل اشتراكك عبر واتساب @moaz elokly" class="px-3 py-2 rounded-xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 text-xs font-extrabold transition shrink-0 shadow-lg flex items-center gap-1.5 cursor-pointer">
+          <span>💬</span><span>اشتراك (@moaz elokly)</span>
         </button>
 
         <!-- Auth Buttons (Guest State) -->
@@ -160,8 +160,8 @@
         <button data-tab="dashboard" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow-md">
           <span>🏠</span><span>الرئيسية ولوحة التحكم</span>
         </button>
-        <button data-tab="subscription" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-amber-300 bg-amber-500/15 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-950">
-          <span>💎</span><span>الاشتراك وتفعيل العضوية</span>
+        <button id="mainNavSubscriptionTabBtn" data-tab="subscription" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-emerald-300 bg-emerald-500/15 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950">
+          <span>💬</span><span>اشتراك واتساب (@moaz elokly)</span>
         </button>
         <button data-tab="roadmaps" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition flex items-center gap-2 text-slate-300 hover:bg-slate-800/80 hover:text-white">
           <span>🧭</span><span>مسارات التعلم (6 تخصصات)</span>
@@ -751,16 +751,23 @@
             </form>
           </div>
 
-          <!-- Method 2: Send Subscription Request (Vodafone Cash / InstaPay / WhatsApp) -->
-          <div class="bg-slate-950 border border-amber-500/40 rounded-3xl p-5 space-y-4">
-            <div class="space-y-1 border-b border-slate-800 pb-3">
-              <span class="text-[11px] font-extrabold text-amber-400">💳 الطريقة الثانية: الدفع وطلب التفعيل أو استلام الكود</span>
-              <h3 class="text-base sm:text-lg font-extrabold text-white">طلب اشتراك عبر فودافون كاش أو إنستا باي</h3>
-              <p class="text-xs text-slate-400">
-                حول قيمة الباقة على رقم المحفظة / إنستا باي المعتمد:
+          <!-- Method 2: Direct WhatsApp Subscription with @moaz elokly + Payment Request -->
+          <div class="bg-slate-950 border-2 border-emerald-500/60 rounded-3xl p-5 space-y-4 shadow-xl">
+            <div class="space-y-2 border-b border-slate-800 pb-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-[11px] font-extrabold text-emerald-400">💬 الطريقة الأسرع: التواصل المباشر عبر واتساب لتفعيل الاشتراك</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold ltr-num">@moaz elokly</span>
+              </div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white">تواصل مباشرة على واتساب مع م. معاذ العكلي (<span class="text-emerald-400 ltr-num">@moaz elokly</span>)</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                للاشتراك أو تفعيل اشتراكك واستلام كود التفعيل الفوري، تواصل الآن عبر الواتساب مع حساب الإدارة الرسمي
+                <strong class="text-emerald-400 ltr-num">@moaz elokly</strong> أو حول قيمة الباقة على رقم المحفظة / إنستا باي:
                 <span id="subPaymentWalletDisplay" class="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-extrabold ltr-num mr-1">01000000000</span>
-                ثم أرسل بياناتك ليقوم المدير بتفعيل حسابك فوراً:
               </p>
+              <button type="button" id="subHeroDirectWhatsappBtn" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                <span>💬</span>
+                <span>اضغط هنا للتواصل عبر واتساب الآن والاشتراك (@moaz elokly)</span>
+              </button>
             </div>
             <form id="subPaymentRequestForm" class="space-y-3 text-xs">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -791,8 +798,8 @@
                 <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition">
                   📩 إرسال طلب تفعيل الاشتراك للمدير
                 </button>
-                <a id="subWhatsappDirectBtn" href="https://wa.me/201000000000" target="_blank" rel="noopener noreferrer" class="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/40 font-extrabold transition">
-                  💬 تواصل عبر واتساب
+                <a id="subWhatsappDirectBtn" href="https://wa.me/moaz.elokly" target="_blank" rel="noopener noreferrer" class="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold transition flex items-center gap-1.5 shadow-md">
+                  <span>💬</span><span>محادثة واتساب (@moaz elokly)</span>
                 </a>
               </div>
             </form>
@@ -2907,8 +2914,8 @@
                 <input id="adminCfgWalletNumber" type="text" value="01000000000" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
               </div>
               <div>
-                <label class="block text-slate-300 font-bold mb-1">رقم واتساب المدير (بالكود الدولي)</label>
-                <input id="adminCfgWhatsappNumber" type="text" value="201000000000" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
+                <label class="block text-slate-300 font-bold mb-1">حساب أو رقم واتساب المدير للاشتراك</label>
+                <input id="adminCfgWhatsappNumber" type="text" value="@moaz elokly" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white ltr-num outline-none">
               </div>
             </div>
             <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold transition">
@@ -4395,6 +4402,92 @@
     </div>
   </div>
 
+  
+  <!-- ==================== WHATSAPP SUBSCRIPTION PROMPT MODAL (@moaz elokly) ==================== -->
+  <div id="whatsappSubscribePromptModal" class="fixed inset-0 z-[85] hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border-2 border-emerald-500 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl text-center space-y-5 relative animate-fadeIn">
+      <button type="button" id="closeWhatsappPromptXBtn" class="absolute top-4 left-4 w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-extrabold flex items-center justify-center transition">✕</button>
+
+      <!-- Official WhatsApp Icon -->
+      <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/50 flex items-center justify-center mx-auto shadow-lg">
+        <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.359 5.016L2 22l5.156-1.359c1.484.813 3.172 1.25 4.875 1.25 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2zm5.828 14.125c-.25.703-1.438 1.344-2 1.422-.531.078-1.203.109-1.953-.125-.453-.141-1.031-.328-1.766-.641-3.094-1.328-5.109-4.469-5.266-4.672-.156-.203-1.266-1.688-1.266-3.219 0-1.531.797-2.281 1.078-2.594.281-.313.609-.391.813-.391.203 0 .406.005.578.016.188.009.438-.078.688.516.25.609.859 2.094.938 2.25.078.156.125.344.031.547-.094.203-.141.328-.297.5-.156.172-.313.391-.453.516-.156.141-.313.297-.141.594.172.297.766 1.266 1.641 2.047 1.125 1.016 2.078 1.328 2.375 1.484.297.156.469.125.641-.078.172-.203.734-.859.938-1.156.203-.297.391-.25.656-.156.266.094 1.703.813 2 .953.297.141.484.219.563.344.078.125.078.734-.172 1.438z"/>
+        </svg>
+      </div>
+
+      <div class="space-y-2">
+        <span id="waPromptFeatureTag" class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold">
+          💬 الاشتراك وتفعيل العضوية في GeoMasaha Pro
+        </span>
+        <h3 class="text-lg sm:text-xl font-extrabold text-white">
+          تواصل الآن معي على الواتساب للاشتراك وتفعيل حسابك
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          للاشتراك في منصة <strong>GeoMasaha Pro</strong> أو تفعيل اشتراكك واستلام كود التفعيل الفوري، تواصل مباشرة على الواتساب مع مدير المنصة <strong>م. معاذ العكلي (<span class="text-emerald-400 font-extrabold ltr-num">@moaz elokly</span>)</strong>.
+        </p>
+      </div>
+
+      <!-- Official WhatsApp Account Card -->
+      <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/40 text-xs text-slate-200 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-slate-400 font-bold">👤 حساب الواتساب الرسمي:</span>
+          <div class="flex items-center gap-1.5">
+            <span id="waPromptAccountDisplay" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-extrabold ltr-num text-sm">@moaz elokly</span>
+            <button type="button" id="copyWaAccountHandleBtn" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition" title="نسخ حساب الواتساب">📋 نسخ</button>
+          </div>
+        </div>
+        <div class="text-right pt-1 border-t border-slate-800">
+          <label class="block text-[11px] text-slate-400 font-bold mb-1">اختر الباقة المطلوبة قبل الانتقال للمحادثة:</label>
+          <select id="waPromptPlanSelect" class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-white text-xs font-bold outline-none">
+            <option value="الباقة الشهرية (150 ج.م)">الباقة الشهرية — 150 ج.م / شهرياً</option>
+            <option value="باقة 6 أشهر (600 ج.م)" selected>باقة الترم الدراسي (6 أشهر) — 600 ج.م</option>
+            <option value="الباقة السنوية الشاملة (1000 ج.م)">الباقة السنوية الشاملة (سنة كاملة) — 1000 ج.م</option>
+          </select>
+        </div>
+        <div id="waPromptStudentSummary" class="text-[11px] text-emerald-300/90 font-semibold pt-1">
+          سيتم نقلك إلى محادثة الواتساب مباشرة مع إرسال بياناتك لتسريع تفعيل الاشتراك.
+        </div>
+      </div>
+
+      <!-- Primary Direct WhatsApp Action Button -->
+      <div class="flex flex-col gap-2.5">
+        <button type="button" id="btnWaPromptGoChat" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 text-xs sm:text-sm font-extrabold shadow-xl shadow-emerald-950/60 transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>💬</span>
+          <span>انتقل لمحادثة الواتساب الآن للاشتراك (@moaz elokly)</span>
+        </button>
+
+        <!-- Instant Code Quick Entry inside Modal -->
+        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-3 space-y-2 text-right">
+          <div class="text-[11px] font-bold text-amber-300">🔑 هل تواصلت على الواتساب واستلمت كود التفعيل؟ أدخله هنا فوراً:</div>
+          <div class="flex items-center gap-2">
+            <input id="waModalQuickCodeInput" type="text" placeholder="أدخل كود التفعيل مثل: GEO-PRO-2026" class="flex-1 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-white text-xs font-extrabold ltr-num text-center outline-none">
+            <button type="button" id="waModalQuickActivateBtn" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold shrink-0 transition">
+              ⚡ تفعيل
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="btnWaPromptViewPlansPage" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-extrabold transition">
+            💎 صفحة الباقات
+          </button>
+          <button type="button" id="btnWaPromptClose" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-extrabold transition">
+            إغلاق
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Quick WhatsApp Subscription Button -->
+  <button type="button" id="floatingWhatsappSubscribeBtn" title="اشترك أو فعل اشتراكك عبر واتساب @moaz elokly" class="fixed bottom-5 left-5 z-40 px-4 py-3 rounded-2xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-extrabold text-xs shadow-2xl border-2 border-white/20 flex items-center gap-2 transition transform hover:scale-105 cursor-pointer">
+    <span class="text-base">💬</span>
+    <div class="text-right leading-tight">
+      <div class="text-[10px] font-bold text-slate-900">تفعيل الاشتراك واتساب</div>
+      <div class="text-xs font-extrabold ltr-num">@moaz elokly</div>
+    </div>
+  </button>
+
   <!-- Software Detail Modal -->
   <div id="softwareModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full max-h-[88vh] overflow-y-auto custom-scroll p-6 space-y-4 shadow-2xl">
@@ -4429,6 +4522,8 @@
 
   <script>
 
+
+    const FOUNDER_AVATAR_B64 = "data:image/jpeg;base64,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";
 
     // ==========================================
     // 1. VERIFIED COURSES DATABASE (36 COURSES: YOUTUBE + GLOBAL PLATFORMS)
@@ -12806,6 +12901,17 @@
     let COMMUNITY_NOTIFICATIONS_DATA = [];
     let COMMUNITY_REPORTS_DATA = [];
 
+    let commFilterState = {
+      activeSubView: "feed",
+      activeProfileMemberId: null,
+      section: "all",
+      postType: "all",
+      sortBy: "latest",
+      searchQuery: "",
+      memberSearchQuery: ""
+    };
+    let lastPostSubmitTimestamp = 0;
+
     function getCurrentCommunityIdentity() {
       if (currentUser && currentUser.email) {
         const cleanHandle = '@' + currentUser.email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
@@ -15616,8 +15722,66 @@
       priceSemester: 600,
       priceAnnual: 1000,
       walletNumber: '01000000000',
-      whatsappNumber: '201000000000'
+      whatsappNumber: '@moaz elokly',
+      whatsappHandle: 'moaz.elokly'
     };
+
+    function buildMoazWhatsAppSubscribeUrl(selectedPlan) {
+      const planText = selectedPlan || (document.getElementById('waPromptPlanSelect') ? document.getElementById('waPromptPlanSelect').value : 'باقة 6 أشهر (600 ج.م)');
+      const studentName = (currentUser && currentUser.name) ? currentUser.name : 'طالب جديد في المنصة';
+      const studentEmail = (currentUser && currentUser.email) ? currentUser.email : '';
+      const studentSpec = (currentUser && currentUser.specialty) ? currentUser.specialty : '';
+
+      let msg = `مرحباً م. معاذ العكلي (@moaz elokly)، أرغب في الاشتراك وتفعيل حسابي في منصة GeoMasaha Pro:\n`;
+      msg += `• الاسم: ${studentName}\n`;
+      if (studentEmail) msg += `• البريد الإلكتروني: ${studentEmail}\n`;
+      if (studentSpec) msg += `• التخصص: ${studentSpec}\n`;
+      msg += `• الباقة المطلوبة: ${planText}`;
+
+      const rawWa = String(SUBSCRIPTION_CONFIG.whatsappNumber || '@moaz elokly').trim();
+      const digitsOnly = rawWa.replace(/[^0-9]/g, '');
+      const targetPath = (digitsOnly.length >= 10 && digitsOnly !== '201000000000')
+        ? digitsOnly
+        : 'moaz.elokly';
+
+      return `https://wa.me/${targetPath}?text=${encodeURIComponent(msg)}`;
+    }
+
+    function openWhatsAppSubscribePromptModal(featureLabel, preselectedPlan) {
+      const modal = document.getElementById('whatsappSubscribePromptModal');
+      if (!modal) return;
+
+      const tagEl = document.getElementById('waPromptFeatureTag');
+      if (tagEl) {
+        tagEl.textContent = featureLabel
+          ? `🔒 تفعيل الاشتراك لفتح: ${featureLabel}`
+          : '💬 الاشتراك وتفعيل العضوية في GeoMasaha Pro';
+      }
+
+      const planSel = document.getElementById('waPromptPlanSelect');
+      if (planSel && preselectedPlan) {
+        planSel.value = preselectedPlan;
+      }
+
+      const accDisplay = document.getElementById('waPromptAccountDisplay');
+      if (accDisplay) {
+        const waTxt = (SUBSCRIPTION_CONFIG.whatsappNumber && SUBSCRIPTION_CONFIG.whatsappNumber !== '201000000000')
+          ? SUBSCRIPTION_CONFIG.whatsappNumber
+          : '@moaz elokly';
+        accDisplay.textContent = waTxt;
+      }
+
+      const summaryEl = document.getElementById('waPromptStudentSummary');
+      if (summaryEl) {
+        if (currentUser && currentUser.name) {
+          summaryEl.textContent = `حسابك الحالي: ${currentUser.name} (${currentUser.email}) — اضغط بالأسفل لفتح محادثة الواتساب مباشرة مع م. معاذ العكلي (@moaz elokly).`;
+        } else {
+          summaryEl.textContent = 'اضغط بالأسفل للانتقال مباشرة إلى محادثة الواتساب مع م. معاذ العكلي (@moaz elokly) للاشتراك وتفعيل حسابك.';
+        }
+      }
+
+      modal.classList.remove('hidden');
+    }
 
     let ACTIVATION_CODES_DATA = [
       { code: 'GEO-PRO-2026', plan: 'باقة الترم (6 أشهر)', status: 'available', usedBy: null, createdAt: '2026-11-01' },
@@ -15665,8 +15829,8 @@
 
     function checkSubscriptionBeforeAction(featureLabel) {
       if (isCurrentUserSubscribed()) return true;
-      switchTab('subscription');
-      showToast(`💎 للوصول إلى (${featureLabel}) يرجى تفعيل اشتراكك بكود التفعيل أو إرسال طلب اشتراك للمدير`, 'info');
+      openWhatsAppSubscribePromptModal(featureLabel);
+      showToast(`💬 للاشتراك وفتح (${featureLabel}) تواصل عبر واتساب مع @moaz elokly أو أدخل كود التفعيل`, 'info');
       return false;
     }
 
@@ -15682,9 +15846,7 @@
 
       const waBtn = document.getElementById('subWhatsappDirectBtn');
       if (waBtn) {
-        const cleanWa = String(SUBSCRIPTION_CONFIG.whatsappNumber || '201000000000').replace(/[^0-9]/g, '');
-        const msg = encodeURIComponent('مرحباً م. معاذ، أرغب في تفعيل اشتراكي في منصة GeoMasaha Pro.');
-        waBtn.href = `https://wa.me/${cleanWa}?text=${msg}`;
+        waBtn.href = buildMoazWhatsAppSubscribeUrl();
       }
 
       const statusBadge = document.getElementById('subPageUserStatusBadge');
@@ -15719,8 +15881,8 @@
         }
         if (planDetails) planDetails.textContent = 'أدخل كود التفعيل الفوري أو أرسل طلب اشتراك لفتح جميع الكورسات والمشاريع والملفات والاختبارات.';
         if (headerSubBadge) {
-          headerSubBadge.textContent = '💎 تفعيل الاشتراك';
-          headerSubBadge.className = 'px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 text-xs font-extrabold shadow-md';
+          headerSubBadge.innerHTML = '<span>💬</span><span>اشتراك (@moaz elokly)</span>';
+          headerSubBadge.className = 'px-3 py-2 rounded-xl bg-gradient-to-l from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 text-xs font-extrabold shadow-lg flex items-center gap-1.5 cursor-pointer';
         }
       }
 
@@ -18149,15 +18311,13 @@
         };
       }
 
-      // Subscription Plan Selection Buttons
+      // Subscription Plan Selection Buttons -> Immediately show WhatsApp Prompt Modal for @moaz elokly
       document.querySelectorAll('[data-select-sub-plan]').forEach(btn => {
         btn.addEventListener('click', () => {
           const planName = btn.getAttribute('data-select-sub-plan');
           const sel = document.getElementById('subReqPlanSelect');
           if (sel) sel.value = planName;
-          const reqForm = document.getElementById('subPaymentRequestForm');
-          if (reqForm) reqForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          showToast(`💎 تم اختيار (${planName}) — أدخل كود التفعيل أو أرسل بيانات التحويل للتفعيل الفوري`, 'info');
+          openWhatsAppSubscribePromptModal(null, planName);
         });
       });
 
@@ -18316,7 +18476,91 @@
 
       const headerSubBtn = document.getElementById('headerSubStatusBadge');
       if (headerSubBtn) {
-        headerSubBtn.addEventListener('click', () => switchTab('subscription'));
+        headerSubBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openWhatsAppSubscribePromptModal();
+        });
+      }
+
+      const floatingWaSubBtn = document.getElementById('floatingWhatsappSubscribeBtn');
+      if (floatingWaSubBtn) {
+        floatingWaSubBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openWhatsAppSubscribePromptModal();
+        });
+      }
+
+      const subHeroWaBtn = document.getElementById('subHeroDirectWhatsappBtn');
+      if (subHeroWaBtn) {
+        subHeroWaBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openWhatsAppSubscribePromptModal();
+        });
+      }
+
+      // Wire up WhatsApp Subscription Prompt Modal controls
+      const waModalEl = document.getElementById('whatsappSubscribePromptModal');
+      const closeWaPromptBtn = document.getElementById('btnWaPromptClose');
+      const closeWaPromptXBtn = document.getElementById('closeWhatsappPromptXBtn');
+      const goWaChatBtn = document.getElementById('btnWaPromptGoChat');
+      const viewPlansBtn = document.getElementById('btnWaPromptViewPlansPage');
+      const copyWaHandleBtn = document.getElementById('copyWaAccountHandleBtn');
+      const waQuickActBtn = document.getElementById('waModalQuickActivateBtn');
+
+      if (closeWaPromptBtn && waModalEl) {
+        closeWaPromptBtn.addEventListener('click', () => waModalEl.classList.add('hidden'));
+      }
+      if (closeWaPromptXBtn && waModalEl) {
+        closeWaPromptXBtn.addEventListener('click', () => waModalEl.classList.add('hidden'));
+      }
+      const mainNavSubBtn = document.getElementById('mainNavSubscriptionTabBtn');
+      if (mainNavSubBtn) {
+        mainNavSubBtn.addEventListener('click', () => {
+          openWhatsAppSubscribePromptModal();
+        });
+      }
+      if (viewPlansBtn && waModalEl) {
+        viewPlansBtn.addEventListener('click', () => {
+          waModalEl.classList.add('hidden');
+          switchTab('subscription');
+        });
+      }
+      if (copyWaHandleBtn) {
+        copyWaHandleBtn.addEventListener('click', () => {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText('@moaz elokly');
+          }
+          showToast('📋 تم نسخ حساب الواتساب الرسمي: @moaz elokly');
+        });
+      }
+      if (goWaChatBtn) {
+        goWaChatBtn.addEventListener('click', () => {
+          const planSel = document.getElementById('waPromptPlanSelect');
+          const chosenPlan = planSel ? planSel.value : 'باقة 6 أشهر (600 ج.م)';
+          const url = buildMoazWhatsAppSubscribeUrl(chosenPlan);
+          if (waModalEl) waModalEl.classList.add('hidden');
+          window.open(url, '_blank', 'noopener,noreferrer');
+        });
+      }
+      if (waQuickActBtn) {
+        waQuickActBtn.addEventListener('click', () => {
+          const codeInput = document.getElementById('waModalQuickCodeInput');
+          const mainCodeInput = document.getElementById('subActivationCodeInput');
+          const subCodeForm = document.getElementById('subInstantCodeForm');
+          if (codeInput && mainCodeInput && subCodeForm) {
+            const val = (codeInput.value || '').trim();
+            if (!val) {
+              showToast('⚠️ يرجى إدخال كود التفعيل الذي استلمته من @moaz elokly أولاً', 'error');
+              return;
+            }
+            mainCodeInput.value = val;
+            subCodeForm.dispatchEvent(new Event('submit', { cancelable: true }));
+            if (isCurrentUserSubscribed() && waModalEl) {
+              codeInput.value = '';
+              waModalEl.classList.add('hidden');
+            }
+          }
+        });
       }
 
       const hubVerifyBtn = document.getElementById('hubVerifyCertQuickBtn');
